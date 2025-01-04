@@ -78,6 +78,12 @@ class Tagesschau extends utils.Adapter {
       this.log.warn("No regions selected! Adapter paused!");
       return;
     }
+    if (!this.config.selectedTags) {
+      this.config.selectedTags = [];
+    }
+    if (!this.config.maxEntries) {
+      this.config.maxEntries = 20;
+    }
     if (!this.config.videosEnabled && !this.config.newsEnabled) {
       this.log.warn("No news or videos selected! Adapter paused!");
       return;
@@ -147,15 +153,17 @@ class Tagesschau extends utils.Adapter {
             for (const news of data.news) {
               if (news.tags) {
                 for (const tag of news.tags) {
-                  if (!this.additionalConfig.allTags.includes(tag.tag)) {
+                  if (!(this.additionalConfig.allTags || []).includes(tag.tag)) {
                     this.additionalConfig.allTags.push(tag.tag);
                   }
                 }
               }
             }
-            data.news = data.news.filter(
-              (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag))
-            );
+            if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
+              data.news = data.news.filter(
+                (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag))
+              );
+            }
             data.news = data.news.slice(0, this.config.maxEntries);
             data.newsCount = data.news.length;
             for (const news of data.news) {

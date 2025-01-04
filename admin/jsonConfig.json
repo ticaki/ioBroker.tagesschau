@@ -309,6 +309,7 @@
             "tooltip": "Intervall in Minuten, in dem die Nachrichten aktualisiert werden sollen",
             "min": 5,
             "max": 1000000,
+            "unit": "Minuten",
             "step": 1,
             "newLine": true,
             "xs": 12,
@@ -320,7 +321,7 @@
         "maxEntries": {
             "type": "number",
             "label": "Maximale Anzahl an Nachrichten",
-            "tooltip": "Maximale Anzahl an Nachrichten, die angezeigt werden sollen",
+            "tooltip": "Maximale Anzahl an Nachrichten pro Unterkategorie, die angezeigt werden sollen",
             "min": 1,
             "max": 200,
             "default": 20,
