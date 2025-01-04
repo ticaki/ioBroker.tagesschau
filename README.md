@@ -20,6 +20,8 @@ Beachten:
 1. Der Adapter läuft nur wenn in der Konfiguration 1 Thema und 1 Bundesland ausgewählt sind.
 2. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit auch immer mehr!
 
+Beispiel:
+[Videoansicht](img/BeispielVideoansicht1.png)
 
 ## Changelog
 <!--
