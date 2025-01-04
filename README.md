@@ -21,7 +21,7 @@ Beachten:
 2. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit auch immer mehr!
 
 Beispiel:
-[Videoansicht](img/BeispielVideoansicht1.png)
+![Videoansicht](img/BeispielVideoansicht1.png)
 
 ## Changelog
 <!--
