@@ -80,7 +80,7 @@ class Tagesschau extends utils.Adapter {
         }
         for (let i = 1; i <= maxRegions; i++) {
             const k = `L${i.toString()}` as keyof typeof this.config;
-            this.regions += this.config[k] === true ? i + (this.regions ? ',' : '') : '';
+            this.regions += this.config[k] === true ? (this.regions ? ',' : '') + i : '';
         }
         if (this.regions.length === 0) {
             this.log.warn('No regions selected! Adapter paused!');
@@ -197,6 +197,10 @@ class Tagesschau extends utils.Adapter {
                                 const k = key as keyof NewsEntity;
                                 delete news[k];
                             }
+                            if (news.date) {
+                                news.jsDate = new Date(news.date).getTime();
+                            }
+
                             //this.log.debug(`News: ${JSON.stringify(news)}`);
                             if (news.breakingNews) {
                                 bnews.push(news);
@@ -232,7 +236,11 @@ class Tagesschau extends utils.Adapter {
                 this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                 const data = response.data as videosType;
                 data.channels = data.channels.slice(0, this.config.maxEntries);
-
+                for (const news of data.channels) {
+                    if (news.date) {
+                        news.jsDate = new Date(news.date).getTime();
+                    }
+                }
                 await this.library.writeFromJson(`videos`, `videos`, statesObjects, data, true);
                 await this.library.garbageColleting(`videos`, 60000, true);
             }

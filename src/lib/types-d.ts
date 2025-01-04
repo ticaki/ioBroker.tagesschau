@@ -13,6 +13,7 @@ export interface NewsEntity {
     externalId: string;
     title: string;
     date: string;
+    jsDate?: number;
     teaserImage: TeaserImage;
     tags?: TagsEntity[] | null;
     updateCheckUrl: string;
@@ -124,6 +125,7 @@ export interface Channel {
     externalId: string;
     title: string;
     date?: string;
+    jsDate?: number;
     teaserImage: TeaserImage;
     tags: any[];
     updateCheckUrl: string;

@@ -23,6 +23,9 @@ export type ChangeTypeOfKeys<Obj, N> = Obj extends object ? { [K in keyof Obj]-?
 export type customChannelType = {
     _channel: ioBroker.ChannelObject | ioBroker.DeviceObject;
 };
+export type customChannelArrayType = {
+    _array: ioBroker.ChannelObject | ioBroker.DeviceObject;
+};
 
 export const defaultChannel: ioBroker.ChannelObject = {
     _id: '',
@@ -32,6 +35,56 @@ export const defaultChannel: ioBroker.ChannelObject = {
     },
     native: {},
 };
+/*const newsChannel: NewsEntity = {
+    sophoraId: '',
+    externalId: '',
+    title: '',
+    date: '',
+    teaserImage: {
+        alttext: '',
+        imageVariants: {
+            '1x1-144': '',
+            '1x1-256': '',
+            '1x1-432': '',
+            '1x1-640': '',
+            '1x1-840': '',
+            '16x9-256': '',
+            '16x9-384': '',
+            '16x9-512': '',
+            '16x9-640': '',
+            '16x9-960': '',
+            '16x9-1280': '',
+            '16x9-1920': '',
+        },
+        type: '',
+    },
+    tags: [
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+    ],
+    updateCheckUrl: '',
+    topline: '',
+    firstSentence: '',
+    details: '',
+    detailsweb: '',
+    shareURL: '',
+    geotags: [],
+    regionId: 0,
+    regionIds: [],
+    ressort: '',
+    breakingNews: false,
+    type: '',
+}*/
 
 export const genericStateObjects: {
     default: ioBroker.StateObject;
