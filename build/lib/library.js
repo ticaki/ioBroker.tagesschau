@@ -174,6 +174,9 @@ class Library extends BaseClass {
         if (!objectDefinition) {
           return;
         }
+        if (data.length === 0) {
+          return;
+        }
         if (objectDefinition.type !== "state" || expandTree) {
           let a = 0;
           const defChannel = this.getChannelObject(objectDefinition, prefix);
@@ -194,6 +197,9 @@ class Library extends BaseClass {
           );
         }
       } else {
+        if (Object.keys(data).length === 0) {
+          return;
+        }
         if (objectDefinition) {
           const defChannel = this.getChannelObject(objectDefinition, prefix);
           await this.writedp(prefix, null, defChannel);

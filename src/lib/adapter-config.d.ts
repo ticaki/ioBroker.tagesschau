@@ -4,22 +4,22 @@
 declare global {
     namespace ioBroker {
         interface AdapterConfig {
-            '1': boolean;
-            '2': boolean;
-            '3': boolean;
-            '4': boolean;
-            '5': boolean;
-            '6': boolean;
-            '7': boolean;
-            '8': boolean;
-            '9': boolean;
-            '10': boolean;
-            '11': boolean;
-            '12': boolean;
-            '13': boolean;
-            '14': boolean;
-            '15': boolean;
-            '16': boolean;
+            'L1': boolean;
+            'L2': boolean;
+            'L3': boolean;
+            'L4': boolean;
+            'L5': boolean;
+            'L6': boolean;
+            'L7': boolean;
+            'L8': boolean;
+            'L9': boolean;
+            'L10': boolean;
+            'L11': boolean;
+            'L12': boolean;
+            'L13': boolean;
+            'L14': boolean;
+            'L15': boolean;
+            'L16': boolean;
             inland: boolean;
             ausland: boolean;
             sport: boolean;
@@ -27,6 +27,11 @@ declare global {
             video: boolean;
             investigativ: boolean;
             wissen: boolean;
+            selectedTags: string[];
+            interval: number;
+            newsEnabled: boolean;
+            videosEnabled: boolean;
+            maxEntries: number;
         }
     }
 }

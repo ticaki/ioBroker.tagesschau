@@ -20,7 +20,7 @@ var definition_exports = {};
 __export(definition_exports, {
   Defaults: () => Defaults,
   defaultChannel: () => defaultChannel,
-  descriptionUrlAppendix: () => descriptionUrlAppendix,
+  filterPartOfNews: () => filterPartOfNews,
   genericStateObjects: () => genericStateObjects,
   statesObjects: () => statesObjects
 });
@@ -136,78 +136,108 @@ const genericStateObjects = {
   }
 };
 const statesObjects = {
-  inland: {
+  videos: {
     _channel: {
       _id: "",
       type: "channel",
       common: {
-        name: "Inlandsnachrichten"
+        name: "Nachrichtenvideos"
       },
       native: {}
+    },
+    channels: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Nachrichtenkanal"
+        },
+        native: {}
+      }
     }
   },
-  ausland: {
+  news: {
     _channel: {
       _id: "",
       type: "channel",
       common: {
-        name: "Auslandsnachrichten"
+        name: "Nachrichten"
       },
       native: {}
-    }
-  },
-  wirtschaft: {
-    _channel: {
-      _id: "",
-      type: "channel",
-      common: {
-        name: "Wirtschaftsnachrichten"
-      },
-      native: {}
-    }
-  },
-  sport: {
-    _channel: {
-      _id: "",
-      type: "channel",
-      common: {
-        name: "Sportnachrichten"
-      },
-      native: {}
-    }
-  },
-  video: {
-    _channel: {
-      _id: "",
-      type: "channel",
-      common: {
-        name: "Videos"
-      },
-      native: {}
-    }
-  },
-  investigativ: {
-    _channel: {
-      _id: "",
-      type: "channel",
-      common: {
-        name: "Investigative Nachrichten"
-      },
-      native: {}
-    }
-  },
-  wissen: {
-    _channel: {
-      _id: "",
-      type: "channel",
-      common: {
-        name: "Wissensnachrichten"
-      },
-      native: {}
+    },
+    inland: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Inlandsnachrichten"
+        },
+        native: {}
+      }
+    },
+    ausland: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Auslandsnachrichten"
+        },
+        native: {}
+      }
+    },
+    wirtschaft: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Wirtschaftsnachrichten"
+        },
+        native: {}
+      }
+    },
+    sport: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Sportnachrichten"
+        },
+        native: {}
+      }
+    },
+    video: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Videos"
+        },
+        native: {}
+      }
+    },
+    investigativ: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Investigative Nachrichten"
+        },
+        native: {}
+      }
+    },
+    wissen: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Wissensnachrichten"
+        },
+        native: {}
+      }
     }
   }
 };
-const descriptionUrlAppendix = "/description.xml";
+const filterPartOfNews = ["tracking"];
 const Defaults = {
   state: {
     _id: "No_definition",
@@ -226,7 +256,7 @@ const Defaults = {
 0 && (module.exports = {
   Defaults,
   defaultChannel,
-  descriptionUrlAppendix,
+  filterPartOfNews,
   genericStateObjects,
   statesObjects
 });

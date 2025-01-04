@@ -159,6 +159,9 @@ export class Library extends BaseClass {
                 if (!objectDefinition) {
                     return;
                 }
+                if (data.length === 0) {
+                    return;
+                }
                 if (objectDefinition.type !== 'state' || expandTree) {
                     let a = 0;
                     const defChannel = this.getChannelObject(objectDefinition, prefix);
@@ -182,6 +185,9 @@ export class Library extends BaseClass {
                 }
                 //objectDefinition._id = `${this.adapter.name}.${this.adapter.instance}.${prefix}.${key}`;
             } else {
+                if (Object.keys(data).length === 0) {
+                    return;
+                }
                 // create folder
                 if (objectDefinition) {
                     const defChannel = this.getChannelObject(objectDefinition, prefix);

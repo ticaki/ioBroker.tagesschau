@@ -2,18 +2,40 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "0": {
+        "newsEnabled": {
+            "type": "checkbox",
+            "label": "Nachrichten aktivieren",
+            "newLine": false,
+            "default": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "videosEnabled": {
+            "type": "checkbox",
+            "label": "Nachrichtenvideos aktivieren",
+            "newLine": false,
+            "default": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "L0": {
             "type": "header",
             "text": "Regionen",
             "size": 2,
-            "newLine": false,
+            "newLine": true,
             "xs": 12,
             "sm": 12,
             "md": 12,
             "lg": 12,
             "xl": 12
         },
-        "1": {
+        "L1": {
             "type": "checkbox",
             "label": "Baden-Württemberg",
             "newLine": false,
@@ -23,7 +45,7 @@
             "lg": 4,
             "xl": 3
         },
-        "2": {
+        "L2": {
             "type": "checkbox",
             "label": "Bayern",
             "newLine": false,
@@ -33,7 +55,7 @@
             "lg": 4,
             "xl": 3
         },
-        "3": {
+        "L3": {
             "type": "checkbox",
             "label": "Berlin",
             "newLine": false,
@@ -43,7 +65,7 @@
             "lg": 4,
             "xl": 3
         },
-        "4": {
+        "L4": {
             "type": "checkbox",
             "label": "Brandenburg",
             "newLine": false,
@@ -53,7 +75,7 @@
             "lg": 4,
             "xl": 3
         },
-        "5": {
+        "L5": {
             "type": "checkbox",
             "label": "Bremen",
             "newLine": false,
@@ -63,7 +85,7 @@
             "lg": 4,
             "xl": 3
         },
-        "6": {
+        "L6": {
             "type": "checkbox",
             "label": "Hamburg",
             "newLine": false,
@@ -73,7 +95,7 @@
             "lg": 4,
             "xl": 3
         },
-        "7": {
+        "L7": {
             "type": "checkbox",
             "label": "Hessen",
             "newLine": false,
@@ -83,7 +105,7 @@
             "lg": 4,
             "xl": 3
         },
-        "8": {
+        "L8": {
             "type": "checkbox",
             "label": "Mecklenburg-Vorpommern",
             "newLine": false,
@@ -93,7 +115,7 @@
             "lg": 4,
             "xl": 3
         },
-        "9": {
+        "L9": {
             "type": "checkbox",
             "label": "Niedersachsen",
             "newLine": false,
@@ -103,7 +125,7 @@
             "lg": 4,
             "xl": 3
         },
-        "10": {
+        "L10": {
             "type": "checkbox",
             "label": "Nordrhein-Westfalen",
             "newLine": false,
@@ -113,7 +135,7 @@
             "lg": 4,
             "xl": 3
         },
-        "11": {
+        "L11": {
             "type": "checkbox",
             "label": "Rheinland-Pfalz",
             "newLine": false,
@@ -123,7 +145,7 @@
             "lg": 4,
             "xl": 3
         },
-        "12": {
+        "L12": {
             "type": "checkbox",
             "label": "Saarland",
             "newLine": false,
@@ -133,7 +155,7 @@
             "lg": 4,
             "xl": 3
         },
-        "13": {
+        "L13": {
             "type": "checkbox",
             "label": "Sachsen",
             "newLine": false,
@@ -143,7 +165,7 @@
             "lg": 4,
             "xl": 3
         },
-        "14": {
+        "L14": {
             "type": "checkbox",
             "label": "Sachsen-Anhalt",
             "newLine": false,
@@ -153,7 +175,7 @@
             "lg": 4,
             "xl": 3
         },
-        "15": {
+        "L15": {
             "type": "checkbox",
             "label": "Schleswig-Holstein",
             "newLine": false,
@@ -163,7 +185,7 @@
             "lg": 4,
             "xl": 3
         },
-        "16": {
+        "L16": {
             "type": "checkbox",
             "label": "Thüringen",
             "newLine": false,
@@ -247,6 +269,62 @@
         "wissen": {
             "type": "checkbox",
             "label": "Wissen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "__tags": {
+            "type": "header",
+            "text": "Schlüsselwörter",
+            "size": 2,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "selectedTags":
+        {
+            "type": "selectSendTo",
+            "label": "Erwünschte Schlüsselwörter",
+            "tooltip": "Wählen Sie die Schlüsselwörter aus, die Sie interessieren! Neu gefunde werden angzeigt bis die auswahl neu bestägtigt wurde.",
+            "command": "selectNewsTags",
+            "jsonData": "{\"type\":\"tags\"}",
+            "multiple": true,
+            "noTranslation": true,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "interval": {
+            "type": "number",
+            "label": "Aktualisierungsintervall",
+            "tooltip": "Intervall in Minuten, in dem die Nachrichten aktualisiert werden sollen",
+            "min": 5,
+            "max": 1000000,
+            "step": 1,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "maxEntries": {
+            "type": "number",
+            "label": "Maximale Anzahl an Nachrichten",
+            "tooltip": "Maximale Anzahl an Nachrichten, die angezeigt werden sollen",
+            "min": 1,
+            "max": 200,
+            "default": 20,
+            "step": 1,
             "newLine": false,
             "xs": 12,
             "sm": 12,

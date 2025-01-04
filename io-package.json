@@ -49,6 +49,9 @@
 			"type": "free",
 			"license": "MIT"
 		},
+        "supportedMessages": {
+            "custom": true
+        },
 		"platform": "Javascript/Node.js",
 		"icon": "tagesschau.png",
 		"enabled": true,
@@ -56,9 +59,7 @@
 		"readme": "https://github.com/ticaki/ioBroker.tagesschau/blob/main/README.md",
 		"loglevel": "info",
 		"tier": 2,
-		"mode": "schedule",
-        "schedule": "*/30 * * * *",
-		"allowInit": true,
+		"mode": "daemon",
 		"type": "misc-data",
 		"compact": true,
 		"connectionType": "cloud",
@@ -78,6 +79,8 @@
 		]
 	},
 	"native": {
+        "interval": 30,
+        "maxEntries": 20
 	},
 	"objects": [],
 	"instanceObjects": []
