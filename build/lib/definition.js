@@ -248,7 +248,7 @@ const statesObjects = {
     }
   }
 };
-const filterPartOfNews = ["tracking"];
+const filterPartOfNews = ["tracking", "regionId", "regionIds", "geotags"];
 const Defaults = {
   state: {
     _id: "No_definition",

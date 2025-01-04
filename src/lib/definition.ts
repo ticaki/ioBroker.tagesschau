@@ -1,4 +1,4 @@
-import {NewsEntity} from "./types-d";
+import type { NewsEntity } from './types-d';
 
 export type ChangeTypeToChannelAndState5<Obj> = Obj extends object
     ? {
@@ -275,7 +275,7 @@ export const statesObjects: statesObjectsType = {
     },
 };
 
-export const filterPartOfNews: string[] = ['tracking'];
+export const filterPartOfNews: string[] = ['tracking', 'regionId', 'regionIds', 'geotags'];
 
 export const Defaults = {
     state: {

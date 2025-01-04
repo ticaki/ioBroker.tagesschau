@@ -23,7 +23,7 @@ export interface NewsEntity {
     detailsweb: string;
     shareURL: string;
     geotags?: null[] | null;
-    regionId: number;
+    regionId?: number;
     regionIds?: null[] | null;
     ressort: string;
     breakingNews: boolean;
@@ -38,6 +38,18 @@ export interface TeaserImage {
     title?: string | null;
 }
 export interface ImageVariants {
+    '1x1-144': string;
+    '1x1-256': string;
+    '1x1-432': string;
+    '1x1-640': string;
+    '1x1-840': string;
+    '16x9-256': string;
+    '16x9-384': string;
+    '16x9-512': string;
+    '16x9-640': string;
+    '16x9-960': string;
+    '16x9-1280': string;
+    '16x9-1920': string;
     '1x1 - 144'?: string;
     '1x1 - 256'?: string;
     '1x1 - 432'?: string;
