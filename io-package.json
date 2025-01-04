@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "news": {
+      "0.1.3": {
+        "en": "Reduced size of the icon",
+        "de": "Verringerte Größe des Icons",
+        "ru": "Уменьшение размера иконы",
+        "pt": "Tamanho reduzido do ícone",
+        "nl": "Verminderde grootte van het pictogram",
+        "fr": "Taille réduite de l'icône",
+        "it": "Dimensioni ridotte dell'icona",
+        "es": "Tamaño reducido del icono",
+        "pl": "Zmniejszony rozmiar ikony",
+        "uk": "Зменшений розмір ікони",
+        "zh-cn": "图标的缩小大小"
+      },
       "0.1.2": {
         "en": "Added: Breaking news is excluded from filtering and copied to a separate folder. \nChanged: Taglist is now sorted.",
         "de": "Hinzugefügt: Breaking News ist vom Filtern ausgeschlossen und in einen separaten Ordner kopiert.\nGeändert: Die Tagliste ist jetzt sortiert.",
