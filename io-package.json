@@ -55,8 +55,9 @@
 		"extIcon": "https://raw.githubusercontent.com/ticaki/ioBroker.tagesschau/main/admin/tagesschau.png",
 		"readme": "https://github.com/ticaki/ioBroker.tagesschau/blob/main/README.md",
 		"loglevel": "info",
-		"tier": 3,
+		"tier": 2,
 		"mode": "schedule",
+        "schedule": "*/30 * * * *",
 		"allowInit": true,
 		"type": "misc-data",
 		"compact": true,
@@ -77,8 +78,6 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
 	},
 	"objects": [],
 	"instanceObjects": []

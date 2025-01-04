@@ -22,95 +22,92 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+var import_library = require("./lib/library");
+var import_definition = require("./lib/definition");
+var import_axios = __toESM(require("axios"));
 class Tagesschau extends utils.Adapter {
+  library;
   constructor(options = {}) {
     super({
       ...options,
       name: "tagesschau"
     });
+    this.library = new import_library.Library(this);
     this.on("ready", this.onReady.bind(this));
-    this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
   /**
    * Is called when databases are connected and adapter received configuration.
    */
   async onReady() {
-    this.log.info("config option1: " + this.config.option1);
-    this.log.info("config option2: " + this.config.option2);
-    await this.setObjectNotExistsAsync("testVariable", {
-      type: "state",
-      common: {
-        name: "testVariable",
-        type: "boolean",
-        role: "indicator",
-        read: true,
-        write: true
-      },
-      native: {}
-    });
-    this.subscribeStates("testVariable");
-    await this.setStateAsync("testVariable", true);
-    await this.setStateAsync("testVariable", { val: true, ack: true });
-    await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-    let result = await this.checkPasswordAsync("admin", "iobroker");
-    this.log.info("check user admin pw iobroker: " + result);
-    result = await this.checkGroupAsync("admin", "admin");
-    this.log.info("check group user admin group admin: " + result);
+    await this.library.init();
+    await this.library.initStates(await this.getStatesAsync("*"));
+    const maxRegions = 16;
+    let regions = "";
+    for (let i = 1; i <= maxRegions; i++) {
+      const k = i.toString();
+      regions += this.config[k] === true ? `${k},` : "";
+    }
+    if (regions.length === 0) {
+      this.log.warn("No regions selected! Adapter stopped!");
+      if (this.stop) {
+        await this.stop();
+      }
+      return;
+    }
+    let topics = [
+      "inland",
+      "ausland",
+      "wirtschaft",
+      "sport",
+      "video",
+      "investigativ",
+      "wissen"
+    ];
+    topics = topics.filter((topic) => this.config[topic] === true);
+    if (topics.length === 0) {
+      this.log.warn("No topics selected! Adapter stopped!");
+      if (this.stop) {
+        await this.stop();
+      }
+      return;
+    }
+    for (const topic of topics) {
+      await this.library.writedp(topic, void 0, import_definition.statesObjects[topic]._channel);
+      const url = `https://www.tagesschau.de/api2u/news/?regions=${regions}&ressort=${topic}`;
+      try {
+        const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
+        if (response.status === 200 && response.data) {
+          this.log.debug(`Response: ${JSON.stringify(response.data)}`);
+          const data = {};
+          data[topic] = response.data;
+          await this.library.writeFromJson(topic, topic, import_definition.statesObjects, data, true);
+        }
+      } catch (e) {
+        this.log.error(`Error: ${e}`);
+      }
+    }
+    if (this.stop) {
+      await this.stop();
+    }
   }
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
+   *
+   * @param callback
    */
   onUnload(callback) {
     try {
       callback();
-    } catch (e) {
+    } catch {
       callback();
     }
   }
-  // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-  // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-  // /**
-  //  * Is called if a subscribed object changes
-  //  */
-  // private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-  // 	if (obj) {
-  // 		// The object was changed
-  // 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-  // 	} else {
-  // 		// The object was deleted
-  // 		this.log.info(`object ${id} deleted`);
-  // 	}
-  // }
-  /**
-   * Is called if a subscribed state changes
-   */
-  onStateChange(id, state) {
-    if (state) {
-      this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-    } else {
-      this.log.info(`state ${id} deleted`);
-    }
-  }
-  // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-  // /**
-  //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-  //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-  //  */
-  // private onMessage(obj: ioBroker.Message): void {
-  // 	if (typeof obj === 'object' && obj.message) {
-  // 		if (obj.command === 'send') {
-  // 			// e.g. send email or pushover or whatever
-  // 			this.log.info('send command');
-  // 			// Send response in callback if required
-  // 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-  // 		}
-  // 	}
-  // }
 }
 if (require.main !== module) {
   module.exports = (options) => new Tagesschau(options);
 } else {
   (() => new Tagesschau())();
 }
+module.exports = Tagesschau;
 //# sourceMappingURL=main.js.map

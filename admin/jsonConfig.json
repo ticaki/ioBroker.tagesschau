@@ -1,16 +1,258 @@
 {
-	"i18n": true,
-	"type": "panel",
-	"items": {
-		"option1": {
-			"type": "checkbox",
-			"label": "option1",
-			"newLine": true
-		},
-		"option2": {
-			"type": "text",
-			"label": "option2",
-			"newLine": true
-		}
-	}
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "0": {
+            "type": "header",
+            "text": "Regionen",
+            "size": 2,
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "1": {
+            "type": "checkbox",
+            "label": "Baden-Württemberg",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "2": {
+            "type": "checkbox",
+            "label": "Bayern",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "3": {
+            "type": "checkbox",
+            "label": "Berlin",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "4": {
+            "type": "checkbox",
+            "label": "Brandenburg",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "5": {
+            "type": "checkbox",
+            "label": "Bremen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "6": {
+            "type": "checkbox",
+            "label": "Hamburg",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "7": {
+            "type": "checkbox",
+            "label": "Hessen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "8": {
+            "type": "checkbox",
+            "label": "Mecklenburg-Vorpommern",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "9": {
+            "type": "checkbox",
+            "label": "Niedersachsen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "10": {
+            "type": "checkbox",
+            "label": "Nordrhein-Westfalen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "11": {
+            "type": "checkbox",
+            "label": "Rheinland-Pfalz",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "12": {
+            "type": "checkbox",
+            "label": "Saarland",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "13": {
+            "type": "checkbox",
+            "label": "Sachsen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "14": {
+            "type": "checkbox",
+            "label": "Sachsen-Anhalt",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "15": {
+            "type": "checkbox",
+            "label": "Schleswig-Holstein",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "16": {
+            "type": "checkbox",
+            "label": "Thüringen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "_topic": {
+            "type": "header",
+            "text": "Themen",
+            "size": 2,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
+        "inland": {
+            "type": "checkbox",
+            "label": "Inland",
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "ausland": {
+            "type": "checkbox",
+            "label": "Ausland",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "wirtschaft": {
+            "type": "checkbox",
+            "label": "Wirtschaft",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "sport": {
+            "type": "checkbox",
+            "label": "Sport",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "video": {
+            "type": "checkbox",
+            "label": "Video",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "investigativ": {
+            "type": "checkbox",
+            "label": "Investigativ",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        },
+        "wissen": {
+            "type": "checkbox",
+            "label": "Wissen",
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 4,
+            "xl": 3
+        }
+    }
 }
