@@ -213,7 +213,7 @@ class Tagesschau extends utils.Adapter {
   /**
    * Is called when adapter shuts down - callback has to be called under any circumstances!
    *
-   * @param callback
+   * @param callback Callback function
    */
   onUnload(callback) {
     try {
