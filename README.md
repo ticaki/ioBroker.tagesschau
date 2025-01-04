@@ -22,6 +22,9 @@ Installieren - Im Admin gewünschtes einstellen - fertig.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.1.1 (2025-01-04)
+* (ticaki) fixed: The empty configuration after the first installation leaves crashed adapters
+
 ### 0.1.0 (2025-01-04)
 * (ticaki) initial release
 

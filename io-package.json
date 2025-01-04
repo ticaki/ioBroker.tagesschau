@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "fixed: The empty configuration after the first installation leaves crashed adapters",
+        "de": "fest: Die leere Konfiguration nach der ersten Installation lässt abgestürzte Adapter",
+        "ru": "фиксированный: Пустая конфигурация после первой установки оставляет аварийные адаптеры",
+        "pt": "fixo: A configuração vazia após a primeira instalação deixa cair adaptadores",
+        "nl": "vast: De lege configuratie na de eerste installatie verlaat gecrashte adapters",
+        "fr": "fixe: La configuration vide après la première installation laisse les adaptateurs écrasés",
+        "it": "fisso: La configurazione vuota dopo la prima installazione lascia gli adattatori bloccati",
+        "es": "fijo: La configuración vacía después de la primera instalación deja los adaptadores estrellados",
+        "pl": "stałe: Pusta konfiguracja po pierwszej instalacji pozostawia uszkodzone adaptery",
+        "uk": "фіксована: Порожня конфігурація після першого встановлення листя збитих адаптерів",
+        "zh-cn": "固定 : 第一个安装离开后空配置崩溃适配器"
+      },
       "0.1.0": {
         "en": "initial release",
         "de": "erstausstrahlung",
