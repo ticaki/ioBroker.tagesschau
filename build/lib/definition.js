@@ -22,6 +22,7 @@ __export(definition_exports, {
   defaultChannel: () => defaultChannel,
   filterPartOfNews: () => filterPartOfNews,
   genericStateObjects: () => genericStateObjects,
+  newsDefault: () => newsDefault,
   statesObjects: () => statesObjects
 });
 module.exports = __toCommonJS(definition_exports);
@@ -46,25 +47,25 @@ const genericStateObjects = {
     },
     native: {}
   },
-  deviceDB: {
+  breakingNewsCount: {
     _id: "",
     type: "state",
     common: {
-      name: "genericStateObjects.deviceDB",
-      type: "string",
-      role: "json",
+      name: "Anzahl der Breaking News",
+      type: "number",
+      role: "value",
       read: true,
       write: false
     },
     native: {}
   },
-  authenticationError: {
+  breakingNewsArray: {
     _id: "",
     type: "state",
     common: {
-      name: "genericStateObjects.authenticationError",
-      type: "boolean",
-      role: "indicator",
+      name: "Array das auf die Breaking News zeigt",
+      type: "string",
+      role: "json",
       read: true,
       write: false
     },
@@ -165,6 +166,16 @@ const statesObjects = {
       },
       native: {}
     },
+    breakingNews: {
+      _channel: {
+        _id: "",
+        type: "channel",
+        common: {
+          name: "Breaking News"
+        },
+        native: {}
+      }
+    },
     inland: {
       _channel: {
         _id: "",
@@ -252,12 +263,63 @@ const Defaults = {
     native: {}
   }
 };
+const newsDefault = {
+  sophoraId: "",
+  externalId: "",
+  title: "",
+  date: "",
+  teaserImage: {
+    alttext: "",
+    imageVariants: {
+      "1x1-144": "",
+      "1x1-256": "",
+      "1x1-432": "",
+      "1x1-640": "",
+      "1x1-840": "",
+      "16x9-256": "",
+      "16x9-384": "",
+      "16x9-512": "",
+      "16x9-640": "",
+      "16x9-960": "",
+      "16x9-1280": "",
+      "16x9-1920": ""
+    },
+    type: ""
+  },
+  tags: [
+    {
+      tag: ""
+    },
+    {
+      tag: ""
+    },
+    {
+      tag: ""
+    },
+    {
+      tag: ""
+    }
+  ],
+  updateCheckUrl: "",
+  topline: "",
+  firstSentence: "",
+  details: "",
+  detailsweb: "",
+  shareURL: "",
+  geotags: [],
+  regionId: 0,
+  regionIds: [],
+  ressort: "",
+  breakingNews: false,
+  type: ""
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   Defaults,
   defaultChannel,
   filterPartOfNews,
   genericStateObjects,
+  newsDefault,
   statesObjects
 });
 //# sourceMappingURL=definition.js.map

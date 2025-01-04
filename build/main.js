@@ -39,6 +39,7 @@ class Tagesschau extends utils.Adapter {
     "wissen"
   ];
   regions = "";
+  breakingNewsDatapointExists = false;
   constructor(options = {}) {
     super({
       ...options,
@@ -50,7 +51,7 @@ class Tagesschau extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   /**
-   * Is called when databases are connected and adapter received configuration
+   * Is called when databases are connected and adapter received configuration.
    */
   async onReady() {
     await this.library.init();
@@ -110,6 +111,15 @@ class Tagesschau extends utils.Adapter {
       this.additionalConfig = obj.native.additionalConfig;
     }
     this.log.debug(`selectedTags: ${JSON.stringify(this.config.selectedTags)}`);
+    this.breakingNewsDatapointExists = !!this.library.readdb(`breakingNewsCount`);
+    if (!this.breakingNewsDatapointExists) {
+      await this.library.writedp(`breakingNewsCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
+      const data = {
+        newsCount: 0
+      };
+      data.news = [import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault];
+      await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, import_definition.statesObjects, data, true);
+    }
     if (this.config.newsEnabled) {
       await this.updateNews();
     } else {
@@ -134,6 +144,7 @@ class Tagesschau extends utils.Adapter {
     }, 3e5);
   }
   async updateNews() {
+    const bnews = [];
     await this.library.writedp(`news`, void 0, import_definition.statesObjects[`news`]._channel);
     for (const topic of this.topics) {
       await this.library.writedp(
@@ -148,9 +159,9 @@ class Tagesschau extends utils.Adapter {
         const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
         if (response.status === 200 && response.data) {
           this.log.debug(`Response: ${JSON.stringify(response.data)}`);
-          const data = response.data;
-          if (data.news) {
-            for (const news of data.news) {
+          const data2 = response.data;
+          if (data2.news) {
+            for (const news of data2.news) {
               if (news.tags) {
                 for (const tag of news.tags) {
                   if (!(this.additionalConfig.allTags || []).includes(tag.tag)) {
@@ -160,20 +171,23 @@ class Tagesschau extends utils.Adapter {
               }
             }
             if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
-              data.news = data.news.filter(
-                (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag))
+              data2.news = data2.news.filter(
+                (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag)) || news.breakingNews
               );
             }
-            data.news = data.news.slice(0, this.config.maxEntries);
-            data.newsCount = data.news.length;
-            for (const news of data.news) {
+            data2.news = data2.news.slice(0, this.config.maxEntries);
+            data2.newsCount = data2.news.length;
+            for (const news of data2.news) {
               for (const key of import_definition.filterPartOfNews) {
                 const k = key;
                 delete news[k];
               }
+              if (news.breakingNews) {
+                bnews.push(news);
+              }
             }
           }
-          await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data, true);
+          await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data2, true);
           await this.library.garbageColleting(`news.${topic}`, 6e4, true);
         }
         const obj = await this.getForeignObjectAsync(this.namespace);
@@ -182,6 +196,9 @@ class Tagesschau extends utils.Adapter {
           obj.native.additionalConfig = this.additionalConfig;
           await this.setForeignObject(this.namespace, obj);
         }
+        await this.library.writedp(`breakingNewsCount`, bnews.length, import_definition.genericStateObjects.breakingNewsCount);
+        const data = { news: bnews, newsCount: bnews.length };
+        await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, import_definition.statesObjects, data, true);
       } catch (e) {
         this.log.error(`Error: ${e}`);
       }

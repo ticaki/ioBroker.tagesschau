@@ -1,3 +1,5 @@
+import {NewsEntity} from "./types-d";
+
 export type ChangeTypeToChannelAndState5<Obj> = Obj extends object
     ? {
           [K in keyof Obj]-?: ChangeTypeToChannelAndState<Obj[K]>;
@@ -38,8 +40,8 @@ export const genericStateObjects: {
     json: ioBroker.StateObject;
     settings: ioBroker.FolderObject;
     global: ioBroker.FolderObject;
-    authenticationError: ioBroker.StateObject;
-    deviceDB: ioBroker.StateObject;
+    breakingNewsArray: ioBroker.StateObject;
+    breakingNewsCount: ioBroker.StateObject;
     checkOnline: ioBroker.StateObject;
 } = {
     default: {
@@ -54,25 +56,25 @@ export const genericStateObjects: {
         },
         native: {},
     },
-    deviceDB: {
+    breakingNewsCount: {
         _id: '',
         type: 'state',
         common: {
-            name: 'genericStateObjects.deviceDB',
-            type: 'string',
-            role: 'json',
+            name: 'Anzahl der Breaking News',
+            type: 'number',
+            role: 'value',
             read: true,
             write: false,
         },
         native: {},
     },
-    authenticationError: {
+    breakingNewsArray: {
         _id: '',
         type: 'state',
         common: {
-            name: 'genericStateObjects.authenticationError',
-            type: 'boolean',
-            role: 'indicator',
+            name: 'Array das auf die Breaking News zeigt',
+            type: 'string',
+            role: 'json',
             read: true,
             write: false,
         },
@@ -153,6 +155,7 @@ export type statesObjectsType = {
         video: customChannelType;
         investigativ: customChannelType;
         wissen: customChannelType;
+        breakingNews: customChannelType;
     };
     videos: customChannelType & {
         channels: customChannelType;
@@ -188,6 +191,16 @@ export const statesObjects: statesObjectsType = {
                 name: 'Nachrichten',
             },
             native: {},
+        },
+        breakingNews: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Breaking News',
+                },
+                native: {},
+            },
         },
         inland: {
             _channel: {
@@ -278,4 +291,55 @@ export const Defaults = {
         },
         native: {},
     },
+};
+
+export const newsDefault: NewsEntity = {
+    sophoraId: '',
+    externalId: '',
+    title: '',
+    date: '',
+    teaserImage: {
+        alttext: '',
+        imageVariants: {
+            '1x1-144': '',
+            '1x1-256': '',
+            '1x1-432': '',
+            '1x1-640': '',
+            '1x1-840': '',
+            '16x9-256': '',
+            '16x9-384': '',
+            '16x9-512': '',
+            '16x9-640': '',
+            '16x9-960': '',
+            '16x9-1280': '',
+            '16x9-1920': '',
+        },
+        type: '',
+    },
+    tags: [
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+        {
+            tag: '',
+        },
+    ],
+    updateCheckUrl: '',
+    topline: '',
+    firstSentence: '',
+    details: '',
+    detailsweb: '',
+    shareURL: '',
+    geotags: [],
+    regionId: 0,
+    regionIds: [],
+    ressort: '',
+    breakingNews: false,
+    type: '',
 };

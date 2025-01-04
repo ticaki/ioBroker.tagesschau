@@ -23,6 +23,7 @@ Installieren - Im Admin gewünschtes einstellen - fertig.
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (ticaki) Added: Breaking news is excluded from filtering and copied to a separate folder. 
 * (ticaki) Changed: Taglist is now sorted.
 
 ### 0.1.1 (2025-01-04)

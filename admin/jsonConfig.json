@@ -290,8 +290,8 @@
         "selectedTags":
         {
             "type": "selectSendTo",
-            "label": "Erwünschte Schlüsselwörter",
-            "tooltip": "Wählen Sie die Schlüsselwörter aus, die Sie interessieren! Keine Auswahl bedeutet alle werden angezeigt! Neu gefundene werden angzeigt bis die auswahl neu bestägtigt wurde.",
+            "label": "Erwünschte Schlüsselwörter(keine Auswahl = alle)",
+            "tooltip": "Wählen Sie die Schlüsselwörter aus, die Sie interessieren! Keine Auswahl bedeutet alle werden angezeigt!",
             "command": "selectNewsTags",
             "jsonData": "{\"type\":\"tags\"}",
             "multiple": true,

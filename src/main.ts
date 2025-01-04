@@ -7,7 +7,13 @@
 import * as utils from '@iobroker/adapter-core';
 import type { NewsEntity, responseType, videosType } from './lib/types-d';
 import { Library } from './lib/library';
-import { filterPartOfNews, statesObjects, type statesObjectsType } from './lib/definition';
+import {
+    filterPartOfNews,
+    genericStateObjects,
+    newsDefault,
+    statesObjects,
+    type statesObjectsType,
+} from './lib/definition';
 import axios from 'axios';
 
 // Load your modules here, e.g.:
@@ -28,6 +34,8 @@ class Tagesschau extends utils.Adapter {
     ] as (keyof typeof this.config)[];
     regions = '';
 
+    breakingNewsDatapointExists = false;
+
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
@@ -42,7 +50,7 @@ class Tagesschau extends utils.Adapter {
     }
 
     /**
-     * Is called when databases are connected and adapter received configuration
+     * Is called when databases are connected and adapter received configuration.
      */
     private async onReady(): Promise<void> {
         // 1=Baden-Württemberg, 2=Bayern, 3=Berlin, 4=Brandenburg, 5=Bremen, 6=Hamburg, 7=Hessen, 8=Mecklenburg-Vorpommern, 9=Niedersachsen, 10=Nordrhein-Westfalen, 11=Rheinland-Pfalz, 12=Saarland, 13=Sachsen, 14=Sachsen-Anhalt, 15=Schleswig-Holstein, 16=Thüringen
@@ -111,6 +119,18 @@ class Tagesschau extends utils.Adapter {
             this.additionalConfig = obj.native.additionalConfig;
         }
         this.log.debug(`selectedTags: ${JSON.stringify(this.config.selectedTags)}`);
+
+        this.breakingNewsDatapointExists = !!this.library.readdb(`breakingNewsCount`);
+        if (!this.breakingNewsDatapointExists) {
+            await this.library.writedp(`breakingNewsCount`, 0, genericStateObjects.breakingNewsCount);
+            const data: { news?: [NewsEntity, NewsEntity, NewsEntity, NewsEntity, NewsEntity]; newsCount: number } = {
+                newsCount: 0,
+            };
+            data.news = [newsDefault, newsDefault, newsDefault, newsDefault, newsDefault];
+            await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true);
+        }
+        // start working
+
         if (this.config.newsEnabled) {
             await this.updateNews();
         } else {
@@ -136,6 +156,7 @@ class Tagesschau extends utils.Adapter {
     }
 
     async updateNews(): Promise<void> {
+        const bnews: NewsEntity[] = [];
         await this.library.writedp(`news`, undefined, statesObjects[`news` as keyof statesObjectsType]._channel);
         for (const topic of this.topics) {
             await this.library.writedp(
@@ -164,7 +185,9 @@ class Tagesschau extends utils.Adapter {
                         }
                         if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
                             data.news = data.news.filter(
-                                news => news.tags && news.tags.some(tag => this.config.selectedTags.includes(tag.tag)),
+                                news =>
+                                    (news.tags && news.tags.some(tag => this.config.selectedTags.includes(tag.tag))) ||
+                                    news.breakingNews,
                             );
                         }
                         data.news = data.news.slice(0, this.config.maxEntries);
@@ -173,6 +196,10 @@ class Tagesschau extends utils.Adapter {
                             for (const key of filterPartOfNews) {
                                 const k = key as keyof NewsEntity;
                                 delete news[k];
+                            }
+                            //this.log.debug(`News: ${JSON.stringify(news)}`);
+                            if (news.breakingNews) {
+                                bnews.push(news);
                             }
                         }
                     }
@@ -186,6 +213,9 @@ class Tagesschau extends utils.Adapter {
                     obj.native.additionalConfig = this.additionalConfig;
                     await this.setForeignObject(this.namespace, obj);
                 }
+                await this.library.writedp(`breakingNewsCount`, bnews.length, genericStateObjects.breakingNewsCount);
+                const data: { news: NewsEntity[]; newsCount: number } = { news: bnews, newsCount: bnews.length };
+                await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true);
             } catch (e) {
                 this.log.error(`Error: ${e as string}`);
             }
