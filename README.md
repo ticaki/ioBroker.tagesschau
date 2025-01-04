@@ -22,6 +22,9 @@ Installieren - Im Admin gewünschtes einstellen - fertig.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) Changed: Taglist is now sorted.
+
 ### 0.1.1 (2025-01-04)
 * (ticaki) fixed: The empty configuration after the first installation leaves crashed adapters
 

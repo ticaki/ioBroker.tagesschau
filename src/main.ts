@@ -220,6 +220,7 @@ class Tagesschau extends utils.Adapter {
                     r.label = tag;
                     return r;
                 });
+                json.sort((a, b) => (a.label > b.label ? 1 : -1));
                 this.sendTo(obj.from, obj.command, json, obj.callback);
             }
 
