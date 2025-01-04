@@ -1,5 +1,3 @@
-import { topicType } from './types-d';
-
 export type ChangeTypeToChannelAndState5<Obj> = Obj extends object
     ? {
           [K in keyof Obj]-?: ChangeTypeToChannelAndState<Obj[K]>;

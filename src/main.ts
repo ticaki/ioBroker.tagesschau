@@ -7,8 +7,7 @@
 import * as utils from '@iobroker/adapter-core';
 import type { responseType } from './lib/types-d';
 import { Library } from './lib/library';
-import type { statesObjectsType } from './lib/definition';
-import { statesObjects } from './lib/definition';
+import { statesObjects, type statesObjectsType } from './lib/definition';
 import axios from 'axios';
 
 // Load your modules here, e.g.:
