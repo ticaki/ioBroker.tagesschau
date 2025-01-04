@@ -22,7 +22,7 @@ Installieren - Im Admin gewünschtes einstellen - fertig.
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.2 (2025-01-04)
 * (ticaki) Added: Breaking news is excluded from filtering and copied to a separate folder. 
 * (ticaki) Changed: Taglist is now sorted.
 

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "Added: Breaking news is excluded from filtering and copied to a separate folder. \nChanged: Taglist is now sorted.",
+        "de": "Hinzugefügt: Breaking News ist vom Filtern ausgeschlossen und in einen separaten Ordner kopiert.\nGeändert: Die Tagliste ist jetzt sortiert.",
+        "ru": "Добавлено: Перерыв новостей исключен из фильтрации и скопирован в отдельную папку.\nИзменено: теперь отсортирован.",
+        "pt": "Adicionado: A notícia de quebra é excluída da filtragem e copiada para uma pasta separada.\nAlterado: Taglist agora está classificado.",
+        "nl": "Toegevoegd: Breaking news is uitgesloten van filteren en gekopieerd naar een aparte map.\nGewijzigd: Taglist is nu gesorteerd.",
+        "fr": "Ajouté : Les nouvelles sont exclues du filtrage et copiées dans un dossier séparé.\nChanged: La liste d'étiquettes est maintenant triée.",
+        "it": "Aggiunto: Breaking news è escluso dal filtraggio e copiato in una cartella separata.\nCambiato: il taglist è ora risolto.",
+        "es": "Añadido: Las noticias de actualidad están excluidas de filtrar y copiar a una carpeta separada.\nCambiado: Taglist ahora está clasificado.",
+        "pl": "Dodano: Najnowsze wiadomości są wyłączone z filtrowania i skopiowane do oddzielnego folderu.\nZmienione: Taglist jest teraz sortowane.",
+        "uk": "Додано: Новини прориву виключено з фільтрації та копіювання до окремої папки.\nЗмінено: Відсмоктуються теги.",
+        "zh-cn": "添加:突发新闻被排除在过滤之外,复制到单独的文件夹.\n更改: 标签列表现已排序 ."
+      },
       "0.1.1": {
         "en": "fixed: The empty configuration after the first installation leaves crashed adapters",
         "de": "fest: Die leere Konfiguration nach der ersten Installation lässt abgestürzte Adapter",
