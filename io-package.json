@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "news": {
+      "0.3.2": {
+        "en": "added length to videos\nSystem load reduced at startup",
+        "de": "länge zu videos hinzugefügt\nSystemlast reduziert beim Start",
+        "ru": "добавленная длина к видео\nЗагрузка системы снижается при запуске",
+        "pt": "comprimento adicionado aos vídeos\nCarga do sistema reduzida na inicialização",
+        "nl": "lengte toegevoegd aan video's\nSysteembelasting verlaagd bij opstarten",
+        "fr": "longueur ajoutée aux vidéos\nCharge du système réduite au démarrage",
+        "it": "aggiunta di lunghezza ai video\nCarico di sistema ridotto all'avvio",
+        "es": "longitud agregada a los vídeos\nLa carga del sistema se reduce al inicio",
+        "pl": "dodano długość do filmów\nObciążenie układu zmniejszone przy starcie",
+        "uk": "додано довжину до відео\nСистемне навантаження зменшено при запуску",
+        "zh-cn": "在视频中添加长度\n启动时系统负载减少"
+      },
       "0.3.1": {
         "en": "Back to stable admin",
         "de": "Zurück zu Stall Admin",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono: Bardziej jak błąd 1 regionu",
         "uk": "Виправлено: Більш як 1 регіон помилка",
         "zh-cn": "固定: 更多为 1 区域错误"
-      },
-      "0.1.3": {
-        "en": "Reduced size of the icon",
-        "de": "Verringerte Größe des Icons",
-        "ru": "Уменьшение размера иконы",
-        "pt": "Tamanho reduzido do ícone",
-        "nl": "Verminderde grootte van het pictogram",
-        "fr": "Taille réduite de l'icône",
-        "it": "Dimensioni ridotte dell'icona",
-        "es": "Tamaño reducido del icono",
-        "pl": "Zmniejszony rozmiar ikony",
-        "uk": "Зменшений розмір ікони",
-        "zh-cn": "图标的缩小大小"
       }
     },
     "titleLang": {
