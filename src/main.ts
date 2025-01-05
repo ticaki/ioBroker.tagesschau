@@ -153,7 +153,7 @@ class Tagesschau extends utils.Adapter {
                 await this.updateVideos();
             }
             this.update();
-        }, 60000 /*this.config.interval*/);
+        }, this.config.interval);
     }
 
     /**

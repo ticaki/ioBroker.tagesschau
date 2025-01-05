@@ -1,9 +1,9 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "news": {
-      "0.2.2": {
+      "0.2.3": {
         "en": "Fixed: Adapter deletes own states",
         "de": "Fixed: Adapter löscht eigene Zustände",
         "ru": "Исправлено: Адаптер удаляет собственные состояния",

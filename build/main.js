@@ -134,19 +134,15 @@ class Tagesschau extends utils.Adapter {
     this.update();
   }
   update() {
-    this.updateTimeout = this.setTimeout(
-      async () => {
-        if (this.config.newsEnabled) {
-          await this.updateNews();
-        }
-        if (this.config.videosEnabled) {
-          await this.updateVideos();
-        }
-        this.update();
-      },
-      6e4
-      /*this.config.interval*/
-    );
+    this.updateTimeout = this.setTimeout(async () => {
+      if (this.config.newsEnabled) {
+        await this.updateNews();
+      }
+      if (this.config.videosEnabled) {
+        await this.updateVideos();
+      }
+      this.update();
+    }, this.config.interval);
   }
   /**
    * update news from tagesschau.
