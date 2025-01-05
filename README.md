@@ -29,6 +29,14 @@ Weiteres zum Bild: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) States are only updated when changes are made.
+* (ticaki) Last update Data point added with timestamp of the last successful data access
+* (ticaki) Emptying of data points improved
+* (ticaki) Placeholder images inserted for no news.
+* (ticaki) User-defined keywords with `*`
+
+
 ### 0.2.3 (2025-01-05)
 * (ticaki) Fixed: Adapter deletes own states
 

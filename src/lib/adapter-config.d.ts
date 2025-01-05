@@ -32,6 +32,7 @@ declare global {
             newsEnabled: boolean;
             videosEnabled: boolean;
             maxEntries: number;
+            selectedUserTags: string[] | undefined;
         }
     }
 }

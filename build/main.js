@@ -41,6 +41,7 @@ class Tagesschau extends utils.Adapter {
   ];
   regions = "";
   breakingNewsDatapointExists = false;
+  isOnline = false;
   constructor(options = {}) {
     super({
       ...options,
@@ -52,11 +53,12 @@ class Tagesschau extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   /**
-   * Is called when databases are connected and adapter received configuration.
+   * Is called when databases are connected and adapter received configuration.....
    */
   async onReady() {
     await this.library.init();
     await this.library.initStates(await this.getStatesAsync("*"));
+    await (0, import_library.sleep)(500);
     const maxRegions = 16;
     this.config.interval = (typeof this.config.interval !== "number" || this.config.interval < 5 || this.config.interval > 1e5 ? 30 : this.config.interval) * 6e4;
     this.log.info(`Set news interval to ${this.config.interval / 6e4} minutes`);
@@ -79,9 +81,6 @@ class Tagesschau extends utils.Adapter {
     if (this.regions.length === 0) {
       this.log.warn("No regions selected! Adapter paused!");
       return;
-    }
-    if (!this.config.selectedTags) {
-      this.config.selectedTags = [];
     }
     if (!this.config.maxEntries) {
       this.config.maxEntries = 20;
@@ -111,30 +110,33 @@ class Tagesschau extends utils.Adapter {
     if (obj && obj.native && obj.native.additionalConfig) {
       this.additionalConfig = obj.native.additionalConfig;
     }
-    this.log.debug(`selectedTags: ${JSON.stringify(this.config.selectedTags)}`);
-    this.breakingNewsDatapointExists = !!this.library.readdb(`breakingNewsCount`);
-    if (!this.breakingNewsDatapointExists) {
-      await this.library.writedp(`breakingNewsCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
-      const data = {
-        newsCount: 0
-      };
-      data.news = [import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault];
-      await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, import_definition.statesObjects, data, true);
+    if (!this.config.selectedTags) {
+      this.config.selectedTags = [];
+    } else {
+      this.updateSelectedTags();
     }
+    this.log.info(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
+    await this.library.writedp(`breakingNewsCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
+    const data = {
+      newsCount: 0,
+      news: [import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault, import_definition.newsDefault]
+    };
+    await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, import_definition.statesObjects, data, true, true);
     if (this.config.newsEnabled) {
       await this.updateNews();
     } else {
-      await this.library.garbageColleting(`news`, 6e4, false);
+      await this.library.garbageColleting(`news.`, 6e4, false);
     }
     if (this.config.videosEnabled) {
       await this.updateVideos();
     } else {
-      await this.library.garbageColleting(`videos`, 6e4, false);
+      await this.library.garbageColleting(`videos.`, 6e4, false);
     }
     this.update();
   }
   update() {
     this.updateTimeout = this.setTimeout(async () => {
+      this.updateSelectedTags();
       if (this.config.newsEnabled) {
         await this.updateNews();
       }
@@ -144,27 +146,56 @@ class Tagesschau extends utils.Adapter {
       this.update();
     }, this.config.interval);
   }
+  updateSelectedTags() {
+    const selectedUserTags = this.config.selectedUserTags || [];
+    for (let index = 0; index < selectedUserTags.length; index++) {
+      let tempTags = [];
+      if (selectedUserTags[index].startsWith("*") || selectedUserTags[index].endsWith("*")) {
+        if (selectedUserTags[index].endsWith("*") && selectedUserTags[index].startsWith("*")) {
+          tempTags = this.additionalConfig.allTags.filter(
+            (tag) => tag.includes(selectedUserTags[index].slice(1, -1))
+          );
+        } else if (selectedUserTags[index].startsWith("*")) {
+          tempTags = this.additionalConfig.allTags.filter(
+            (tag) => tag.endsWith(selectedUserTags[index].slice(1))
+          );
+        } else if (selectedUserTags[index].endsWith("*")) {
+          tempTags = this.additionalConfig.allTags.filter(
+            (tag) => tag.startsWith(selectedUserTags[index].slice(0, -1))
+          );
+        }
+      }
+      if (tempTags.length > 0) {
+        this.config.selectedTags = this.config.selectedTags.concat(tempTags);
+      }
+    }
+    this.config.selectedTags = this.config.selectedTags.filter(
+      (tag, index) => this.config.selectedTags.indexOf(tag) === index
+    );
+    this.config.selectedTags = this.config.selectedTags.filter((tag) => !tag.startsWith("*") && !tag.endsWith("*"));
+  }
   /**
    * update news from tagesschau.
    */
   async updateNews() {
     const bnews = [];
     await this.library.writedp(`news`, void 0, import_definition.statesObjects[`news`]._channel);
-    for (const topic of this.topics) {
-      await this.library.writedp(
-        `news.${topic}`,
-        void 0,
-        //@ts-expect-error
-        import_definition.statesObjects.news[topic]._channel
-      );
-      const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
-      this.log.debug(`URL: ${url}`);
-      try {
+    try {
+      for (const topic of this.topics) {
+        await this.library.writedp(
+          `news.${topic}`,
+          void 0,
+          //@ts-expect-error
+          import_definition.statesObjects.news[topic]._channel
+        );
+        const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
+        this.log.debug(`URL: ${url}`);
         const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
         if (response.status === 200 && response.data) {
-          const data2 = response.data;
-          if (data2.news) {
-            for (const news of data2.news) {
+          this.isOnline = true;
+          const data = response.data;
+          if (data.news) {
+            for (const news of data.news) {
               if (news.tags) {
                 for (const tag of news.tags) {
                   if (!(this.additionalConfig.allTags || []).includes(tag.tag)) {
@@ -174,13 +205,13 @@ class Tagesschau extends utils.Adapter {
               }
             }
             if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
-              data2.news = data2.news.filter(
+              data.news = data.news.filter(
                 (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag)) || news.breakingNews
               );
             }
-            data2.news = data2.news.slice(0, this.config.maxEntries);
-            data2.newsCount = data2.news.length;
-            for (const news of data2.news) {
+            data.news = data.news.slice(0, this.config.maxEntries);
+            data.newsCount = data.news.length;
+            for (const news of data.news) {
               for (const key of import_definition.filterPartOfNews) {
                 const k = key;
                 delete news[k];
@@ -192,22 +223,37 @@ class Tagesschau extends utils.Adapter {
                 bnews.push(news);
               }
             }
+            await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data, true);
+            await this.library.writedp(
+              `news.lastUpdate`,
+              (/* @__PURE__ */ new Date()).getTime(),
+              import_definition.genericStateObjects.lastUpdate
+            );
           }
-          await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data2, true);
-          await this.library.garbageColleting(`news.${topic}`, 6e4, false);
+        } else {
+          this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
         }
-        const obj = await this.getForeignObjectAsync(this.namespace);
-        if (obj) {
-          obj.native = obj.native || {};
-          obj.native.additionalConfig = this.additionalConfig;
-          await this.setForeignObject(this.namespace, obj);
-        }
-        await this.library.writedp(`breakingNewsCount`, bnews.length, import_definition.genericStateObjects.breakingNewsCount);
-        const data = { news: bnews, newsCount: bnews.length };
-        await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, import_definition.statesObjects, data, true);
-      } catch (e) {
+      }
+      const obj = await this.getForeignObjectAsync(this.namespace);
+      if (obj) {
+        obj.native = obj.native || {};
+        obj.native.additionalConfig = this.additionalConfig;
+        await this.setForeignObject(this.namespace, obj);
+      }
+      await this.library.writedp(`breakingNewsCount`, bnews.length, import_definition.genericStateObjects.breakingNewsCount);
+      await this.library.writeFromJson(
+        `news.breakingNews`,
+        `news.breakingNews`,
+        import_definition.statesObjects,
+        { news: bnews, newsCount: bnews.length },
+        true
+      );
+      await this.library.garbageColleting(`news.`, 6e4, false);
+    } catch (e) {
+      if (this.isOnline) {
         this.log.error(`Error: ${e}`);
       }
+      this.isOnline = false;
     }
   }
   async updateVideos() {
@@ -217,6 +263,7 @@ class Tagesschau extends utils.Adapter {
     try {
       const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
       if (response.status === 200 && response.data) {
+        this.isOnline = true;
         const data = response.data;
         data.channels = data.channels.slice(0, this.config.maxEntries);
         for (const news of data.channels) {
@@ -228,10 +275,14 @@ class Tagesschau extends utils.Adapter {
           }
         }
         await this.library.writeFromJson(`videos`, `videos`, import_definition.statesObjects, data, true);
-        await this.library.garbageColleting(`videos`, 6e4, false);
+        await this.library.writedp("videos.lastUpdate", (/* @__PURE__ */ new Date()).getTime(), import_definition.genericStateObjects.lastUpdate);
+        await this.library.garbageColleting(`videos.`, 6e4, false);
       }
     } catch (e) {
-      this.log.error(`Error: ${e}`);
+      if (this.isOnline) {
+        this.log.error(`Error: ${e}`);
+      }
+      this.isOnline = false;
     }
   }
   onMessage(obj) {

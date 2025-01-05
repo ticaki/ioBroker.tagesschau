@@ -302,7 +302,7 @@ class Library extends BaseClass {
   /**
    * Get a channel/device definition from property _channel out of a getObjectDefFromJson() result or a default definition.
    *
-   * @param definition the definition object
+   * @param definition the definition object.
    * @param id the id of the object
    * @param tryArray try to get the array definition
    * @returns ioBroker.ChannelObject | ioBroker.DeviceObject or a default channel obj
@@ -368,7 +368,7 @@ class Library extends BaseClass {
     if (node) {
       this.setdb(dp, node.type, val, node.stateTyp, true);
     }
-    if (node && (this.defaults.updateStateOnChangeOnly || node.val != val || !node.ack)) {
+    if (node && (!this.defaults.updateStateOnChangeOnly || node.val !== val || !node.ack)) {
       const typ = obj && obj.common && obj.common.type || node.stateTyp;
       if (typ && typ != typeof val && val !== void 0) {
         val = this.convertToType(val, typ);
@@ -642,8 +642,13 @@ class Library extends BaseClass {
       for (const id in this.stateDataBase) {
         if (id.startsWith(prefix)) {
           const state = this.stateDataBase[id];
-          if (!state || state.val == void 0) {
-            continue;
+          if (!state || !state.val) {
+            if (state && state.val == void 0 && state.obj && state.obj.common && state.obj.common.def) {
+              state.val = state.obj.common.def;
+              state.ts = 1;
+            } else {
+              continue;
+            }
           }
           if (state.ts < Date.now() - offset) {
             if (del) {
@@ -651,35 +656,39 @@ class Library extends BaseClass {
               continue;
             }
             let newVal;
-            switch (state.stateTyp) {
-              case "string":
-                if (typeof state.val == "string") {
-                  if (state.val.startsWith("{") && state.val.endsWith("}")) {
-                    newVal = "{}";
-                  } else if (state.val.startsWith("[") && state.val.endsWith("]")) {
-                    newVal = "[]";
+            if (state.obj && state.obj.common && state.obj.common.def) {
+              newVal = state.obj.common.def;
+            } else {
+              switch (state.stateTyp) {
+                case "string":
+                  if (typeof state.val == "string") {
+                    if (state.val.startsWith("{") && state.val.endsWith("}")) {
+                      newVal = "{}";
+                    } else if (state.val.startsWith("[") && state.val.endsWith("]")) {
+                      newVal = "[]";
+                    } else {
+                      newVal = "";
+                    }
                   } else {
                     newVal = "";
                   }
-                } else {
-                  newVal = "";
-                }
-                break;
-              case "bigint":
-              case "number":
-                newVal = -1;
-                break;
-              case "boolean":
-                newVal = false;
-                break;
-              case "symbol":
-              case "object":
-              case "function":
-                newVal = null;
-                break;
-              case "undefined":
-                newVal = void 0;
-                break;
+                  break;
+                case "bigint":
+                case "number":
+                  newVal = -1;
+                  break;
+                case "boolean":
+                  newVal = false;
+                  break;
+                case "symbol":
+                case "object":
+                case "function":
+                  newVal = null;
+                  break;
+                case "undefined":
+                  newVal = void 0;
+                  break;
+              }
             }
             await this.writedp(id, newVal);
           }

@@ -300,8 +300,21 @@
             "xs": 12,
             "sm": 12,
             "md": 12,
-            "lg": 12,
-            "xl": 12
+            "lg": 6,
+            "xl": 6
+        },
+        "selectedUserTags":
+        {
+            "type": "chips",
+            "label": "Schlüsselwörter (Benutzerdefiniert) - Tooltip beachten!",
+            "tooltip": "Schlüsselworter können mit führendem * und/oder endendem * eingegeben werden. Beispiel: *tagesschau*. Dann werden alle Schlüsselwörter die zutreffen automatisch ausgewählt. Das wird nicht im Nachbarfeld angezeigt, sondern beim Start des Adapters im Log!",
+            "noTranslation": true,
+            "newLine": false,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 6,
+            "xl": 6
         },
         "_sonstiges": {
             "type": "header",

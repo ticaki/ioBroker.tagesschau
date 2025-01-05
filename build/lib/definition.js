@@ -34,6 +34,172 @@ const defaultChannel = {
   },
   native: {}
 };
+const imageVariants = {
+  _channel: {
+    _id: "",
+    type: "channel",
+    common: {
+      name: "Bildvarianten"
+    },
+    native: {}
+  },
+  "1x1-144": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 1x1 - Aufl\xF6sung: 144",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/1x1-144.png"
+    },
+    native: {}
+  },
+  "1x1-256": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 1x1 - Aufl\xF6sung: 256",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/1x1-256.png"
+    },
+    native: {}
+  },
+  "1x1-432": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 1x1 - Aufl\xF6sung: 432",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/1x1-432.png"
+    },
+    native: {}
+  },
+  "1x1-640": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 1x1 - Aufl\xF6sung: 640",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/1x1-640.png"
+    },
+    native: {}
+  },
+  "1x1-840": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 1x1 - Aufl\xF6sung: 840",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/1x1-840.png"
+    },
+    native: {}
+  },
+  "16x9-256": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 256",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-256.png"
+    },
+    native: {}
+  },
+  "16x9-384": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 384",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-384.png"
+    },
+    native: {}
+  },
+  "16x9-512": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 512",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-512.png"
+    },
+    native: {}
+  },
+  "16x9-640": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 640",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-640.png"
+    },
+    native: {}
+  },
+  "16x9-960": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 960",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-960.png"
+    },
+    native: {}
+  },
+  "16x9-1280": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 1280",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-1280.png"
+    },
+    native: {}
+  },
+  "16x9-1920": {
+    _id: "",
+    type: "state",
+    common: {
+      name: "Format: 16x9 - Aufl\xF6sung: 1920",
+      type: "string",
+      role: "text.url",
+      read: true,
+      write: false,
+      def: "/adapter/tagesschau/img/16x9-1920.png"
+    },
+    native: {}
+  }
+};
 const newsChannel = {
   news: {
     _channel: {
@@ -133,160 +299,7 @@ const newsChannel = {
         },
         native: {}
       },
-      imageVariants: {
-        _channel: {
-          _id: "",
-          type: "channel",
-          common: {
-            name: "Bildvarianten"
-          },
-          native: {}
-        },
-        "1x1-144": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 144",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-256": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 256",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-432": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 432",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-640": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 640",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-840": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 840",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-256": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 256",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-384": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 384",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-512": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 512",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-640": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 640",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-960": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 960",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-1280": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 1280",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-1920": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 1920",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        }
-      },
+      imageVariants,
       type: {
         _id: "",
         type: "state",
@@ -599,160 +612,7 @@ const videoChannel = {
         },
         native: {}
       },
-      imageVariants: {
-        _channel: {
-          _id: "",
-          type: "channel",
-          common: {
-            name: "Bildvarianten"
-          },
-          native: {}
-        },
-        "1x1-144": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 144",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-256": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 256",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-432": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 432",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-640": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 640",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "1x1-840": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 1x1 - Aufl\xF6sung: 840",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-256": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 256",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-384": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 384",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-512": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 512",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-640": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 640",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-960": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 960",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-1280": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 1280",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        },
-        "16x9-1920": {
-          _id: "",
-          type: "state",
-          common: {
-            name: "Format: 16x9 - Aufl\xF6sung: 1920",
-            type: "string",
-            role: "text.url",
-            read: true,
-            write: false
-          },
-          native: {}
-        }
-      },
+      imageVariants,
       type: {
         _id: "",
         type: "state",
@@ -1043,11 +903,15 @@ const genericStateObjects = {
     },
     native: {}
   },
-  global: {
+  lastUpdate: {
     _id: "",
-    type: "folder",
+    type: "state",
     common: {
-      name: "settings.global"
+      name: "Letztes Update",
+      type: "number",
+      role: "date",
+      read: true,
+      write: false
     },
     native: {}
   },
@@ -1068,7 +932,7 @@ const statesObjects = {
   videos: {
     _channel: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Nachrichtenvideos"
       },
@@ -1079,7 +943,7 @@ const statesObjects = {
   news: {
     _channel: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Nachrichten"
       },
@@ -1088,7 +952,7 @@ const statesObjects = {
     breakingNews: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Breaking News"
         },
@@ -1099,7 +963,7 @@ const statesObjects = {
     inland: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Inlandsnachrichten"
         },
@@ -1121,7 +985,7 @@ const statesObjects = {
     wirtschaft: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Wirtschaftsnachrichten"
         },
@@ -1132,7 +996,7 @@ const statesObjects = {
     sport: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Sportnachrichten"
         },
@@ -1143,7 +1007,7 @@ const statesObjects = {
     video: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Videos"
         },
@@ -1154,7 +1018,7 @@ const statesObjects = {
     investigativ: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Investigative Nachrichten"
         },
@@ -1165,7 +1029,7 @@ const statesObjects = {
     wissen: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Wissensnachrichten"
         },

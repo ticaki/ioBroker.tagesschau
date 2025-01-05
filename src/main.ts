@@ -6,7 +6,7 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 import type { NewsEntity, responseType, videosType } from './lib/types-d';
-import { Library } from './lib/library';
+import { Library, sleep } from './lib/library';
 import {
     filterPartOfNews,
     genericStateObjects,
@@ -37,6 +37,8 @@ class Tagesschau extends utils.Adapter {
 
     breakingNewsDatapointExists = false;
 
+    isOnline = false;
+
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
@@ -51,13 +53,14 @@ class Tagesschau extends utils.Adapter {
     }
 
     /**
-     * Is called when databases are connected and adapter received configuration.
+     * Is called when databases are connected and adapter received configuration.....
      */
     private async onReady(): Promise<void> {
         // 1=Baden-Württemberg, 2=Bayern, 3=Berlin, 4=Brandenburg, 5=Bremen, 6=Hamburg, 7=Hessen, 8=Mecklenburg-Vorpommern, 9=Niedersachsen, 10=Nordrhein-Westfalen, 11=Rheinland-Pfalz, 12=Saarland, 13=Sachsen, 14=Sachsen-Anhalt, 15=Schleswig-Holstein, 16=Thüringen
-        //  inland, ausland, wirtschaft, sport, video, investigativ, wissen
+        //  inland, ausland, wirtschaft, sport, video, investigativ, wissen.
         await this.library.init();
         await this.library.initStates(await this.getStatesAsync('*'));
+        await sleep(500);
         const maxRegions = 16;
 
         this.config.interval =
@@ -88,9 +91,6 @@ class Tagesschau extends utils.Adapter {
             return;
         }
 
-        if (!this.config.selectedTags) {
-            this.config.selectedTags = [];
-        }
         if (!this.config.maxEntries) {
             this.config.maxEntries = 20;
         }
@@ -115,37 +115,45 @@ class Tagesschau extends utils.Adapter {
             }
             return;
         }
+        // get all tags
         obj = await this.getForeignObjectAsync(this.namespace);
         if (obj && obj.native && obj.native.additionalConfig) {
             this.additionalConfig = obj.native.additionalConfig;
         }
-        this.log.debug(`selectedTags: ${JSON.stringify(this.config.selectedTags)}`);
 
-        this.breakingNewsDatapointExists = !!this.library.readdb(`breakingNewsCount`);
-        if (!this.breakingNewsDatapointExists) {
-            await this.library.writedp(`breakingNewsCount`, 0, genericStateObjects.breakingNewsCount);
-            const data: { news?: [NewsEntity, NewsEntity, NewsEntity, NewsEntity, NewsEntity]; newsCount: number } = {
-                newsCount: 0,
-            };
-            data.news = [newsDefault, newsDefault, newsDefault, newsDefault, newsDefault];
-            await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true);
+        // check selected tags
+        if (!this.config.selectedTags) {
+            this.config.selectedTags = [];
+        } else {
+            this.updateSelectedTags();
         }
+
+        this.log.info(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
+        await this.library.writedp(`breakingNewsCount`, 0, genericStateObjects.breakingNewsCount);
+        const data: { news?: [NewsEntity, NewsEntity, NewsEntity, NewsEntity, NewsEntity]; newsCount: number } = {
+            newsCount: 0,
+            news: [newsDefault, newsDefault, newsDefault, newsDefault, newsDefault],
+        };
+        await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true, true);
+
         // start working
 
         if (this.config.newsEnabled) {
             await this.updateNews();
         } else {
-            await this.library.garbageColleting(`news`, 60000, false);
+            await this.library.garbageColleting(`news.`, 60000, false);
         }
         if (this.config.videosEnabled) {
             await this.updateVideos();
         } else {
-            await this.library.garbageColleting(`videos`, 60000, false);
+            await this.library.garbageColleting(`videos.`, 60000, false);
         }
         this.update();
     }
+
     update(): void {
         this.updateTimeout = this.setTimeout(async () => {
+            this.updateSelectedTags();
             if (this.config.newsEnabled) {
                 await this.updateNews();
             }
@@ -156,26 +164,55 @@ class Tagesschau extends utils.Adapter {
         }, this.config.interval);
     }
 
+    updateSelectedTags(): void {
+        const selectedUserTags = this.config.selectedUserTags || [];
+        for (let index = 0; index < selectedUserTags.length; index++) {
+            let tempTags: typeof this.config.selectedTags = [];
+            if (selectedUserTags[index].startsWith('*') || selectedUserTags[index].endsWith('*')) {
+                if (selectedUserTags[index].endsWith('*') && selectedUserTags[index].startsWith('*')) {
+                    tempTags = this.additionalConfig.allTags.filter(tag =>
+                        tag.includes(selectedUserTags[index].slice(1, -1)),
+                    );
+                } else if (selectedUserTags[index].startsWith('*')) {
+                    tempTags = this.additionalConfig.allTags.filter(tag =>
+                        tag.endsWith(selectedUserTags[index].slice(1)),
+                    );
+                } else if (selectedUserTags[index].endsWith('*')) {
+                    tempTags = this.additionalConfig.allTags.filter(tag =>
+                        tag.startsWith(selectedUserTags[index].slice(0, -1)),
+                    );
+                }
+            }
+            if (tempTags.length > 0) {
+                this.config.selectedTags = this.config.selectedTags.concat(tempTags);
+            }
+        }
+        this.config.selectedTags = this.config.selectedTags.filter(
+            (tag, index) => this.config.selectedTags.indexOf(tag) === index,
+        );
+        this.config.selectedTags = this.config.selectedTags.filter(tag => !tag.startsWith('*') && !tag.endsWith('*'));
+    }
     /**
      * update news from tagesschau.
      */
     async updateNews(): Promise<void> {
         const bnews: NewsEntity[] = [];
         await this.library.writedp(`news`, undefined, statesObjects[`news` as keyof statesObjectsType]._channel);
-        for (const topic of this.topics) {
-            await this.library.writedp(
-                `news.${topic}`,
-                undefined,
-                //@ts-expect-error
-                statesObjects.news[topic]._channel,
-            );
+        try {
+            for (const topic of this.topics) {
+                await this.library.writedp(
+                    `news.${topic}`,
+                    undefined,
+                    //@ts-expect-error
+                    statesObjects.news[topic]._channel,
+                );
 
-            const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
-            this.log.debug(`URL: ${url}`);
-            try {
+                const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
+                this.log.debug(`URL: ${url}`);
                 const response = await axios.get(url, { headers: { accept: 'application/json' } });
                 if (response.status === 200 && response.data) {
                     //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
+                    this.isOnline = true;
                     const data = response.data as responseType;
                     if (data.news) {
                         for (const news of data.news) {
@@ -210,23 +247,39 @@ class Tagesschau extends utils.Adapter {
                                 bnews.push(news);
                             }
                         }
+                        // At this point we sure that the data is valid!
+                        await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, statesObjects, data, true);
+                        await this.library.writedp(
+                            `news.lastUpdate`,
+                            new Date().getTime(),
+                            genericStateObjects.lastUpdate,
+                        );
                     }
+                } else {
+                    this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
+                }
+            }
+            const obj = await this.getForeignObjectAsync(this.namespace);
+            if (obj) {
+                obj.native = obj.native || {};
+                obj.native.additionalConfig = this.additionalConfig;
+                await this.setForeignObject(this.namespace, obj);
+            }
+            await this.library.writedp(`breakingNewsCount`, bnews.length, genericStateObjects.breakingNewsCount);
+            await this.library.writeFromJson(
+                `news.breakingNews`,
+                `news.breakingNews`,
+                statesObjects,
+                { news: bnews, newsCount: bnews.length },
+                true,
+            );
 
-                    await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, statesObjects, data, true);
-                    await this.library.garbageColleting(`news.${topic}`, 60000, false);
-                }
-                const obj = await this.getForeignObjectAsync(this.namespace);
-                if (obj) {
-                    obj.native = obj.native || {};
-                    obj.native.additionalConfig = this.additionalConfig;
-                    await this.setForeignObject(this.namespace, obj);
-                }
-                await this.library.writedp(`breakingNewsCount`, bnews.length, genericStateObjects.breakingNewsCount);
-                const data: { news: NewsEntity[]; newsCount: number } = { news: bnews, newsCount: bnews.length };
-                await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true);
-            } catch (e) {
+            await this.library.garbageColleting(`news.`, 60000, false);
+        } catch (e) {
+            if (this.isOnline) {
                 this.log.error(`Error: ${e as string}`);
             }
+            this.isOnline = false;
         }
     }
 
@@ -238,6 +291,7 @@ class Tagesschau extends utils.Adapter {
             const response = await axios.get(url, { headers: { accept: 'application/json' } });
             if (response.status === 200 && response.data) {
                 //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
+                this.isOnline = true;
                 const data = response.data as videosType;
                 data.channels = data.channels.slice(0, this.config.maxEntries);
                 for (const news of data.channels) {
@@ -249,10 +303,14 @@ class Tagesschau extends utils.Adapter {
                     }
                 }
                 await this.library.writeFromJson(`videos`, `videos`, statesObjects, data, true);
-                await this.library.garbageColleting(`videos`, 60000, false);
+                await this.library.writedp('videos.lastUpdate', new Date().getTime(), genericStateObjects.lastUpdate);
+                await this.library.garbageColleting(`videos.`, 60000, false);
             }
         } catch (e) {
-            this.log.error(`Error: ${e as string}`);
+            if (this.isOnline) {
+                this.log.error(`Error: ${e as string}`);
+            }
+            this.isOnline = false;
         }
     }
 
