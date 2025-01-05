@@ -32,6 +32,7 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 -->
 ### **WORK IN PROGRESS**
 * (ticaki) added length to videos
+* (ticaki) System load reduced at startup
 
 ### 0.3.1 (2025-01-05)
 * (ticaki) Back to stable admin

@@ -118,7 +118,6 @@ _prefix = new WeakMap();
 class Library extends BaseClass {
   stateDataBase = {};
   language = "en";
-  forbiddenDirs = [];
   translation = {};
   /**
    * use extendObject always on folder, devices and channels always
@@ -332,7 +331,6 @@ class Library extends BaseClass {
   async writedp(dp, val, obj = null, ack = true, onlyCreate = false) {
     dp = this.cleandp(dp);
     let node = this.readdb(dp);
-    const del = !this.isDirAllowed(dp);
     let nodeIsNew = false;
     if (node === void 0) {
       if (!obj) {
@@ -346,9 +344,8 @@ class Library extends BaseClass {
       if (typeof obj.common.desc == "string") {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
-      if (!del) {
-        await this.adapter.extendObject(dp, obj);
-      }
+      await this.adapter.extendObject(dp, obj);
+      await sleep(2);
       const stateType = obj && obj.common && obj.common.type;
       node = this.setdb(dp, obj.type, void 0, stateType, true, Date.now(), obj);
     } else if ((node.init || this.extendedFolderAlways) && obj) {
@@ -358,9 +355,8 @@ class Library extends BaseClass {
       if (typeof obj.common.desc == "string") {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
-      if (!del) {
-        await this.adapter.extendObject(dp, obj);
-      }
+      await this.adapter.extendObject(dp, obj);
+      await sleep(2);
     }
     if (obj && obj.type !== "state" || onlyCreate && !nodeIsNew) {
       return;
@@ -373,38 +369,12 @@ class Library extends BaseClass {
       if (typ && typ != typeof val && val !== void 0) {
         val = this.convertToType(val, typ);
       }
-      if (!del) {
-        await this.adapter.setState(dp, {
-          val,
-          ts: Date.now(),
-          ack
-        });
-      }
+      await this.adapter.setState(dp, {
+        val,
+        ts: Date.now(),
+        ack
+      });
     }
-  }
-  /**
-   * Set the forbidden directories for the library.
-   *
-   * @param dirs The directories to set as forbidden.
-   */
-  setForbiddenDirs(dirs) {
-    this.forbiddenDirs = this.forbiddenDirs.concat(dirs);
-  }
-  /**
-   * Check if a directory is allowed.
-   *
-   * @param dp The directory to check.
-   */
-  isDirAllowed(dp) {
-    if (dp && dp.split(".").length <= 2) {
-      return true;
-    }
-    for (const f of this.forbiddenDirs) {
-      if (dp.search(new RegExp(f, "g")) != -1) {
-        return false;
-      }
-    }
-    return true;
   }
   /**
    * Get the states that match the specified string.
@@ -600,31 +570,19 @@ class Library extends BaseClass {
       return;
     }
     this.stateDataBase = {};
-    const removedChannels = [];
     for (const state in states) {
       const dp = state.replace(`${this.adapter.name}.${this.adapter.instance}.`, "");
-      const del = !this.isDirAllowed(dp);
-      if (!del) {
-        const obj = await this.adapter.getObjectAsync(dp);
-        this.setdb(
-          dp,
-          "state",
-          states[state] && states[state].val ? states[state].val : void 0,
-          obj && obj.common && obj.common.type ? obj.common.type : void 0,
-          states[state] && states[state].ack,
-          states[state] && states[state].ts ? states[state].ts : Date.now(),
-          obj == null ? void 0 : obj,
-          true
-        );
-      } else {
-        if (!removedChannels.every((a) => !dp.startsWith(a))) {
-          continue;
-        }
-        const channel = dp.split(".").slice(0, 4).join(".");
-        removedChannels.push(channel);
-        await this.adapter.delObjectAsync(channel, { recursive: true });
-        this.log.debug(`Delete channel with dp:${channel}`);
-      }
+      const obj = await this.adapter.getObjectAsync(dp);
+      this.setdb(
+        dp,
+        "state",
+        states[state] && states[state].val ? states[state].val : void 0,
+        obj && obj.common && obj.common.type ? obj.common.type : void 0,
+        states[state] && states[state].ack,
+        states[state] && states[state].ts ? states[state].ts : Date.now(),
+        obj == null ? void 0 : obj,
+        true
+      );
     }
   }
   /**

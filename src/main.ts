@@ -144,6 +144,7 @@ class Tagesschau extends utils.Adapter {
         } else {
             await this.library.garbageColleting(`news.`, 60000, false);
         }
+        await sleep(300);
         if (this.config.videosEnabled) {
             await this.updateVideos();
         } else {
@@ -211,6 +212,7 @@ class Tagesschau extends utils.Adapter {
                 const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
                 this.log.debug(`URL: ${url}`);
                 const response = await axios.get(url, { headers: { accept: 'application/json' } });
+                const start = new Date().getTime();
                 if (response.status === 200 && response.data) {
                     //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                     this.isOnline = true;
@@ -272,6 +274,7 @@ class Tagesschau extends utils.Adapter {
                     await this.library.garbageColleting(`news.${topic}.`, 60000, false);
                     this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
                 }
+                this.log.debug(`Time: ${new Date().getTime() - start}`);
             }
             const obj = await this.getForeignObjectAsync(this.namespace);
             if (obj) {
