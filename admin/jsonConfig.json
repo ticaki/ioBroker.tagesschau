@@ -329,11 +329,10 @@
         },
         "interval": {
             "type": "number",
-            "label": "Aktualisierungsintervall",
+            "label": "Aktualisierungsintervall (in Minuten)",
             "tooltip": "Intervall in Minuten, in dem die Nachrichten aktualisiert werden sollen",
             "min": 5,
             "max": 1000000,
-            "unit": "Minuten",
             "step": 1,
             "newLine": true,
             "xs": 12,
