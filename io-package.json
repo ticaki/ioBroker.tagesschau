@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "news": {
+      "0.2.2": {
+        "en": "Fixed: Adapter deletes own states",
+        "de": "Fixed: Adapter löscht eigene Zustände",
+        "ru": "Исправлено: Адаптер удаляет собственные состояния",
+        "pt": "Corrigido: Adapter elimina estados próprios",
+        "nl": "Vast: Adapter verwijdert eigen staten",
+        "fr": "Correction : l'adaptateur supprime ses propres états",
+        "it": "Risolto: l'adattatore cancella i propri stati",
+        "es": "Corregido: Adaptador elimina estados propios",
+        "pl": "Naprawiono: Adapter usuwa stany własne",
+        "uk": "Виправлено: Адаптер видаляє власні стани",
+        "zh-cn": "固定: 适配器删除自己的状态"
+      },
       "0.2.1": {
         "en": "fix refresh interval & add axios timeouts",
         "de": "axios timeouts fixieren",
@@ -80,19 +93,6 @@
         "pl": "stałe: Pusta konfiguracja po pierwszej instalacji pozostawia uszkodzone adaptery",
         "uk": "фіксована: Порожня конфігурація після першого встановлення листя збитих адаптерів",
         "zh-cn": "固定 : 第一个安装离开后空配置崩溃适配器"
-      },
-      "0.1.0": {
-        "en": "initial release",
-        "de": "erstausstrahlung",
-        "ru": "первоначальный выпуск",
-        "pt": "lançamento inicial",
-        "nl": "eerste release",
-        "fr": "libération initiale",
-        "it": "rilascio iniziale",
-        "es": "liberación inicial",
-        "pl": "początkowe zwolnienie",
-        "uk": "початковий реліз",
-        "zh-cn": "初步释放"
       }
     },
     "titleLang": {
