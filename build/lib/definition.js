@@ -22,6 +22,7 @@ __export(definition_exports, {
   defaultChannel: () => defaultChannel,
   filterPartOfNews: () => filterPartOfNews,
   genericStateObjects: () => genericStateObjects,
+  newsChannel: () => newsChannel,
   newsDefault: () => newsDefault,
   statesObjects: () => statesObjects
 });
@@ -216,7 +217,7 @@ const newsChannel = {
       common: {
         name: "Nachricht"
       },
-      native: {}
+      native: { name: "Nachricht" }
     },
     sophoraId: {
       _id: "",
@@ -328,7 +329,7 @@ const newsChannel = {
         common: {
           name: "Schl\xFCsselwort"
         },
-        native: {}
+        native: { name: "Schl\xFCsselwort" }
       },
       tag: {
         _id: "",
@@ -529,7 +530,7 @@ const videoChannel = {
       common: {
         name: "Kanal"
       },
-      native: {}
+      native: { name: "Kanal" }
     },
     sophoraId: {
       _id: "",
@@ -665,7 +666,7 @@ const videoChannel = {
         common: {
           name: "Schl\xFCsselwort"
         },
-        native: {}
+        native: { name: "Schl\xFCsselwort" }
       },
       tag: {
         _id: "",
@@ -1110,6 +1111,7 @@ const newsDefault = {
   defaultChannel,
   filterPartOfNews,
   genericStateObjects,
+  newsChannel,
   newsDefault,
   statesObjects
 });

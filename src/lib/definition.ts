@@ -249,7 +249,7 @@ const imageVariants: imageVariants = {
     },
 };
 
-const newsChannel: newsChannel = {
+export const newsChannel: newsChannel = {
     news: {
         _channel: {
             _id: '',
@@ -265,7 +265,7 @@ const newsChannel: newsChannel = {
             common: {
                 name: 'Nachricht',
             },
-            native: {},
+            native: { name: 'Nachricht' },
         },
         sophoraId: {
             _id: '',
@@ -377,7 +377,7 @@ const newsChannel: newsChannel = {
                 common: {
                     name: 'Schlüsselwort',
                 },
-                native: {},
+                native: { name: 'Schlüsselwort' },
             },
 
             tag: {
@@ -614,7 +614,7 @@ const videoChannel: videoChannel = {
             common: {
                 name: 'Kanal',
             },
-            native: {},
+            native: { name: 'Kanal' },
         },
         sophoraId: {
             _id: '',
@@ -750,7 +750,7 @@ const videoChannel: videoChannel = {
                 common: {
                     name: 'Schlüsselwort',
                 },
-                native: {},
+                native: { name: 'Schlüsselwort' },
             },
 
             tag: {

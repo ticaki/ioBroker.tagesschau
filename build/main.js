@@ -175,7 +175,7 @@ class Tagesschau extends utils.Adapter {
     this.config.selectedTags = this.config.selectedTags.filter((tag) => !tag.startsWith("*") && !tag.endsWith("*"));
   }
   /**
-   * update news from tagesschau.
+   * update news from tagesschau..
    */
   async updateNews() {
     const bnews = [];
@@ -229,8 +229,21 @@ class Tagesschau extends utils.Adapter {
               (/* @__PURE__ */ new Date()).getTime(),
               import_definition.genericStateObjects.lastUpdate
             );
+            for (let i = data.news.length; i < this.config.maxEntries; i++) {
+              await this.library.garbageColleting(
+                `news.${topic}.news.${`00${i}`.slice(-2)}`,
+                6e4,
+                false
+              );
+              await this.library.writedp(
+                `news.${topic}.news.${`00${i}`.slice(-2)}`,
+                void 0,
+                import_definition.newsChannel.news._array
+              );
+            }
           }
         } else {
+          await this.library.garbageColleting(`news.${topic}.`, 6e4, false);
           this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
         }
       }
@@ -248,7 +261,14 @@ class Tagesschau extends utils.Adapter {
         { news: bnews, newsCount: bnews.length },
         true
       );
-      await this.library.garbageColleting(`news.`, 6e4, false);
+      for (let i = bnews.length; i < this.config.maxEntries; i++) {
+        await this.library.garbageColleting(`news.breakingNews.news.${`00${i}`.slice(-2)}`, 6e4, false);
+        await this.library.writedp(
+          `news.breakingNews.news.${`00${i}`.slice(-2)}`,
+          void 0,
+          import_definition.newsChannel.news._array
+        );
+      }
     } catch (e) {
       if (this.isOnline) {
         this.log.error(`Error: ${e}`);
@@ -276,7 +296,10 @@ class Tagesschau extends utils.Adapter {
         }
         await this.library.writeFromJson(`videos`, `videos`, import_definition.statesObjects, data, true);
         await this.library.writedp("videos.lastUpdate", (/* @__PURE__ */ new Date()).getTime(), import_definition.genericStateObjects.lastUpdate);
-        await this.library.garbageColleting(`videos.`, 6e4, false);
+      }
+      for (let i = (response && response.data && response.data.channels || []).length; i < 7; i++) {
+        await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 6e4, false);
+        await this.library.writedp(`videos.channels.${`00${i}`.slice(-2)}`, void 0, import_definition.newsChannel.news._array);
       }
     } catch (e) {
       if (this.isOnline) {

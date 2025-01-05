@@ -710,7 +710,7 @@ export class Library extends BaseClass {
      *
      * @param prefix The prefix to clean up.
      * @param offset The offset to clean up.
-     * @param del Whether to delete the data point.
+     * @param del Whether to delete the data point....
      */
     async garbageColleting(prefix: string, offset: number = 2000, del = false): Promise<void> {
         if (!prefix) {
@@ -720,7 +720,7 @@ export class Library extends BaseClass {
             for (const id in this.stateDataBase) {
                 if (id.startsWith(prefix)) {
                     const state = this.stateDataBase[id];
-                    if (!state || !state.val) {
+                    if (!state || (!state.val && (!state.obj || state.obj.type !== 'state' || !state.stateTyp))) {
                         if (state && state.val == undefined && state.obj && state.obj.common && state.obj.common.def) {
                             state.val = state.obj.common.def;
                             state.ts = 1;
