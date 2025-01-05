@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "news": {
+      "0.2.1": {
+        "en": "fix refresh interval & add axios timeouts",
+        "de": "axios timeouts fixieren",
+        "ru": "фиксация интервала обновления & добавить тайм-ауты axios",
+        "pt": "corrigir intervalo de atualização & adicionar intervalos de axios",
+        "nl": "verversen interval repareren en axio's time-outs toevoegen",
+        "fr": "correction de l'intervalle de rafraîchissement & ajouter des timeouts axios",
+        "it": "fissare l'intervallo di aggiornamento e aggiungere timeout assios",
+        "es": "fijar intervalo de actualización & añadir axios timeouts",
+        "pl": "naprawić odświeżający odstęp i dodać axios timeout",
+        "uk": "фіксувати інтервал оновлення і додати осі",
+        "zh-cn": "修复刷新间隔并添加轴超时( a)"
+      },
       "0.2.0": {
         "en": "remove tracking from videos\nbeautiful state name",
         "de": "tracking von videos entfernen\nwunderschöner staatsname",
