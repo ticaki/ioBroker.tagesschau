@@ -30,6 +30,9 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) added length to videos
+
 ### 0.3.1 (2025-01-05)
 * (ticaki) Back to stable admin
 

@@ -291,6 +291,10 @@ class Tagesschau extends utils.Adapter {
             news.jsDate = new Date(news.date).getTime();
           }
           if (news.tracking) {
+            for (const t of news.tracking) {
+              news.length = 0;
+              news.length = t.length ? t.length : news.length;
+            }
             delete news.tracking;
           }
         }

@@ -536,7 +536,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "Sophora ID",
+        name: "Eindeutige ID",
         type: "string",
         role: "text",
         read: true,
@@ -680,6 +680,19 @@ const videoChannel = {
         },
         native: {}
       }
+    },
+    length: {
+      _id: "",
+      type: "state",
+      common: {
+        name: "L\xE4nge des Videos",
+        type: "number",
+        role: "media.duration",
+        read: true,
+        write: false,
+        unit: "s"
+      },
+      native: {}
     },
     updateCheckUrl: {
       _id: "",

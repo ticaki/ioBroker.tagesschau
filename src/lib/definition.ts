@@ -588,6 +588,7 @@ type videoChannel = {
             h264m: ioBroker.StateObject;
             h264xl: ioBroker.StateObject;
         };
+        length: ioBroker.StateObject;
         alttext: ioBroker.StateObject;
         copyright: ioBroker.StateObject;
         type: ioBroker.StateObject;
@@ -620,7 +621,7 @@ const videoChannel: videoChannel = {
             _id: '',
             type: 'state',
             common: {
-                name: 'Sophora ID',
+                name: 'Eindeutige ID',
                 type: 'string',
                 role: 'text',
                 read: true,
@@ -765,6 +766,19 @@ const videoChannel: videoChannel = {
                 },
                 native: {},
             },
+        },
+        length: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Länge des Videos',
+                type: 'number',
+                role: 'media.duration',
+                read: true,
+                write: false,
+                unit: 's',
+            },
+            native: {},
         },
         updateCheckUrl: {
             _id: '',

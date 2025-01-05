@@ -95,7 +95,7 @@ export interface Tracking {
     assetid?: string;
     program?: string;
     title?: string;
-    length?: string;
+    length?: number;
     c2?: string;
     c5?: string;
     c7?: string;
@@ -135,6 +135,7 @@ export interface Channel {
     copyright: string;
     type: string;
     content?: Content[];
+    length?: number;
 }
 
 export interface videosType {
