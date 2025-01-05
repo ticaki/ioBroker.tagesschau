@@ -21,8 +21,9 @@ Beachten:
 2. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit auch immer mehr!
 
 Beispiel: 
-![Videoansicht](img/BeispielVideoansicht1.png)
-Weiteres zum Bild: https://forum.iobroker.net/post/1235111
+![Videoansicht von Armilar](img/BeispielVideoansicht1.png)
+![Videoansicht von bahnuhr](img/BeispielVideoansicht2.png)
+Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 
 ## Changelog
 <!--
