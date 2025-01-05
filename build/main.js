@@ -143,6 +143,9 @@ class Tagesschau extends utils.Adapter {
       this.update();
     }, 3e5);
   }
+  /**
+   * update news from tagesschau.
+   */
   async updateNews() {
     const bnews = [];
     await this.library.writedp(`news`, void 0, import_definition.statesObjects[`news`]._channel);
@@ -220,6 +223,9 @@ class Tagesschau extends utils.Adapter {
         for (const news of data.channels) {
           if (news.date) {
             news.jsDate = new Date(news.date).getTime();
+          }
+          if (news.tracking) {
+            delete news.tracking;
           }
         }
         await this.library.writeFromJson(`videos`, `videos`, import_definition.statesObjects, data, true);

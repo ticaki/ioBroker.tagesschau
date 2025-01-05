@@ -120,6 +120,10 @@ class Library extends BaseClass {
   language = "en";
   forbiddenDirs = [];
   translation = {};
+  /**
+   * use extendObject always on folder, devices and channels always
+   */
+  extendedFolderAlways = true;
   defaults = {
     updateStateOnChangeOnly: true
   };
@@ -153,9 +157,10 @@ class Library extends BaseClass {
    * @param data The Json to read
    * @param expandTree expand arrays up to 99
    * @param onlyCreate only create the objects, do not write the values in exists states.
+   * @param isArray is the data from an array
    * @returns  void
    */
-  async writeFromJson(prefix, objNode, def, data, expandTree = false, onlyCreate = false) {
+  async writeFromJson(prefix, objNode, def, data, expandTree = false, onlyCreate = false, isArray = false) {
     if (!def || typeof def !== "object") {
       return;
     }
@@ -183,8 +188,7 @@ class Library extends BaseClass {
           await this.writedp(prefix, null, defChannel);
           for (const d of data) {
             const dp = `${prefix}.${`00${a++}`.slice(-2)}`;
-            await this.writedp(dp, null, defChannel);
-            await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate);
+            await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate, true);
           }
         } else {
           await this.writeFromJson(
@@ -201,8 +205,14 @@ class Library extends BaseClass {
           return;
         }
         if (objectDefinition) {
-          const defChannel = this.getChannelObject(objectDefinition, prefix);
+          const defChannel = this.getChannelObject(objectDefinition, prefix, isArray);
+          const valbefore = this.extendedFolderAlways;
+          if (isArray && "title" in data && data.title) {
+            this.extendedFolderAlways = true;
+            defChannel.common.name = data.title;
+          }
           await this.writedp(prefix, null, defChannel);
+          this.extendedFolderAlways = valbefore;
         }
         if (data === null) {
           return;
@@ -294,13 +304,14 @@ class Library extends BaseClass {
    *
    * @param definition the definition object
    * @param id the id of the object
+   * @param tryArray try to get the array definition
    * @returns ioBroker.ChannelObject | ioBroker.DeviceObject or a default channel obj
    */
-  getChannelObject(definition = null, id = "") {
-    const def = definition && definition._channel || null;
+  getChannelObject(definition = null, id = "", tryArray = false) {
+    const def = tryArray === true ? definition && definition._array || definition && definition._channel || null : definition && definition._channel || null;
     const result = {
       _id: def ? def._id : "",
-      type: def && def.type != "channel" ? "device" : "channel",
+      type: def && def.type === "device" ? "device" : def && def.type === "channel" ? "channel" : "folder",
       common: {
         name: def && def.common && def.common.name ? def.common.name : id && id.split(".").length > 2 ? id.split(".").pop() || "no definition" : "no definition"
       },
@@ -340,7 +351,7 @@ class Library extends BaseClass {
       }
       const stateType = obj && obj.common && obj.common.type;
       node = this.setdb(dp, obj.type, void 0, stateType, true, Date.now(), obj);
-    } else if (node.init && obj) {
+    } else if ((node.init || this.extendedFolderAlways) && obj) {
       if (typeof obj.common.name == "string") {
         obj.common.name = await this.getTranslationObj(obj.common.name);
       }

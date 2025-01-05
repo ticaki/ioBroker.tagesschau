@@ -4,25 +4,25 @@
     "items": {
         "newsEnabled": {
             "type": "checkbox",
-            "label": "Nachrichten aktivieren",
+            "label": "Nachrichten aktivieren (Auswahl der Regionen und Themen erforderlich)",
             "newLine": false,
             "default": true,
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "videosEnabled": {
             "type": "checkbox",
-            "label": "Nachrichtenvideos aktivieren",
+            "label": "Nachrichtenvideos aktivieren (immer alle Videos)",
             "newLine": false,
             "default": false,
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L0": {
             "type": "header",
@@ -42,8 +42,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L2": {
             "type": "checkbox",
@@ -52,8 +52,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L3": {
             "type": "checkbox",
@@ -62,8 +62,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L4": {
             "type": "checkbox",
@@ -72,8 +72,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L5": {
             "type": "checkbox",
@@ -82,8 +82,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L6": {
             "type": "checkbox",
@@ -92,8 +92,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L7": {
             "type": "checkbox",
@@ -102,8 +102,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L8": {
             "type": "checkbox",
@@ -112,8 +112,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L9": {
             "type": "checkbox",
@@ -122,8 +122,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L10": {
             "type": "checkbox",
@@ -132,8 +132,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L11": {
             "type": "checkbox",
@@ -142,8 +142,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L12": {
             "type": "checkbox",
@@ -152,8 +152,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L13": {
             "type": "checkbox",
@@ -162,8 +162,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L14": {
             "type": "checkbox",
@@ -172,8 +172,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L15": {
             "type": "checkbox",
@@ -182,8 +182,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "L16": {
             "type": "checkbox",
@@ -192,8 +192,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "_topic": {
             "type": "header",
@@ -213,8 +213,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "ausland": {
             "type": "checkbox",
@@ -223,8 +223,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "wirtschaft": {
             "type": "checkbox",
@@ -233,8 +233,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "sport": {
             "type": "checkbox",
@@ -243,8 +243,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "video": {
             "type": "checkbox",
@@ -253,8 +253,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "investigativ": {
             "type": "checkbox",
@@ -263,8 +263,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "wissen": {
             "type": "checkbox",
@@ -273,8 +273,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "__tags": {
             "type": "header",
@@ -303,6 +303,17 @@
             "lg": 12,
             "xl": 12
         },
+        "_sonstiges": {
+            "type": "header",
+            "text": "Sonstiges",
+            "size": 2,
+            "newLine": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        },
         "interval": {
             "type": "number",
             "label": "Aktualisierungsintervall",
@@ -315,8 +326,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         },
         "maxEntries": {
             "type": "number",
@@ -330,8 +341,8 @@
             "xs": 12,
             "sm": 12,
             "md": 6,
-            "lg": 4,
-            "xl": 3
+            "lg": 5,
+            "xl": 4
         }
     }
 }

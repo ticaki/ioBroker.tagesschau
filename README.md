@@ -29,6 +29,10 @@ Weiteres zum Bild: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) remove tracking from videos
+* (ticaki) beautiful state name
+
 ### 0.1.4 (2025-01-04)
 * (ticaki) Fixed: More as 1 region bug
 

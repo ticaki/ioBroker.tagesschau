@@ -21,10 +21,8 @@ export type ChangeToChannel<Obj, T> = Obj extends object
 export type ChangeTypeOfKeys<Obj, N> = Obj extends object ? { [K in keyof Obj]-?: ChangeTypeOfKeys<Obj[K], N> } : N;
 
 export type customChannelType = {
-    _channel: ioBroker.ChannelObject | ioBroker.DeviceObject;
-};
-export type customChannelArrayType = {
-    _array: ioBroker.ChannelObject | ioBroker.DeviceObject;
+    _channel?: ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.FolderObject;
+    _array?: ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.FolderObject;
 };
 
 export const defaultChannel: ioBroker.ChannelObject = {
@@ -35,56 +33,1031 @@ export const defaultChannel: ioBroker.ChannelObject = {
     },
     native: {},
 };
-/*const newsChannel: NewsEntity = {
-    sophoraId: '',
-    externalId: '',
-    title: '',
-    date: '',
-    teaserImage: {
-        alttext: '',
-        imageVariants: {
-            '1x1-144': '',
-            '1x1-256': '',
-            '1x1-432': '',
-            '1x1-640': '',
-            '1x1-840': '',
-            '16x9-256': '',
-            '16x9-384': '',
-            '16x9-512': '',
-            '16x9-640': '',
-            '16x9-960': '',
-            '16x9-1280': '',
-            '16x9-1920': '',
+type newsChannel = {
+    news: customChannelType & {
+        sophoraId: ioBroker.StateObject;
+        externalId: ioBroker.StateObject;
+        title: ioBroker.StateObject;
+        date: ioBroker.StateObject;
+        jsDate: ioBroker.StateObject;
+        teaserImage: customChannelType & {
+            alttext: ioBroker.StateObject;
+            imageVariants: customChannelType & {
+                '1x1-144': ioBroker.StateObject;
+                '1x1-256': ioBroker.StateObject;
+                '1x1-432': ioBroker.StateObject;
+                '1x1-640': ioBroker.StateObject;
+                '1x1-840': ioBroker.StateObject;
+                '16x9-256': ioBroker.StateObject;
+                '16x9-384': ioBroker.StateObject;
+                '16x9-512': ioBroker.StateObject;
+                '16x9-640': ioBroker.StateObject;
+                '16x9-960': ioBroker.StateObject;
+                '16x9-1280': ioBroker.StateObject;
+                '16x9-1920': ioBroker.StateObject;
+            };
+            type: ioBroker.StateObject;
+        };
+        tags: customChannelType & {
+            tag: ioBroker.StateObject;
+        };
+
+        updateCheckUrl: ioBroker.StateObject;
+        topline: ioBroker.StateObject;
+        firstSentence: ioBroker.StateObject;
+        details: ioBroker.StateObject;
+        detailsweb: ioBroker.StateObject;
+        shareURL: ioBroker.StateObject;
+        ressort: ioBroker.StateObject;
+        breakingNews: ioBroker.StateObject;
+        type: ioBroker.StateObject;
+    };
+    regional: ioBroker.StateObject;
+    newStoriesCountLink: ioBroker.StateObject;
+    type: ioBroker.StateObject;
+    nextPage: ioBroker.StateObject;
+    newsCount?: ioBroker.StateObject;
+};
+
+const newsChannel: newsChannel = {
+    news: {
+        _channel: {
+            _id: '',
+            type: 'channel',
+            common: {
+                name: 'Nachrichten',
+            },
+            native: {},
         },
-        type: '',
+        _array: {
+            _id: '',
+            type: 'channel',
+            common: {
+                name: 'Nachricht',
+            },
+            native: {},
+        },
+        sophoraId: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Sophora ID',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        externalId: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Externe ID',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        title: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Titel',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        date: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Datum/Uhrzeit',
+                type: 'string',
+                role: 'date',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        jsDate: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Datum/Uhrzeit',
+                type: 'number',
+                role: 'date',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        teaserImage: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Teaserbild',
+                },
+                native: {},
+            },
+            alttext: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Alternativer Text',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            imageVariants: {
+                _channel: {
+                    _id: '',
+                    type: 'channel',
+                    common: {
+                        name: 'Bildvarianten',
+                    },
+                    native: {},
+                },
+
+                '1x1-144': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 144',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-256': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 256',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-432': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 432',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-640': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 640',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-840': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 840',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-256': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 256',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-384': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 384',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-512': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 512',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-640': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 640',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-960': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 960',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-1280': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 1280',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-1920': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 1920',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+            },
+            type: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Typ',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+        tags: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Schlüsselwörter',
+                },
+                native: {},
+            },
+            _array: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Schlüsselwort',
+                },
+                native: {},
+            },
+
+            tag: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Wert',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+        updateCheckUrl: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Update Check URL',
+                type: 'string',
+                role: 'text.url',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        topline: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Topline',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        firstSentence: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Erster Satz',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        details: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Details',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        detailsweb: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Detailsweb',
+                type: 'string',
+                role: 'text.url',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        shareURL: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Share URL',
+                type: 'string',
+                role: 'text.url',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        ressort: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Ressort',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        breakingNews: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Breaking News',
+                type: 'boolean',
+                role: 'indicator',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        type: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Typ',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
     },
-    tags: [
-        {
-            tag: '',
+    regional: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'Bitte bescheid sagen wenn hier was steht',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
         },
-        {
-            tag: '',
+        native: {},
+    },
+    newStoriesCountLink: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'Link zu den neuen Nachrichten',
+            type: 'string',
+            role: 'text.url',
+            read: true,
+            write: false,
         },
-        {
-            tag: '',
+        native: {},
+    },
+    type: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'Typ',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
         },
-        {
-            tag: '',
+        native: {},
+    },
+    nextPage: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'Nächste Seite',
+            type: 'string',
+            role: 'text.url',
+            read: true,
+            write: false,
         },
-    ],
-    updateCheckUrl: '',
-    topline: '',
-    firstSentence: '',
-    details: '',
-    detailsweb: '',
-    shareURL: '',
-    geotags: [],
-    regionId: 0,
-    regionIds: [],
-    ressort: '',
-    breakingNews: false,
-    type: '',
-}*/
+        native: {},
+    },
+    newsCount: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'Anzahl der Nachrichten',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+        },
+        native: {},
+    },
+};
+
+type videoChannel = {
+    channels: customChannelType & {
+        sophoraId: ioBroker.StateObject;
+        externalId: ioBroker.StateObject;
+        title: ioBroker.StateObject;
+        date: ioBroker.StateObject;
+        jsDate: ioBroker.StateObject;
+        teaserImage: customChannelType & {
+            alttext: ioBroker.StateObject;
+            imageVariants: customChannelType & {
+                '1x1-144': ioBroker.StateObject;
+                '1x1-256': ioBroker.StateObject;
+                '1x1-432': ioBroker.StateObject;
+                '1x1-640': ioBroker.StateObject;
+                '1x1-840': ioBroker.StateObject;
+                '16x9-256': ioBroker.StateObject;
+                '16x9-384': ioBroker.StateObject;
+                '16x9-512': ioBroker.StateObject;
+                '16x9-640': ioBroker.StateObject;
+                '16x9-960': ioBroker.StateObject;
+                '16x9-1280': ioBroker.StateObject;
+                '16x9-1920': ioBroker.StateObject;
+            };
+            type: ioBroker.StateObject;
+            copyright: ioBroker.StateObject;
+            title: ioBroker.StateObject;
+        };
+        tags: customChannelType & {
+            tag: ioBroker.StateObject;
+        };
+        updateCheckUrl: ioBroker.StateObject;
+        streams: customChannelType & {
+            adaptivestreaming: ioBroker.StateObject;
+            h264s: ioBroker.StateObject;
+            h264m: ioBroker.StateObject;
+            h264xl: ioBroker.StateObject;
+        };
+        alttext: ioBroker.StateObject;
+        copyright: ioBroker.StateObject;
+        type: ioBroker.StateObject;
+        content: customChannelType & {
+            value: ioBroker.StateObject;
+            type: ioBroker.StateObject;
+        };
+    };
+};
+
+const videoChannel: videoChannel = {
+    channels: {
+        _channel: {
+            _id: '',
+            type: 'channel',
+            common: {
+                name: 'Kanäle',
+            },
+            native: {},
+        },
+        _array: {
+            _id: '',
+            type: 'channel',
+            common: {
+                name: 'Kanal',
+            },
+            native: {},
+        },
+        sophoraId: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Sophora ID',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        externalId: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Externe ID',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        title: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Titel',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        date: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Datum/Uhrzeit',
+                type: 'string',
+                role: 'date',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        jsDate: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Datum/Uhrzeit',
+                type: 'number',
+                role: 'date',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        teaserImage: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Teaserbild',
+                },
+                native: {},
+            },
+            alttext: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Alternativer Text',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            imageVariants: {
+                _channel: {
+                    _id: '',
+                    type: 'channel',
+                    common: {
+                        name: 'Bildvarianten',
+                    },
+                    native: {},
+                },
+                '1x1-144': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 144',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-256': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 256',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-432': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 432',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-640': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 640',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '1x1-840': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 1x1 - Auflösung: 840',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-256': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 256',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-384': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 384',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-512': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 512',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-640': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 640',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-960': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 960',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-1280': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 1280',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+                '16x9-1920': {
+                    _id: '',
+                    type: 'state',
+                    common: {
+                        name: 'Format: 16x9 - Auflösung: 1920',
+                        type: 'string',
+                        role: 'text.url',
+                        read: true,
+                        write: false,
+                    },
+                    native: {},
+                },
+            },
+            type: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Typ',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            copyright: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Urheberrecht',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            title: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Titel',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+        tags: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Schlüsselwörter',
+                },
+                native: {},
+            },
+            _array: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Schlüsselwort',
+                },
+                native: {},
+            },
+
+            tag: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Wert',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+        updateCheckUrl: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Update Check URL',
+                type: 'string',
+                role: 'text.url',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        streams: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Streams',
+                },
+                native: {},
+            },
+            adaptivestreaming: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Adaptive Streaming',
+                    type: 'string',
+                    role: 'text.url',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            h264s: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'H264s',
+                    type: 'string',
+                    role: 'text.url',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            h264m: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'H264m',
+                    type: 'string',
+                    role: 'text.url',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            h264xl: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'H264xl',
+                    type: 'string',
+                    role: 'text.url',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+        alttext: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Alternativer Text',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        copyright: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Urheberrecht',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        type: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Typ',
+                type: 'string',
+                role: 'text',
+                read: true,
+                write: false,
+            },
+            native: {},
+        },
+        content: {
+            _channel: {
+                _id: '',
+                type: 'channel',
+                common: {
+                    name: 'Inhalt',
+                },
+                native: {},
+            },
+            value: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Wert',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+            type: {
+                _id: '',
+                type: 'state',
+                common: {
+                    name: 'Typ',
+                    type: 'string',
+                    role: 'text',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            },
+        },
+    },
+};
 
 export const genericStateObjects: {
     default: ioBroker.StateObject;
@@ -201,18 +1174,16 @@ export const genericStateObjects: {
 
 export type statesObjectsType = {
     news: customChannelType & {
-        inland: customChannelType;
-        ausland: customChannelType;
-        wirtschaft: customChannelType;
-        sport: customChannelType;
-        video: customChannelType;
-        investigativ: customChannelType;
-        wissen: customChannelType;
-        breakingNews: customChannelType;
+        inland: customChannelType & newsChannel;
+        ausland: customChannelType & newsChannel;
+        wirtschaft: customChannelType & newsChannel;
+        sport: customChannelType & newsChannel;
+        video: customChannelType & newsChannel;
+        investigativ: customChannelType & newsChannel;
+        wissen: customChannelType & newsChannel;
+        breakingNews: customChannelType & newsChannel;
     };
-    videos: customChannelType & {
-        channels: customChannelType;
-    };
+    videos: customChannelType & videoChannel;
 };
 
 export const statesObjects: statesObjectsType = {
@@ -225,16 +1196,7 @@ export const statesObjects: statesObjectsType = {
             },
             native: {},
         },
-        channels: {
-            _channel: {
-                _id: '',
-                type: 'channel',
-                common: {
-                    name: 'Nachrichtenkanal',
-                },
-                native: {},
-            },
-        },
+        ...videoChannel,
     },
     news: {
         _channel: {
@@ -254,6 +1216,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         inland: {
             _channel: {
@@ -264,6 +1227,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         ausland: {
             _channel: {
@@ -274,6 +1238,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         wirtschaft: {
             _channel: {
@@ -284,6 +1249,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         sport: {
             _channel: {
@@ -294,6 +1260,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         video: {
             _channel: {
@@ -304,6 +1271,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         investigativ: {
             _channel: {
@@ -314,6 +1282,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
         wissen: {
             _channel: {
@@ -324,6 +1293,7 @@ export const statesObjects: statesObjectsType = {
                 },
                 native: {},
             },
+            ...newsChannel,
         },
     },
 };

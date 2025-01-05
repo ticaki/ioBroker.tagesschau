@@ -129,7 +129,7 @@ export interface Channel {
     teaserImage: TeaserImage;
     tags: any[];
     updateCheckUrl: string;
-    tracking: Tracking[];
+    tracking?: Tracking[];
     streams: Streams;
     alttext: string;
     copyright: string;

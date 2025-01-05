@@ -92,6 +92,12 @@ export class Library extends BaseClass {
     private language: ioBroker.Languages | 'uk' = 'en';
     private forbiddenDirs: string[] = [];
     private translation: { [key: string]: string } = {};
+
+    /**
+     * use extendObject always on folder, devices and channels always
+     */
+    private extendedFolderAlways = true;
+
     defaults = {
         updateStateOnChangeOnly: true,
     };
@@ -126,6 +132,7 @@ export class Library extends BaseClass {
      * @param data The Json to read
      * @param expandTree expand arrays up to 99
      * @param onlyCreate only create the objects, do not write the values in exists states.
+     * @param isArray is the data from an array
      * @returns  void
      */
     async writeFromJson(
@@ -136,6 +143,7 @@ export class Library extends BaseClass {
         data: any,
         expandTree: boolean = false,
         onlyCreate: boolean = false,
+        isArray: boolean = false,
     ): Promise<void> {
         if (!def || typeof def !== 'object') {
             return;
@@ -168,10 +176,8 @@ export class Library extends BaseClass {
                     await this.writedp(prefix, null, defChannel);
                     for (const d of data) {
                         const dp = `${prefix}.${`00${a++}`.slice(-2)}`;
-                        // create folder
-                        await this.writedp(dp, null, defChannel);
 
-                        await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate);
+                        await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate, true);
                     }
                 } else {
                     await this.writeFromJson(
@@ -190,8 +196,15 @@ export class Library extends BaseClass {
                 }
                 // create folder
                 if (objectDefinition) {
-                    const defChannel = this.getChannelObject(objectDefinition, prefix);
+                    const defChannel = this.getChannelObject(objectDefinition, prefix, isArray);
+                    const valbefore = this.extendedFolderAlways;
+                    if (isArray && 'title' in data && data.title) {
+                        this.extendedFolderAlways = true;
+                        defChannel.common.name = data.title;
+                    }
+
                     await this.writedp(prefix, null, defChannel);
+                    this.extendedFolderAlways = valbefore;
                 }
                 if (data === null) {
                     return;
@@ -297,20 +310,27 @@ export class Library extends BaseClass {
      *
      * @param definition the definition object
      * @param id the id of the object
+     * @param tryArray try to get the array definition
      * @returns ioBroker.ChannelObject | ioBroker.DeviceObject or a default channel obj
      */
     getChannelObject(
         definition:
             | (ioBroker.Object & {
                   _channel?: ioBroker.Object;
+                  _array?: ioBroker.Object;
               })
             | null = null,
         id: string = '',
-    ): ioBroker.ChannelObject | ioBroker.DeviceObject {
-        const def = (definition && definition._channel) || null;
-        const result: ioBroker.ChannelObject | ioBroker.DeviceObject = {
+        tryArray: boolean = false,
+    ): ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.FolderObject {
+        const def =
+            tryArray === true
+                ? (definition && definition._array) || (definition && definition._channel) || null
+                : (definition && definition._channel) || null;
+
+        const result: ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.FolderObject = {
             _id: def ? def._id : '',
-            type: def && def.type != 'channel' ? 'device' : 'channel',
+            type: def && def.type === 'device' ? 'device' : def && def.type === 'channel' ? 'channel' : 'folder',
             common: {
                 name:
                     def && def.common && def.common.name
@@ -363,7 +383,7 @@ export class Library extends BaseClass {
             }
             const stateType = obj && obj.common && obj.common.type;
             node = this.setdb(dp, obj.type, undefined, stateType, true, Date.now(), obj);
-        } else if (node.init && obj) {
+        } else if ((node.init || this.extendedFolderAlways) && obj) {
             if (typeof obj.common.name == 'string') {
                 obj.common.name = await this.getTranslationObj(obj.common.name);
             }
