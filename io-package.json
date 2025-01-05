@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.1.4",
+    "version": "0.2.0",
     "news": {
+      "0.2.0": {
+        "en": "remove tracking from videos\nbeautiful state name",
+        "de": "tracking von videos entfernen\nwunderschöner staatsname",
+        "ru": "удалить отслеживание с видео\nкрасивое название государства",
+        "pt": "remover rastreamento de vídeos\nnome do estado bonito",
+        "nl": "tracking verwijderen uit video's\nmooie staat naam",
+        "fr": "supprimer le suivi des vidéos\nbeau nom d'état",
+        "it": "rimuovere il monitoraggio dai video\nbel nome di stato",
+        "es": "eliminar el seguimiento de los vídeos\nhermoso nombre de estado",
+        "pl": "usunąć śledzenie z wideo\npiękna nazwa stanu",
+        "uk": "видалення відстеження з відео\nкрасива назва держави",
+        "zh-cn": "从视频中删除跟踪\n美丽的州名"
+      },
       "0.1.4": {
         "en": "Fixed: More as 1 region bug",
         "de": "Behoben: Mehr als 1 Region Fehler",

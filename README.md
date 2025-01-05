@@ -29,7 +29,7 @@ Weiteres zum Bild: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.2.0 (2025-01-05)
 * (ticaki) remove tracking from videos
 * (ticaki) beautiful state name
 
