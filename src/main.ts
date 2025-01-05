@@ -153,7 +153,7 @@ class Tagesschau extends utils.Adapter {
                 await this.updateVideos();
             }
             this.update();
-        }, this.config.interval);
+        }, 60000 /*this.config.interval*/);
     }
 
     /**
@@ -175,7 +175,7 @@ class Tagesschau extends utils.Adapter {
             try {
                 const response = await axios.get(url, { headers: { accept: 'application/json' } });
                 if (response.status === 200 && response.data) {
-                    this.log.debug(`Response: ${JSON.stringify(response.data)}`);
+                    //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                     const data = response.data as responseType;
                     if (data.news) {
                         for (const news of data.news) {
@@ -213,7 +213,7 @@ class Tagesschau extends utils.Adapter {
                     }
 
                     await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, statesObjects, data, true);
-                    await this.library.garbageColleting(`news.${topic}`, 60000, true);
+                    await this.library.garbageColleting(`news.${topic}`, 60000, false);
                 }
                 const obj = await this.getForeignObjectAsync(this.namespace);
                 if (obj) {
@@ -237,7 +237,7 @@ class Tagesschau extends utils.Adapter {
         try {
             const response = await axios.get(url, { headers: { accept: 'application/json' } });
             if (response.status === 200 && response.data) {
-                this.log.debug(`Response: ${JSON.stringify(response.data)}`);
+                //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                 const data = response.data as videosType;
                 data.channels = data.channels.slice(0, this.config.maxEntries);
                 for (const news of data.channels) {
@@ -249,7 +249,7 @@ class Tagesschau extends utils.Adapter {
                     }
                 }
                 await this.library.writeFromJson(`videos`, `videos`, statesObjects, data, true);
-                await this.library.garbageColleting(`videos`, 60000, true);
+                await this.library.garbageColleting(`videos`, 60000, false);
             }
         } catch (e) {
             this.log.error(`Error: ${e as string}`);

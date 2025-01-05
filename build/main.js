@@ -134,15 +134,19 @@ class Tagesschau extends utils.Adapter {
     this.update();
   }
   update() {
-    this.updateTimeout = this.setTimeout(async () => {
-      if (this.config.newsEnabled) {
-        await this.updateNews();
-      }
-      if (this.config.videosEnabled) {
-        await this.updateVideos();
-      }
-      this.update();
-    }, this.config.interval);
+    this.updateTimeout = this.setTimeout(
+      async () => {
+        if (this.config.newsEnabled) {
+          await this.updateNews();
+        }
+        if (this.config.videosEnabled) {
+          await this.updateVideos();
+        }
+        this.update();
+      },
+      6e4
+      /*this.config.interval*/
+    );
   }
   /**
    * update news from tagesschau.
@@ -162,7 +166,6 @@ class Tagesschau extends utils.Adapter {
       try {
         const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
         if (response.status === 200 && response.data) {
-          this.log.debug(`Response: ${JSON.stringify(response.data)}`);
           const data2 = response.data;
           if (data2.news) {
             for (const news of data2.news) {
@@ -195,7 +198,7 @@ class Tagesschau extends utils.Adapter {
             }
           }
           await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data2, true);
-          await this.library.garbageColleting(`news.${topic}`, 6e4, true);
+          await this.library.garbageColleting(`news.${topic}`, 6e4, false);
         }
         const obj = await this.getForeignObjectAsync(this.namespace);
         if (obj) {
@@ -218,7 +221,6 @@ class Tagesschau extends utils.Adapter {
     try {
       const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
       if (response.status === 200 && response.data) {
-        this.log.debug(`Response: ${JSON.stringify(response.data)}`);
         const data = response.data;
         data.channels = data.channels.slice(0, this.config.maxEntries);
         for (const news of data.channels) {
@@ -230,7 +232,7 @@ class Tagesschau extends utils.Adapter {
           }
         }
         await this.library.writeFromJson(`videos`, `videos`, import_definition.statesObjects, data, true);
-        await this.library.garbageColleting(`videos`, 6e4, true);
+        await this.library.garbageColleting(`videos`, 6e4, false);
       }
     } catch (e) {
       this.log.error(`Error: ${e}`);
