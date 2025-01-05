@@ -15,6 +15,7 @@ import {
     type statesObjectsType,
 } from './lib/definition';
 import axios from 'axios';
+axios.defaults.timeout = 10000;
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";

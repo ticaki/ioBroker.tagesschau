@@ -25,6 +25,7 @@ var utils = __toESM(require("@iobroker/adapter-core"));
 var import_library = require("./lib/library");
 var import_definition = require("./lib/definition");
 var import_axios = __toESM(require("axios"));
+import_axios.default.defaults.timeout = 1e4;
 class Tagesschau extends utils.Adapter {
   library;
   additionalConfig = { allTags: [] };
