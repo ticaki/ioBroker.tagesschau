@@ -29,6 +29,9 @@ Weiteres zum Bild: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.3.1 (2025-01-05)
+* (ticaki) Back to stable admin
+
 ### 0.3.0 (2025-01-05)
 * (ticaki) States are only updated when changes are made.
 * (ticaki) Last update Data point added with timestamp of the last successful data access

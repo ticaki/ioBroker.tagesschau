@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "Back to stable admin",
+        "de": "Zurück zu Stall Admin",
+        "ru": "Назад к стабильному администратору",
+        "pt": "Voltar para administrador estável",
+        "nl": "Terug naar stabiele toediening",
+        "fr": "Retour à l'administration stable",
+        "it": "Torna a amministratore stabile",
+        "es": "Volver a administración estable",
+        "pl": "Powrót do stabilnego administratora",
+        "uk": "Повернутися до стабільного адміністратора",
+        "zh-cn": "回到稳定的管理员"
+      },
       "0.3.0": {
         "en": "States are only updated when changes are made.\nLast update Data point added with timestamp of the last successful data access\nEmptying of data points improved\nPlaceholder images inserted for no news.\nUser-defined keywords with `*`\nRequires admin version 7.4.9 or higher",
         "de": "Staaten werden nur aktualisiert, wenn Änderungen vorgenommen werden.\nLetzte Aktualisierung Datenpunkt mit Zeitstempel des letzten erfolgreichen Datenzugriffs hinzugefügt\nLeerung der Datenpunkte verbessert\nPlatzhalter Bilder für keine Nachrichten eingefügt.\nBenutzerdefinierte Schlüsselwörter mit `*`\nErfordert Admin Version 7.4.9 oder höher",
@@ -80,19 +93,6 @@
         "pl": "Zmniejszony rozmiar ikony",
         "uk": "Зменшений розмір ікони",
         "zh-cn": "图标的缩小大小"
-      },
-      "0.1.2": {
-        "en": "Added: Breaking news is excluded from filtering and copied to a separate folder. \nChanged: Taglist is now sorted.",
-        "de": "Hinzugefügt: Breaking News ist vom Filtern ausgeschlossen und in einen separaten Ordner kopiert.\nGeändert: Die Tagliste ist jetzt sortiert.",
-        "ru": "Добавлено: Перерыв новостей исключен из фильтрации и скопирован в отдельную папку.\nИзменено: теперь отсортирован.",
-        "pt": "Adicionado: A notícia de quebra é excluída da filtragem e copiada para uma pasta separada.\nAlterado: Taglist agora está classificado.",
-        "nl": "Toegevoegd: Breaking news is uitgesloten van filteren en gekopieerd naar een aparte map.\nGewijzigd: Taglist is nu gesorteerd.",
-        "fr": "Ajouté : Les nouvelles sont exclues du filtrage et copiées dans un dossier séparé.\nChanged: La liste d'étiquettes est maintenant triée.",
-        "it": "Aggiunto: Breaking news è escluso dal filtraggio e copiato in una cartella separata.\nCambiato: il taglist è ora risolto.",
-        "es": "Añadido: Las noticias de actualidad están excluidas de filtrar y copiar a una carpeta separada.\nCambiado: Taglist ahora está clasificado.",
-        "pl": "Dodano: Najnowsze wiadomości są wyłączone z filtrowania i skopiowane do oddzielnego folderu.\nZmienione: Taglist jest teraz sortowane.",
-        "uk": "Додано: Новини прориву виключено з фільтрації та копіювання до окремої папки.\nЗмінено: Відсмоктуються теги.",
-        "zh-cn": "添加:突发新闻被排除在过滤之外,复制到单独的文件夹.\n更改: 标签列表现已排序 ."
       }
     },
     "titleLang": {
