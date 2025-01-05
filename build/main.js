@@ -142,7 +142,7 @@ class Tagesschau extends utils.Adapter {
         await this.updateVideos();
       }
       this.update();
-    }, 3e5);
+    }, this.config.interval);
   }
   /**
    * update news from tagesschau.
