@@ -29,13 +29,13 @@ Weiteres zum Bild: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.3.0 (2025-01-05)
 * (ticaki) States are only updated when changes are made.
 * (ticaki) Last update Data point added with timestamp of the last successful data access
 * (ticaki) Emptying of data points improved
 * (ticaki) Placeholder images inserted for no news.
 * (ticaki) User-defined keywords with `*`
-
+* (ticaki) Requires admin version 7.4.9 or higher
 
 ### 0.2.3 (2025-01-05)
 * (ticaki) Fixed: Adapter deletes own states

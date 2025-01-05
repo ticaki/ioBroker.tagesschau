@@ -1,6 +1,6 @@
 {
   "name": "iobroker.tagesschau",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Request news from tagesschau",
   "author": {
     "name": "ticaki",

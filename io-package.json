@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "States are only updated when changes are made.\nLast update Data point added with timestamp of the last successful data access\nEmptying of data points improved\nPlaceholder images inserted for no news.\nUser-defined keywords with `*`\nRequires admin version 7.4.9 or higher",
+        "de": "Staaten werden nur aktualisiert, wenn Änderungen vorgenommen werden.\nLetzte Aktualisierung Datenpunkt mit Zeitstempel des letzten erfolgreichen Datenzugriffs hinzugefügt\nLeerung der Datenpunkte verbessert\nPlatzhalter Bilder für keine Nachrichten eingefügt.\nBenutzerdefinierte Schlüsselwörter mit `*`\nErfordert Admin Version 7.4.9 oder höher",
+        "ru": "Государства обновляются только при внесении изменений.\nПоследняя точка обновления данных добавлена со временем последнего успешного доступа к данным\nУлучшен набор точек данных\nИзображения помещика вставлены без новостей.\nПользовательские ключевые слова с `*`\nAdmin версии 7.4.9 или выше",
+        "pt": "Os Estados só são atualizados quando as mudanças são feitas.\nÚltima atualização Ponto de dados adicionado com o timestamp do último acesso de dados bem sucedido\nO esvaziamento dos pontos de dados melhorou\nImagens de placeholder inseridas para nenhuma notícia.\nPalavras-chave definidas pelo usuário com `*`\nRequer versão admin 7.4.9 ou superior",
+        "nl": "Staten worden alleen bijgewerkt wanneer wijzigingen worden aangebracht.\nLaatste update Gegevenspunt toegevoegd met tijdstempel van de laatste succesvolle gegevenstoegang\nHet legen van datapunten verbeterd\nPlaatshouder beelden ingevoegd voor geen nieuws.\nGebruikersgedefinieerde trefwoorden met \nVereist admin versie 7.4.9 of hoger",
+        "fr": "Les États ne sont mis à jour que lorsque des modifications sont apportées.\nDernière mise à jour Point de données ajouté avec horodatage du dernier accès réussi aux données\nAmélioration du videment des points de données\nImages d'emplacement insérées pour aucune nouvelle.\nMots clés définis par l'utilisateur avec `*`\nNécessite une version admin 7.4.9 ou supérieure",
+        "it": "Gli Stati vengono aggiornati solo quando vengono effettuate le modifiche.\nUltimo aggiornamento Data point aggiunto con timestamp dell'ultimo accesso di dati di successo\nMiglioramento del svuotamento dei punti di dati\nImmagini del segnaposto inserite per nessuna notizia.\nParole chiave definite dall'utente con `*`\nRichiede versione admin 7.4.9 o superiore",
+        "es": "Los Estados sólo se actualizan cuando se producen cambios.\nÚltima actualización Punto de datos añadido con el timetamp del último acceso a datos exitoso\nMejoramiento del número de puntos de datos\nLas imágenes del marcador insertadas para ninguna noticia.\nPalabras clave definidas por el usuario con `*`\nRequiere administración versión 7.4.9 o superior",
+        "pl": "Państwa są aktualizowane dopiero po wprowadzeniu zmian.\nOstatnia aktualizacja Punkt danych dodany ze znacznikiem czasu ostatniego udanego dostępu do danych\nOpróżnianie punktów danych poprawiło się\nObrazy na planszy wstawione dla żadnych wiadomości.\nUser- zdefiniowane słowa kluczowe z '*'\nWymaga wersji admin 7.4.9 lub wyższej",
+        "uk": "США оновлюються лише при внесенні змін.\nОстаннє оновлення точки даних додано з таймером останнього успішного доступу до даних\nПоліпшення показників даних\nЗнімки власників не вставляються на новини.\nВизначені ключові слова з `*`\nПотрібна версія адміністратора 7.4.9 або вище",
+        "zh-cn": "只有在作出修改时才更新国家.\n上次更新 数据点加上上次成功数据访问的时间戳\n清理数据点的工作得到改善\n无新闻插入占位符图像 .\n用户定义的带有QQ的关键字\n需要7.4.9或更高版本的管理员"
+      },
       "0.2.3": {
         "en": "Fixed: Adapter deletes own states",
         "de": "Fixed: Adapter löscht eigene Zustände",
@@ -80,19 +93,6 @@
         "pl": "Dodano: Najnowsze wiadomości są wyłączone z filtrowania i skopiowane do oddzielnego folderu.\nZmienione: Taglist jest teraz sortowane.",
         "uk": "Додано: Новини прориву виключено з фільтрації та копіювання до окремої папки.\nЗмінено: Відсмоктуються теги.",
         "zh-cn": "添加:突发新闻被排除在过滤之外,复制到单独的文件夹.\n更改: 标签列表现已排序 ."
-      },
-      "0.1.1": {
-        "en": "fixed: The empty configuration after the first installation leaves crashed adapters",
-        "de": "fest: Die leere Konfiguration nach der ersten Installation lässt abgestürzte Adapter",
-        "ru": "фиксированный: Пустая конфигурация после первой установки оставляет аварийные адаптеры",
-        "pt": "fixo: A configuração vazia após a primeira instalação deixa cair adaptadores",
-        "nl": "vast: De lege configuratie na de eerste installatie verlaat gecrashte adapters",
-        "fr": "fixe: La configuration vide après la première installation laisse les adaptateurs écrasés",
-        "it": "fisso: La configurazione vuota dopo la prima installazione lascia gli adattatori bloccati",
-        "es": "fijo: La configuración vacía después de la primera instalación deja los adaptadores estrellados",
-        "pl": "stałe: Pusta konfiguracja po pierwszej instalacji pozostawia uszkodzone adaptery",
-        "uk": "фіксована: Порожня конфігурація після першого встановлення листя збитих адаптерів",
-        "zh-cn": "固定 : 第一个安装离开后空配置崩溃适配器"
       }
     },
     "titleLang": {
