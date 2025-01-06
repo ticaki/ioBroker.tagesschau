@@ -909,11 +909,15 @@ const genericStateObjects = {
     },
     native: {}
   },
-  settings: {
+  totalNewsCount: {
     _id: "",
-    type: "folder",
+    type: "state",
     common: {
-      name: "settings.folder"
+      name: "Gesamtanzahl der Nachrichten vor Filterung",
+      type: "number",
+      role: "value",
+      read: true,
+      write: false
     },
     native: {}
   },
@@ -923,19 +927,21 @@ const genericStateObjects = {
     common: {
       name: "Letztes Update",
       type: "number",
-      role: "date",
+      role: "value.time",
       read: true,
       write: false
     },
     native: {}
   },
-  checkOnline: {
+  firstNewsAt: {
     _id: "",
     type: "state",
     common: {
-      name: "genericStateObjects.checkOnline",
-      type: "boolean",
-      role: "switch",
+      name: "Ab welcher Nachricht soll die Liste beginnen",
+      type: "number",
+      role: "value",
+      min: 0,
+      step: 1,
       read: true,
       write: true
     },

@@ -95,7 +95,7 @@ export class Library extends BaseClass {
     /**
      * use extendObject always on folder, devices and channels always
      */
-    private extendedFolderAlways = true;
+    private extendedFolderAlways = false;
 
     defaults = {
         updateStateOnChangeOnly: true,
@@ -137,7 +137,7 @@ export class Library extends BaseClass {
     async writeFromJson(
         // provider.dwd.*warncellid*.warnung*1-5*
         prefix: string,
-        objNode: string, // the json path to object def for jsonata
+        objNode: string, // the json path to object def for deepjson
         def: statesObjectsType,
         data: any,
         expandTree: boolean = false,
@@ -175,7 +175,6 @@ export class Library extends BaseClass {
                     await this.writedp(prefix, null, defChannel);
                     for (const d of data) {
                         const dp = `${prefix}.${`00${a++}`.slice(-2)}`;
-
                         await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate, true);
                     }
                 } else {
@@ -196,6 +195,9 @@ export class Library extends BaseClass {
                 // create folder
                 if (objectDefinition) {
                     const defChannel = this.getChannelObject(objectDefinition, prefix, isArray);
+
+                    // if data is from a array and there is a key title, we need to set the title to the folder name.
+                    // we need to set the extendedFolderAlways to true, to write the name this time.
                     const valbefore = this.extendedFolderAlways;
                     if (isArray && 'title' in data && data.title) {
                         this.extendedFolderAlways = true;
@@ -203,6 +205,8 @@ export class Library extends BaseClass {
                     }
 
                     await this.writedp(prefix, null, defChannel);
+
+                    // reset the extendedFolderAlways to the old value
                     this.extendedFolderAlways = valbefore;
                 }
                 if (data === null) {
@@ -230,7 +234,6 @@ export class Library extends BaseClass {
      * @returns ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.StateObject
      */
     getObjectDefFromJson(key: string, def: any, data: any): ioBroker.Object {
-        //let result = await jsonata(`${key}`).evaluate(data);
         let result = this.deepJsonValue(key, def);
         if (result === null || result === undefined) {
             const k = key.split('.');
@@ -350,7 +353,8 @@ export class Library extends BaseClass {
      * @param val Value for this data point. Channel vals (old and new) are undefined so they never will be written.
      * @param obj The object definition for this data point (ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.StateObject)
      * @param ack set ack to false if needed - NEVER after u subscript to states)
-     * @param onlyCreate only create the objects, do not write the values in exists states
+     * @param onlyCreate only extended the objects, do not write the values in exists states
+     * @param forceExtend force the extend of the object
      * @returns void
      */
     async writedp(
@@ -359,6 +363,7 @@ export class Library extends BaseClass {
         obj: ioBroker.Object | null = null,
         ack: boolean = true,
         onlyCreate: boolean = false,
+        forceExtend: boolean = false,
     ): Promise<void> {
         dp = this.cleandp(dp);
         let node = this.readdb(dp);
@@ -382,7 +387,7 @@ export class Library extends BaseClass {
 
             const stateType = obj && obj.common && obj.common.type;
             node = this.setdb(dp, obj.type, undefined, stateType, true, Date.now(), obj);
-        } else if ((node.init || this.extendedFolderAlways) && obj) {
+        } else if ((node.init || this.extendedFolderAlways || forceExtend) && obj) {
             if (typeof obj.common.name == 'string') {
                 obj.common.name = await this.getTranslationObj(obj.common.name);
             }
@@ -672,68 +677,73 @@ export class Library extends BaseClass {
      *
      * @param prefix The prefix to clean up.
      * @param offset The offset to clean up.
-     * @param del Whether to delete the data point....
+     * @param del Whether to delete the data point. this part need rework
      */
     async garbageColleting(prefix: string, offset: number = 2000, del = false): Promise<void> {
-        if (!prefix) {
+        if (!prefix || !this.stateDataBase) {
             return;
         }
-        if (this.stateDataBase) {
-            for (const id in this.stateDataBase) {
-                if (id.startsWith(prefix)) {
-                    const state = this.stateDataBase[id];
-                    if (!state || (!state.val && (!state.obj || state.obj.type !== 'state' || !state.stateTyp))) {
-                        if (state && state.val == undefined && state.obj && state.obj.common && state.obj.common.def) {
-                            state.val = state.obj.common.def;
-                            state.ts = 1;
-                        } else {
-                            continue;
-                        }
-                    }
-                    if (state.ts < Date.now() - offset) {
-                        if (del) {
-                            await this.cleanUpTree([], [id], -1);
-                            continue;
-                        }
-                        let newVal: -1 | '' | '{}' | '[]' | false | null | undefined;
-                        if (state.obj && state.obj.common && state.obj.common.def) {
-                            newVal = state.obj.common.def;
-                        } else {
-                            switch (state.stateTyp) {
-                                case 'string':
-                                    if (typeof state.val == 'string') {
-                                        if (state.val.startsWith('{') && state.val.endsWith('}')) {
-                                            newVal = '{}';
-                                        } else if (state.val.startsWith('[') && state.val.endsWith(']')) {
-                                            newVal = '[]';
-                                        } else {
-                                            newVal = '';
-                                        }
-                                    } else {
-                                        newVal = '';
-                                    }
-                                    break;
-                                case 'bigint':
-                                case 'number':
-                                    newVal = -1;
-                                    break;
+        if (del) {
+            this.log.warn(`garbageColleting with del = true is not well implemented yet!`);
+            return;
+        }
 
-                                case 'boolean':
-                                    newVal = false;
-                                    break;
-                                case 'symbol':
-                                case 'object':
-                                case 'function':
-                                    newVal = null;
-                                    break;
-                                case 'undefined':
-                                    newVal = undefined;
-                                    break;
+        const filteredStateKeys = Object.keys(this.stateDataBase).filter(id => id.startsWith(prefix));
+        const currentTestTime = Date.now() - offset;
+        for (const id of filteredStateKeys) {
+            const state = this.stateDataBase[id];
+            if (!state) {
+                continue;
+            }
+            if (state.val === undefined && (!state.obj || state.obj.type !== 'state' || !state.stateTyp)) {
+                if (state.obj && state.obj.common && state.obj.common.def) {
+                    state.ts = 1;
+                } else {
+                    continue;
+                }
+            }
+            if (state.ts < currentTestTime) {
+                if (del) {
+                    await this.cleanUpTree([], [id], -1);
+                    continue;
+                }
+                let newVal: -1 | '' | '{}' | '[]' | false | null | undefined;
+                if (state.obj && state.obj.common && state.obj.common.def) {
+                    newVal = state.obj.common.def;
+                } else {
+                    switch (state.stateTyp || (state.obj && state.obj.common && state.obj.common.type) || 'string') {
+                        case 'string':
+                            if (typeof state.val == 'string') {
+                                if (state.val.startsWith('{') && state.val.endsWith('}')) {
+                                    newVal = '{}';
+                                } else if (state.val.startsWith('[') && state.val.endsWith(']')) {
+                                    newVal = '[]';
+                                } else {
+                                    newVal = '';
+                                }
+                            } else {
+                                newVal = '';
                             }
-                        }
-                        await this.writedp(id, newVal);
+                            break;
+                        case 'bigint':
+                        case 'number':
+                            newVal = -1;
+                            break;
+
+                        case 'boolean':
+                            newVal = false;
+                            break;
+                        case 'symbol':
+                        case 'object':
+                        case 'function':
+                            newVal = null;
+                            break;
+                        case 'undefined':
+                            newVal = undefined;
+                            break;
                     }
                 }
+                await this.writedp(id, newVal);
             }
         }
     }

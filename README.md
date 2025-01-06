@@ -17,10 +17,11 @@ Ruft News und Videolinks von Tagesschau ab.
 Installieren - Im Admin gewünschtes einstellen - fertig.
 
 Beachten: 
-1. Der Adapter läuft nur wenn in der Konfiguration 1 Thema und 1 Bundesland ausgewählt sind.
-2. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit auch immer mehr!
+1. Wenn nicht Nachrichten aktivieren oder Videonachrichten aktivieren ausgewählt sind pausiert der Adapter
+2. Bei aktivieren Nachrichten läuft der Adapter nur, wenn in der Konfiguration 1 Thema und 1 Bundesland ausgewählt sind.
+3. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit immer mehr! Diese greifen nur bei den Nachrichten.
 
-Beispiel: 
+Beispiel was mit VIS möglich ist: 
 ![Videoansicht von Armilar](img/BeispielVideoansicht1.png)
 ![Videoansicht von bahnuhr](img/BeispielVideoansicht2.png)
 Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
@@ -30,6 +31,13 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) Command data point for defining the first news to be displayed
+* (ticaki) Reduce object updates
+* (ticaki) Total number of news as a data point
+* (ticaki) We not in hurry, write object updates slowly.
+* (ticaki) Info log messages are a bit more fun. (error and warn messages are not funny at all)
+
 ### 0.3.2 (2025-01-05)
 * (ticaki) added length to videos
 * (ticaki) System load reduced at startup

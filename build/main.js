@@ -42,6 +42,7 @@ class Tagesschau extends utils.Adapter {
   regions = "";
   breakingNewsDatapointExists = false;
   isOnline = false;
+  receivedNews = {};
   constructor(options = {}) {
     super({
       ...options,
@@ -49,6 +50,7 @@ class Tagesschau extends utils.Adapter {
     });
     this.library = new import_library.Library(this);
     this.on("ready", this.onReady.bind(this));
+    this.on("stateChange", this.onStateChange.bind(this));
     this.on("message", this.onMessage.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
@@ -60,8 +62,15 @@ class Tagesschau extends utils.Adapter {
     await this.library.initStates(await this.getStatesAsync("*"));
     await (0, import_library.sleep)(500);
     const maxRegions = 16;
+    this.log.info(
+      "Thanks for using this adapter. I hope you enjoy it! We not in hurry so please give me some time to get the news."
+    );
+    const interval = this.config.interval * 6e4;
     this.config.interval = (typeof this.config.interval !== "number" || this.config.interval < 5 || this.config.interval > 1e5 ? 30 : this.config.interval) * 6e4;
-    this.log.info(`Set news interval to ${this.config.interval / 6e4} minutes`);
+    const changed = interval !== this.config.interval;
+    this.log.info(
+      `${changed ? "I" : "You"} set the refresh interval to ${this.config.interval / 6e4} minutes. ${changed ? "Sorry, we have rules here!" : "I am happy with that."}`
+    );
     let obj;
     try {
       obj = await this.getForeignObjectAsync(this.namespace);
@@ -78,15 +87,15 @@ class Tagesschau extends utils.Adapter {
       const k = `L${i.toString()}`;
       this.regions += this.config[k] === true ? (this.regions ? "," : "") + i : "";
     }
-    if (this.regions.length === 0) {
-      this.log.warn("No regions selected! Adapter paused!");
+    if (this.regions.length === 0 && this.config.newsEnabled) {
+      this.log.error("No regions selected! Adapter paused!");
       return;
     }
     if (!this.config.maxEntries) {
       this.config.maxEntries = 20;
     }
     if (!this.config.videosEnabled && !this.config.newsEnabled) {
-      this.log.warn("No news or videos selected! Adapter paused!");
+      this.log.error("Neither news nor video news activated! Adapter paused!");
       return;
     }
     const topics = [
@@ -99,12 +108,19 @@ class Tagesschau extends utils.Adapter {
       "wissen"
     ];
     this.topics = topics.filter((topic) => this.config[topic] === true);
-    if (this.topics.length === 0) {
-      this.log.warn("No topics selected! Adapter stopped!");
-      if (this.stop) {
-        await this.stop();
-      }
+    if (this.topics.length === 0 && this.config.newsEnabled) {
+      this.log.error("No topics selected! Adapter paused!");
       return;
+    }
+    for (const topic of this.topics) {
+      await this.library.writedp(
+        `news.${topic}`,
+        void 0,
+        // @ts-expect-error
+        import_definition.statesObjects.news[topic]._channel
+      );
+      await this.library.writedp(`news.${topic}.firstNewsAt`, 0, import_definition.genericStateObjects.firstNewsAt);
+      await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
     }
     obj = await this.getForeignObjectAsync(this.namespace);
     if (obj && obj.native && obj.native.additionalConfig) {
@@ -115,7 +131,7 @@ class Tagesschau extends utils.Adapter {
     } else {
       this.updateSelectedTags();
     }
-    this.log.info(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
+    this.log.debug(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
     await this.library.writedp(`breakingNewsCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
     const data = {
       newsCount: 0,
@@ -134,6 +150,7 @@ class Tagesschau extends utils.Adapter {
       await this.library.garbageColleting(`videos.`, 6e4, false);
     }
     this.update();
+    this.log.info("Initialize stuff completed and new news are available. Old ones too. No more text for now on.");
   }
   update() {
     this.updateTimeout = this.setTimeout(async () => {
@@ -183,20 +200,15 @@ class Tagesschau extends utils.Adapter {
     await this.library.writedp(`news`, void 0, import_definition.statesObjects[`news`]._channel);
     try {
       for (const topic of this.topics) {
-        await this.library.writedp(
-          `news.${topic}`,
-          void 0,
-          //@ts-expect-error
-          import_definition.statesObjects.news[topic]._channel
-        );
         const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
-        this.log.debug(`URL: ${url}`);
+        this.log.debug(`News URL for ${topic}: ${url}`);
         const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
         const start = (/* @__PURE__ */ new Date()).getTime();
         if (response.status === 200 && response.data) {
           this.isOnline = true;
           const data = response.data;
           if (data.news) {
+            const totalNews = data.news.length;
             for (const news of data.news) {
               if (news.tags) {
                 for (const tag of news.tags) {
@@ -205,50 +217,25 @@ class Tagesschau extends utils.Adapter {
                   }
                 }
               }
-            }
-            if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
-              data.news = data.news.filter(
-                (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag)) || news.breakingNews
-              );
-            }
-            data.news = data.news.slice(0, this.config.maxEntries);
-            data.newsCount = data.news.length;
-            for (const news of data.news) {
-              for (const key of import_definition.filterPartOfNews) {
-                const k = key;
-                delete news[k];
-              }
-              if (news.date) {
-                news.jsDate = new Date(news.date).getTime();
-              }
               if (news.breakingNews) {
+                news.jsDate = new Date(news.date).getTime();
                 bnews.push(news);
               }
             }
-            await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data, true);
-            await this.library.writedp(
-              `news.lastUpdate`,
-              (/* @__PURE__ */ new Date()).getTime(),
-              import_definition.genericStateObjects.lastUpdate
-            );
-            for (let i = data.news.length; i < this.config.maxEntries; i++) {
-              await this.library.garbageColleting(
-                `news.${topic}.news.${`00${i}`.slice(-2)}`,
-                6e4,
-                false
-              );
-              await this.library.writedp(
-                `news.${topic}.news.${`00${i}`.slice(-2)}`,
-                void 0,
-                import_definition.newsChannel.news._array
+            if (this.config.selectedTags && this.config.selectedTags.length !== 0) {
+              data.news = data.news.filter(
+                (news) => news.tags && news.tags.some((tag) => this.config.selectedTags.includes(tag.tag))
               );
             }
+            this.receivedNews[topic] = data.news;
+            await this.writeNews(data, topic, totalNews);
           }
         } else {
+          this.receivedNews[topic] = [];
           await this.library.garbageColleting(`news.${topic}.`, 6e4, false);
           this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
         }
-        this.log.debug(`Time: ${(/* @__PURE__ */ new Date()).getTime() - start}`);
+        this.log.debug(`Time to write ${topic}: ${(/* @__PURE__ */ new Date()).getTime() - start}`);
       }
       const obj = await this.getForeignObjectAsync(this.namespace);
       if (obj) {
@@ -269,7 +256,10 @@ class Tagesschau extends utils.Adapter {
         await this.library.writedp(
           `news.breakingNews.news.${`00${i}`.slice(-2)}`,
           void 0,
-          import_definition.newsChannel.news._array
+          import_definition.newsChannel.news._array,
+          void 0,
+          void 0,
+          true
         );
       }
     } catch (e) {
@@ -279,10 +269,42 @@ class Tagesschau extends utils.Adapter {
       this.isOnline = false;
     }
   }
+  async writeNews(data, topic, totalNews) {
+    if (!data.news) {
+      return;
+    }
+    data.news = data.news.slice(0, this.config.maxEntries);
+    data.newsCount = data.news.length;
+    for (const news of data.news) {
+      for (const key of import_definition.filterPartOfNews) {
+        const k = key;
+        delete news[k];
+      }
+      if (news.date) {
+        news.jsDate = new Date(news.date).getTime();
+      }
+    }
+    await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, import_definition.statesObjects, data, true);
+    await this.library.writedp(`news.lastUpdate`, (/* @__PURE__ */ new Date()).getTime(), import_definition.genericStateObjects.lastUpdate);
+    if (totalNews !== void 0) {
+      await this.library.writedp(`news.${topic}.totalNewsCount`, totalNews, import_definition.genericStateObjects.totalNewsCount);
+    }
+    for (let i = data.news.length; i < this.config.maxEntries; i++) {
+      await this.library.garbageColleting(`news.${topic}.news.${`00${i}`.slice(-2)}`, 6e4, false);
+      await this.library.writedp(
+        `news.${topic}.news.${`00${i}`.slice(-2)}`,
+        void 0,
+        import_definition.newsChannel.news._array,
+        void 0,
+        void 0,
+        true
+      );
+    }
+  }
   async updateVideos() {
     await this.library.writedp(`videos`, void 0, import_definition.statesObjects.videos._channel);
     const url = `https://www.tagesschau.de/api2u/channels`;
-    this.log.debug(`URL: ${url}`);
+    this.log.debug(`Videos URL: ${url}`);
     try {
       const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
       if (response.status === 200 && response.data) {
@@ -306,7 +328,14 @@ class Tagesschau extends utils.Adapter {
       }
       for (let i = (response && response.data && response.data.channels || []).length; i < 7; i++) {
         await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 6e4, false);
-        await this.library.writedp(`videos.channels.${`00${i}`.slice(-2)}`, void 0, import_definition.newsChannel.news._array);
+        await this.library.writedp(
+          `videos.channels.${`00${i}`.slice(-2)}`,
+          void 0,
+          import_definition.newsChannel.news._array,
+          void 0,
+          void 0,
+          true
+        );
       }
     } catch (e) {
       if (this.isOnline) {
@@ -326,8 +355,39 @@ class Tagesschau extends utils.Adapter {
         });
         json.sort((a, b) => a.label > b.label ? 1 : -1);
         this.sendTo(obj.from, obj.command, json, obj.callback);
+        return;
       }
       this.sendTo(obj.from, obj.command, "Message received", obj.callback);
+    }
+  }
+  async onStateChange(id, state) {
+    if (!state || state.ack) {
+      return;
+    }
+    const parts = id.split(".");
+    if (parts.length !== 5) {
+      return;
+    }
+    const topic = parts[3];
+    if (parts[4] === "firstNewsAt" && typeof state.val === "number") {
+      let news = this.receivedNews[topic];
+      if (news) {
+        news = this.library.cloneGenericObject(news);
+        state.val = Math.round(state.val);
+        state.val = Math.min(state.val, news.length, this.config.maxEntries);
+        state.val = state.val % Math.min(news.length, this.config.maxEntries);
+        if (state.val >= 0) {
+          news = news.concat(news.slice(state.val));
+        }
+        news = news.slice(state.val, this.config.maxEntries + state.val);
+        await this.writeNews({ news, newsCount: news.length }, topic, void 0);
+        await this.library.writedp(
+          `news.${topic}.firstNewsAt`,
+          state.val,
+          import_definition.genericStateObjects.firstNewsAt,
+          true
+        );
+      }
     }
   }
   /**
@@ -337,6 +397,9 @@ class Tagesschau extends utils.Adapter {
    */
   onUnload(callback) {
     try {
+      this.log.info(
+        "Thanks for using this adapter. I hope you enjoyed it. I will stop now and clean up my stuff."
+      );
       if (this.updateTimeout) {
         this.clearTimeout(this.updateTimeout);
       }
