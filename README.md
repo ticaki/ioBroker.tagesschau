@@ -16,7 +16,7 @@ Ruft News und Videolinks von Tagesschau ab.
 
 Installieren - Im Admin gewünschtes einstellen - fertig.
 
-** Laut Tagesschau api sind 60 Abfragen pro Stunde in Ordnung. Jedes Themengebiet und Video sind 1 Abfrage. 30 Minuten pro Aktualisierung passen immer. Keine Ahnung wie genau die das nehmen. **
+**Laut Tagesschau api sind 60 Abfragen pro Stunde in Ordnung. Jedes Themengebiet und Video sind 1 Abfrage. 30 Minuten pro Aktualisierung passen immer. Keine Ahnung wie genau die das nehmen.**
 
 Beachten: 
 1. Wenn nicht Nachrichten aktivieren oder Videonachrichten aktivieren ausgewählt sind pausiert der Adapter
