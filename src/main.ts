@@ -406,12 +406,12 @@ class Tagesschau extends utils.Adapter {
             if (news) {
                 news = this.library.cloneGenericObject(news) as NewsEntity[];
                 state.val = Math.round(state.val);
-                state.val = Math.min(state.val, news.length, this.config.maxEntries);
-                state.val = state.val % Math.min(news.length, this.config.maxEntries);
-                if (state.val >= 0) {
-                    news = news.concat(news.slice(state.val));
-                }
-                news = news.slice(state.val, this.config.maxEntries + state.val);
+                state.val = state.val % news.length;
+                state.val = state.val < 0 ? news.length + state.val : state.val;
+                news = news.concat(news.slice(0, state.val));
+                const end =
+                    this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
+                news = news.slice(state.val, end);
                 await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
                 await this.library.writedp(
                     `news.${topic}.firstNewsAt`,
