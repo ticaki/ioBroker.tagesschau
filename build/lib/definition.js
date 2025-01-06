@@ -279,6 +279,19 @@ const newsChannel = {
       },
       native: {}
     },
+    regional: {
+      _id: "",
+      type: "state",
+      common: {
+        name: "Regional",
+        type: "boolean",
+        role: "indicator",
+        read: true,
+        write: false,
+        def: false
+      },
+      native: {}
+    },
     teaserImage: {
       _channel: {
         _id: "",
@@ -1118,6 +1131,7 @@ const newsDefault = {
   detailsweb: "",
   shareURL: "",
   geotags: [],
+  regional: false,
   regionId: 0,
   regionIds: [],
   ressort: "",

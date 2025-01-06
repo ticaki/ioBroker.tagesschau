@@ -39,6 +39,7 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 * (ticaki) Total number of news as a data point
 * (ticaki) We not in hurry, write object updates slowly.
 * (ticaki) Info log messages are a bit more fun. (error and warn messages are not funny at all)
+* (ticaki) firstNewAdd allows you to rotate the news
 
 ### 0.3.2 (2025-01-05)
 * (ticaki) added length to videos

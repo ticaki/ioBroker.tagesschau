@@ -207,8 +207,13 @@ class Tagesschau extends utils.Adapter {
         if (response.status === 200 && response.data) {
           this.isOnline = true;
           const data = response.data;
+          if (data.regional) {
+            data.regional.forEach((news) => {
+              news.regional = true;
+            });
+            data.news = data.news ? data.news.concat(data.regional) : data.regional;
+          }
           if (data.news) {
-            const totalNews = data.news.length;
             for (const news of data.news) {
               if (news.tags) {
                 for (const tag of news.tags) {
@@ -228,7 +233,7 @@ class Tagesschau extends utils.Adapter {
               );
             }
             this.receivedNews[topic] = data.news;
-            await this.writeNews(data, topic, totalNews);
+            await this.writeNews(data, topic, data.news.length);
           }
         } else {
           this.receivedNews[topic] = [];

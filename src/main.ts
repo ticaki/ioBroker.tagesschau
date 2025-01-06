@@ -65,6 +65,7 @@ class Tagesschau extends utils.Adapter {
         await this.library.initStates(await this.getStatesAsync('*'));
         await sleep(500);
         const maxRegions = 16;
+
         this.log.info(
             'Thanks for using this adapter. I hope you enjoy it! We not in hurry so please give me some time to get the news.',
         );
@@ -225,8 +226,13 @@ class Tagesschau extends utils.Adapter {
                     //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                     this.isOnline = true;
                     const data = response.data as responseType;
+                    if (data.regional) {
+                        data.regional.forEach(news => {
+                            news.regional = true;
+                        });
+                        data.news = data.news ? data.news.concat(data.regional) : data.regional;
+                    }
                     if (data.news) {
-                        const totalNews = data.news.length;
                         for (const news of data.news) {
                             if (news.tags) {
                                 for (const tag of news.tags) {
@@ -246,7 +252,7 @@ class Tagesschau extends utils.Adapter {
                             );
                         }
                         this.receivedNews[topic] = data.news;
-                        await this.writeNews(data, topic, totalNews);
+                        await this.writeNews(data, topic, data.news.length);
                     }
                 } else {
                     this.receivedNews[topic] = [];

@@ -71,6 +71,7 @@ type newsChannel = {
         detailsweb: ioBroker.StateObject;
         shareURL: ioBroker.StateObject;
         ressort: ioBroker.StateObject;
+        regional: ioBroker.StateObject;
         breakingNews: ioBroker.StateObject;
         type: ioBroker.StateObject;
     };
@@ -324,6 +325,19 @@ export const newsChannel: newsChannel = {
                 role: 'date',
                 read: true,
                 write: false,
+            },
+            native: {},
+        },
+        regional: {
+            _id: '',
+            type: 'state',
+            common: {
+                name: 'Regional',
+                type: 'boolean',
+                role: 'indicator',
+                read: true,
+                write: false,
+                def: false,
             },
             native: {},
         },
@@ -1234,6 +1248,7 @@ export const newsDefault: NewsEntity = {
     detailsweb: '',
     shareURL: '',
     geotags: [],
+    regional: false,
     regionId: 0,
     regionIds: [],
     ressort: '',

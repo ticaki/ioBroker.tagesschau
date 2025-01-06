@@ -2,7 +2,7 @@ export type topicType = 'inland' | 'ausland' | 'sport' | 'wirtschaft' | 'video' 
 
 export interface responseType {
     news?: NewsEntity[] | null;
-    regional?: null[] | null;
+    regional?: NewsEntity[] | null;
     newStoriesCountLink: string;
     type: string;
     nextPage: string;
@@ -24,6 +24,7 @@ export interface NewsEntity {
     detailsweb: string;
     shareURL: string;
     geotags?: null[] | null;
+    regional?: boolean;
     regionId?: number;
     regionIds?: null[] | null;
     ressort: string;
