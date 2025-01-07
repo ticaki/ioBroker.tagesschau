@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "news": {
+      "0.4.0": {
+        "en": "Command data point for defining the first news to be displayed\nReduce object updates\nTotal number of news as a data point\nWe not in hurry, write object updates slowly.\nInfo log messages are a bit more fun. (error and warn messages are not funny at all)\nfirstNewAdd allows you to rotate the news",
+        "de": "Befehlsdatenpunkt zur Definition der ersten anzuzeigenden Nachrichten\nReduzieren von Objekt-Updates\nGesamtzahl der Nachrichten als Datenpunkt\nWir beeilen uns nicht, schreiben Objekt-Updates langsam.\nInfo-Log-Nachrichten sind ein bisschen mehr Spaß. (Fehler und Warnmeldungen sind überhaupt nicht lustig)\nerste Neu Hinzufügen ermöglicht es Ihnen, die Nachrichten zu drehen",
+        "ru": "Командная точка данных для определения первых новостей, которые будут отображаться\nУменьшить обновления объектов\nОбщее количество новостей как точка данных\nМы не торопимся, пишите обновления объектов медленно.\nИнфолог-сообщения немного веселее. (оскорбление и предупреждение сообщений вовсе не смешно)\nпервый Новый Добавить позволяет вращать новости",
+        "pt": "Ponto de dados de comando para definir a primeira notícia a ser exibida\nReduzir atualizações de objetos\nNúmero total de notícias como ponto de dados\nNão temos pressa, escrevemos atualizações de objetos lentamente.\nAs mensagens de log de informações são um pouco mais divertidas. (O erro e as mensagens de aviso não são engraçadas em absoluto)\nprimeiro Novo Adicionar permite que você gire as notícias",
+        "nl": "Opdrachtdatapunt voor het definiëren van het eerste te tonen nieuws\nObjectupdates verminderen\nTotaal aantal nieuwsberichten als gegevenspunt\nWe hebben geen haast, schrijf object updates langzaam.\nInfo log berichten zijn een beetje leuker. (Fout en waarschuwingen zijn helemaal niet grappig)\neerst Nieuw Toevoegen stelt u in staat om het nieuws te draaien",
+        "fr": "Point de données de commande pour définir les premières nouvelles à afficher\nRéduire les mises à jour des objets\nNombre total de nouvelles comme point de données\nNous ne sommes pas pressés, écrivez les mises à jour des objets lentement.\nLes messages de journal d'information sont un peu plus amusants. (les messages d'erreur et d'avertissement ne sont pas drôles du tout)\npremière Nouveau Ajouter vous permet de faire tourner les nouvelles",
+        "it": "Data point di comando per definire le prime notizie da visualizzare\nRidurre gli aggiornamenti degli oggetti\nNumero totale di notizie come data point\nNon abbiamo fretta, scrivi gli aggiornamenti degli oggetti lentamente.\nI messaggi di registro delle informazioni sono un po' più divertenti. (errore e avvertire i messaggi non sono affatto divertenti)\nprimo Nuovo Add consente di ruotare la notizia",
+        "es": "Punto de datos del comando para definir las primeras noticias que se mostrarán\nReducir las actualizaciones de objetos\nNúmero total de noticias como punto de datos\nNo tenemos prisa, escribe actualizaciones de objetos lentamente.\nLos mensajes de registro de información son un poco más divertidos. (Los mensajes de terror y aviso no son graciosos en absoluto)\nprimero Nuevo Añadir le permite girar las noticias",
+        "pl": "Punkt danych poleceń do zdefiniowania pierwszych wyświetlanych wiadomości\nZmniejsz aktualizacje obiektu\nCałkowita liczba wiadomości jako punkt danych\nNie spieszymy się, pisać aktualizacje obiektów powoli.\nWiadomości z dziennika informacyjnego są trochę zabawniejsze. (komunikaty błędów i ostrzeżeń nie są wcale śmieszne)\npierwszy Nowy Dodaj pozwala obracać wiadomości",
+        "uk": "Командна точка даних для визначення перших новин\nЗменшити оновлення об'єкта\nЗагальна кількість новин як точка даних\nМи не поспішаємо, напишіть оновлення об'єкта повільно.\nІнфоблочні повідомлення трохи цікавіше. (error і попереджати повідомлення не смішні на всіх)\nперший Нові Додайте можливість обертати новини",
+        "zh-cn": "定义要显示的第一个新闻的命令数据点\n减少对象更新\n作为数据点的新闻总数\n我们不着急, 慢慢写更新对象 .\n信息日志消息比较有趣 。 (错误和警告信息一点也不好笑)\n第一个 新设 添加允许您旋转新闻"
+      },
       "0.3.2": {
         "en": "added length to videos\nSystem load reduced at startup",
         "de": "länge zu videos hinzugefügt\nSystemlast reduziert beim Start",
@@ -80,19 +93,6 @@
         "pl": "usunąć śledzenie z wideo\npiękna nazwa stanu",
         "uk": "видалення відстеження з відео\nкрасива назва держави",
         "zh-cn": "从视频中删除跟踪\n美丽的州名"
-      },
-      "0.1.4": {
-        "en": "Fixed: More as 1 region bug",
-        "de": "Behoben: Mehr als 1 Region Fehler",
-        "ru": "Исправлено: больше, чем 1 регион клоп",
-        "pt": "Corrigido: Mais como 1 bug região",
-        "nl": "Vast: Meer als 1 regio bug",
-        "fr": "Correction : Plus d'un bug régional",
-        "it": "Risolto: Più come 1 bug regione",
-        "es": "Fijo: Más como 1 región bug",
-        "pl": "Naprawiono: Bardziej jak błąd 1 regionu",
-        "uk": "Виправлено: Більш як 1 регіон помилка",
-        "zh-cn": "固定: 更多为 1 区域错误"
       }
     },
     "titleLang": {

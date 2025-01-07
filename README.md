@@ -33,7 +33,7 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.4.0 (2025-01-07)
 * (ticaki) Command data point for defining the first news to be displayed
 * (ticaki) Reduce object updates
 * (ticaki) Total number of news as a data point
