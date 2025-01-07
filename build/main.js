@@ -274,6 +274,15 @@ class Tagesschau extends utils.Adapter {
       this.isOnline = false;
     }
   }
+  /**
+   * write news to states
+   *
+   * @param data news data
+   * @param data.news news
+   * @param data.newsCount news count
+   * @param topic topic
+   * @param totalNews total news.
+   */
   async writeNews(data, topic, totalNews) {
     if (!data.news) {
       return;
@@ -306,6 +315,9 @@ class Tagesschau extends utils.Adapter {
       );
     }
   }
+  /**
+   * update videos from tagesschau..
+   */
   async updateVideos() {
     await this.library.writedp(`videos`, void 0, import_definition.statesObjects.videos._channel);
     const url = `https://www.tagesschau.de/api2u/channels`;
@@ -315,6 +327,31 @@ class Tagesschau extends utils.Adapter {
       if (response.status === 200 && response.data) {
         this.isOnline = true;
         const data = response.data;
+        const titlesSort = [
+          "Im Livestream: tagesthemen",
+          "tagesschau in 100 Sekunden",
+          "tagesschau",
+          "tagesschau",
+          "tagesschau in Einfacher Sprache",
+          "tagesschau mit Geb\xE4rdensprache",
+          "tagesschau vor 20 Jahren"
+        ];
+        data.channels.sort((a, b) => {
+          const sa = titlesSort.indexOf(a.title);
+          if (sa === -1) {
+            return 1;
+          }
+          const sb = titlesSort.indexOf(b.title);
+          if (sb === -1) {
+            return -1;
+          }
+          if (sa > sb) {
+            return 1;
+          } else if (sa < sb) {
+            return -1;
+          }
+          return 0;
+        });
         data.channels = data.channels.slice(0, this.config.maxEntries);
         for (const news of data.channels) {
           if (news.date) {
@@ -349,6 +386,11 @@ class Tagesschau extends utils.Adapter {
       this.isOnline = false;
     }
   }
+  /**
+   * Is called when adapter receives a message
+   *
+   * @param obj The message object
+   */
   onMessage(obj) {
     if (typeof obj === "object" && obj.message) {
       if (obj.command === "selectNewsTags") {

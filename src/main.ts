@@ -294,6 +294,15 @@ class Tagesschau extends utils.Adapter {
         }
     }
 
+    /**
+     * write news to states
+     *
+     * @param data news data
+     * @param data.news news
+     * @param data.newsCount news count
+     * @param topic topic
+     * @param totalNews total news.
+     */
     async writeNews(
         data: { news?: NewsEntity[] | null; newsCount?: number },
         topic: string,
@@ -334,6 +343,9 @@ class Tagesschau extends utils.Adapter {
         }
     }
 
+    /**
+     * update videos from tagesschau..
+     */
     async updateVideos(): Promise<void> {
         await this.library.writedp(`videos`, undefined, statesObjects.videos._channel);
         const url = `https://www.tagesschau.de/api2u/channels`;
@@ -344,6 +356,31 @@ class Tagesschau extends utils.Adapter {
                 //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                 this.isOnline = true;
                 const data = response.data as videosType;
+                const titlesSort = [
+                    'Im Livestream: tagesthemen',
+                    'tagesschau in 100 Sekunden',
+                    'tagesschau',
+                    'tagesschau',
+                    'tagesschau in Einfacher Sprache',
+                    'tagesschau mit Gebärdensprache',
+                    'tagesschau vor 20 Jahren',
+                ];
+                data.channels.sort((a, b) => {
+                    const sa = titlesSort.indexOf(a.title);
+                    if (sa === -1) {
+                        return 1;
+                    }
+                    const sb = titlesSort.indexOf(b.title);
+                    if (sb === -1) {
+                        return -1;
+                    }
+                    if (sa > sb) {
+                        return 1;
+                    } else if (sa < sb) {
+                        return -1;
+                    }
+                    return 0;
+                });
                 data.channels = data.channels.slice(0, this.config.maxEntries);
                 for (const news of data.channels) {
                     if (news.date) {
@@ -357,9 +394,11 @@ class Tagesschau extends utils.Adapter {
                         delete news.tracking;
                     }
                 }
+
                 await this.library.writeFromJson(`videos`, `videos`, statesObjects, data, true);
                 await this.library.writedp('videos.lastUpdate', new Date().getTime(), genericStateObjects.lastUpdate);
             }
+
             for (let i = ((response && response.data && response.data.channels) || []).length; i < 7; i++) {
                 await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 60000, false);
                 await this.library.writedp(
@@ -379,6 +418,11 @@ class Tagesschau extends utils.Adapter {
         }
     }
 
+    /**
+     * Is called when adapter receives a message
+     *
+     * @param obj The message object
+     */
     private onMessage(obj: ioBroker.Message): void {
         if (typeof obj === 'object' && obj.message) {
             if (obj.command === 'selectNewsTags') {
@@ -408,6 +452,7 @@ class Tagesschau extends utils.Adapter {
         const topic = parts[3];
 
         if (parts[4] === 'firstNewsAt') {
+            // Is user input a number?
             if (typeof state.val !== 'number') {
                 if (typeof state.val === 'string') {
                     try {
@@ -426,6 +471,7 @@ class Tagesschau extends utils.Adapter {
             }
             let news = this.receivedNews[topic];
             if (news) {
+                // is the number in the range of the news?
                 news = this.library.cloneGenericObject(news) as NewsEntity[];
                 state.val = Math.round(state.val);
                 state.val = state.val % news.length;

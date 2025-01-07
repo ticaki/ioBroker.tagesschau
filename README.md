@@ -33,13 +33,15 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) videos always in the same order.
+
 ### 0.4.0 (2025-01-07)
 * (ticaki) Command data point for defining the first news to be displayed
 * (ticaki) Reduce object updates
 * (ticaki) Total number of news as a data point
 * (ticaki) We not in hurry, write object updates slowly.
 * (ticaki) Info log messages are a bit more fun. (error and warn messages are not funny at all)
-* (ticaki) firstNewAdd allows you to rotate the news
 
 ### 0.3.2 (2025-01-05)
 * (ticaki) added length to videos
