@@ -374,7 +374,23 @@ class Tagesschau extends utils.Adapter {
       return;
     }
     const topic = parts[3];
-    if (parts[4] === "firstNewsAt" && typeof state.val === "number") {
+    if (parts[4] === "firstNewsAt") {
+      if (typeof state.val !== "number") {
+        if (typeof state.val === "string") {
+          try {
+            state.val = parseInt(state.val);
+            if (isNaN(state.val)) {
+              throw new Error("Invalid number");
+            }
+          } catch {
+            this.log.error(`Failed to parse state value. Number expected`);
+            return;
+          }
+        } else {
+          this.log.error(`Invalid state value. Number expected`);
+          return;
+        }
+      }
       let news = this.receivedNews[topic];
       if (news) {
         news = this.library.cloneGenericObject(news);
