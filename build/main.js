@@ -339,16 +339,21 @@ class Tagesschau extends utils.Adapter {
         ];
         const newChannel = [];
         newChannel[0] = data.channels[0];
+        data.channels[0] = void 0;
         for (let i = 1; i < titlesSort.length; i++) {
-          newChannel[i] = data.channels.find((c) => c && c.title === titlesSort[i]);
-        }
-        for (let i = 0; i < titlesSort.length; i++) {
-          if (newChannel[i]) {
-            data.channels.splice(data.channels.indexOf(newChannel[i]), 1);
+          const index = data.channels.findIndex((c) => c && c.title === titlesSort[i]);
+          if (index === -1) {
+            newChannel[i] = void 0;
+            await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 6e4, false);
+          } else {
+            newChannel[i] = data.channels[index];
+            data.channels[index] = void 0;
           }
         }
         for (const news of data.channels) {
-          newChannel.push(news);
+          if (news) {
+            newChannel.push(news);
+          }
         }
         data.channels = newChannel.slice(0, this.config.maxEntries);
         for (const news of data.channels) {
@@ -368,17 +373,6 @@ class Tagesschau extends utils.Adapter {
         }
         await this.library.writeFromJson(`videos`, `videos`, import_definition.statesObjects, data, true);
         await this.library.writedp("videos.lastUpdate", (/* @__PURE__ */ new Date()).getTime(), import_definition.genericStateObjects.lastUpdate);
-      }
-      for (let i = (response && response.data && response.data.channels || []).length; i < 7; i++) {
-        await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 6e4, false);
-        await this.library.writedp(
-          `videos.channels.${`00${i}`.slice(-2)}`,
-          void 0,
-          import_definition.newsChannel.news._array,
-          void 0,
-          void 0,
-          true
-        );
       }
     } catch (e) {
       if (this.isOnline) {
