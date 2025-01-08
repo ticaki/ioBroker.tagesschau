@@ -359,7 +359,7 @@ class Tagesschau extends utils.Adapter {
                 // always the same order of videos
                 const data = response.data as videosType;
                 const titlesSort = [
-                    'Im Livestream: tagesthemen',
+                    'Im Livestream:',
                     'tagesschau in 100 Sekunden',
                     'tagesschau',
                     'tagesschau',
@@ -369,12 +369,13 @@ class Tagesschau extends utils.Adapter {
                     'tagesschau vor 20 Jahren',
                 ];
                 const newChannel: videosType['channels'] = [];
-                for (let i = 0; i < titlesSort.length; i++) {
+                newChannel[0] = data.channels[0];
+                for (let i = 1; i < titlesSort.length; i++) {
                     newChannel[i] = data.channels.find(c => c && c.title === titlesSort[i]);
                 }
                 // unknown videos
                 for (const news of data.channels) {
-                    if (news && newChannel.indexOf(news) === -1) {
+                    if (news && newChannel.findIndex(c => c && news.title.startsWith(c.title)) === -1) {
                         newChannel.push(news);
                     }
                 }
