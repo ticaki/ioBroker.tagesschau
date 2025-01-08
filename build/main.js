@@ -341,6 +341,8 @@ class Tagesschau extends utils.Adapter {
         newChannel[0] = data.channels[0];
         for (let i = 1; i < titlesSort.length; i++) {
           newChannel[i] = data.channels.find((c) => c && c.title === titlesSort[i]);
+        }
+        for (let i = 0; i < titlesSort.length; i++) {
           if (newChannel[i]) {
             data.channels.splice(data.channels.indexOf(newChannel[i]), 1);
           }
