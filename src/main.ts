@@ -372,12 +372,13 @@ class Tagesschau extends utils.Adapter {
                 newChannel[0] = data.channels[0];
                 for (let i = 1; i < titlesSort.length; i++) {
                     newChannel[i] = data.channels.find(c => c && c.title === titlesSort[i]);
+                    if (newChannel[i]) {
+                        data.channels.splice(data.channels.indexOf(newChannel[i]), 1);
+                    }
                 }
                 // unknown videos
                 for (const news of data.channels) {
-                    if (news && newChannel.findIndex(c => c && news.title.startsWith(c.title)) === -1) {
-                        newChannel.push(news);
-                    }
+                    newChannel.push(news);
                 }
                 data.channels = newChannel.slice(0, this.config.maxEntries);
                 for (const news of data.channels) {
