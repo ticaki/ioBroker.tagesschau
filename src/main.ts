@@ -355,34 +355,34 @@ class Tagesschau extends utils.Adapter {
             if (response.status === 200 && response.data) {
                 //this.log.debug(`Response: ${JSON.stringify(response.data)}`);
                 this.isOnline = true;
+
+                // always the same order of videos
                 const data = response.data as videosType;
                 const titlesSort = [
                     'Im Livestream: tagesthemen',
                     'tagesschau in 100 Sekunden',
                     'tagesschau',
                     'tagesschau',
+                    'tagesthemen',
                     'tagesschau in Einfacher Sprache',
                     'tagesschau mit Gebärdensprache',
                     'tagesschau vor 20 Jahren',
                 ];
-                data.channels.sort((a, b) => {
-                    const sa = titlesSort.indexOf(a.title);
-                    if (sa === -1) {
-                        return 1;
-                    }
-                    const sb = titlesSort.indexOf(b.title);
-                    if (sb === -1) {
-                        return -1;
-                    }
-                    if (sa > sb) {
-                        return 1;
-                    } else if (sa < sb) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                data.channels = data.channels.slice(0, this.config.maxEntries);
+                const newChannel: videosType['channels'] = [];
+                for (let i = 0; i < titlesSort.length; i++) {
+                    newChannel[i] = data.channels.find(c => c && c.title === titlesSort[i]);
+                }
+                // unknown videos
                 for (const news of data.channels) {
+                    if (news && newChannel.indexOf(news) === -1) {
+                        newChannel.push(news);
+                    }
+                }
+                data.channels = newChannel.slice(0, this.config.maxEntries);
+                for (const news of data.channels) {
+                    if (!news) {
+                        continue;
+                    }
                     if (news.date) {
                         news.jsDate = new Date(news.date).getTime();
                     }

@@ -140,5 +140,5 @@ export interface Channel {
 }
 
 export interface videosType {
-    channels: Channel[];
+    channels: (Channel | undefined)[];
 }

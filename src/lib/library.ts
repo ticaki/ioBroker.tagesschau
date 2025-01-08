@@ -170,11 +170,11 @@ export class Library extends BaseClass {
                     return;
                 }
                 if (objectDefinition.type !== 'state' || expandTree) {
-                    let a = 0;
                     const defChannel = this.getChannelObject(objectDefinition, prefix);
                     await this.writedp(prefix, null, defChannel);
-                    for (const d of data) {
-                        const dp = `${prefix}.${`00${a++}`.slice(-2)}`;
+                    for (let i = 0; i < data.length; i++) {
+                        const d = data[i];
+                        const dp = `${prefix}.${`00${i}`.slice(-2)}`;
                         await this.writeFromJson(dp, `${objNode}`, def, d, expandTree, onlyCreate, true);
                     }
                 } else {
