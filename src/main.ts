@@ -358,22 +358,50 @@ class Tagesschau extends utils.Adapter {
 
                 // always the same order of videos
                 const data = response.data as videosType;
-                const titlesSort = [
-                    'Im Livestream:',
-                    'tagesschau in 100 Sekunden',
-                    'tagesschau',
-                    'tagesschau',
-                    'tagesthemen',
-                    'tagesschau in Einfacher Sprache',
-                    'tagesschau mit Gebärdensprache',
-                    'tagesschau vor 20 Jahren',
+
+                const titlesSort: { title?: string; sophoraId?: string }[] = [
+                    {
+                        title: 'Im Livestream:',
+                    },
+                    {
+                        title: 'tagesschau in 100 Sekunden',
+                    },
+                    {
+                        sophoraId: 'video-',
+                    },
+                    {
+                        title: 'tagesschau',
+                    },
+                    {
+                        title: 'tagesschau',
+                    },
+                    {
+                        title: 'tagesthemen',
+                    },
+                    {
+                        sophoraId: 'tse-',
+                    },
+                    {
+                        sophoraId: 'tsg-',
+                    },
+                    {
+                        sophoraId: 'tsvorzwanzig-',
+                    },
                 ];
+
                 const newChannel: videosType['channels'] = [];
                 newChannel[0] = data.channels[0];
                 data.channels[0] = undefined;
                 //data.channels.splice(3, 1);
                 for (let i = 1; i < titlesSort.length; i++) {
-                    const index = data.channels.findIndex(c => c && c.title === titlesSort[i]);
+                    const index = data.channels.findIndex(c => {
+                        const element = titlesSort[i];
+                        return (
+                            c &&
+                            ((element.title && c.title === element.title) ||
+                                (element.sophoraId !== undefined && c.sophoraId.startsWith(element.sophoraId)))
+                        );
+                    });
                     if (index === -1) {
                         newChannel[i] = undefined;
                         await this.library.garbageColleting(`videos.channels.${`00${i}`.slice(-2)}`, 60000, false);
