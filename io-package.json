@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "news": {
+      "0.4.1": {
+        "en": "videos always in the same order.",
+        "de": "videos immer in der gleichen reihenfolge.",
+        "ru": "видео всегда в том же порядке.",
+        "pt": "vídeos sempre na mesma ordem.",
+        "nl": "video's altijd in dezelfde volgorde.",
+        "fr": "vidéos toujours dans le même ordre.",
+        "it": "video sempre nello stesso ordine.",
+        "es": "videos siempre en el mismo orden.",
+        "pl": "filmy zawsze w tej samej kolejności.",
+        "uk": "відео завжди в одному порядку.",
+        "zh-cn": "视频总是在同一顺序."
+      },
       "0.4.0": {
         "en": "Command data point for defining the first news to be displayed\nReduce object updates\nTotal number of news as a data point\nWe not in hurry, write object updates slowly.\nInfo log messages are a bit more fun. (error and warn messages are not funny at all)\nfirstNewAdd allows you to rotate the news",
         "de": "Befehlsdatenpunkt zur Definition der ersten anzuzeigenden Nachrichten\nReduzieren von Objekt-Updates\nGesamtzahl der Nachrichten als Datenpunkt\nWir beeilen uns nicht, schreiben Objekt-Updates langsam.\nInfo-Log-Nachrichten sind ein bisschen mehr Spaß. (Fehler und Warnmeldungen sind überhaupt nicht lustig)\nerste Neu Hinzufügen ermöglicht es Ihnen, die Nachrichten zu drehen",
@@ -80,19 +93,6 @@
         "pl": "naprawić odświeżający odstęp i dodać axios timeout",
         "uk": "фіксувати інтервал оновлення і додати осі",
         "zh-cn": "修复刷新间隔并添加轴超时( a)"
-      },
-      "0.2.0": {
-        "en": "remove tracking from videos\nbeautiful state name",
-        "de": "tracking von videos entfernen\nwunderschöner staatsname",
-        "ru": "удалить отслеживание с видео\nкрасивое название государства",
-        "pt": "remover rastreamento de vídeos\nnome do estado bonito",
-        "nl": "tracking verwijderen uit video's\nmooie staat naam",
-        "fr": "supprimer le suivi des vidéos\nbeau nom d'état",
-        "it": "rimuovere il monitoraggio dai video\nbel nome di stato",
-        "es": "eliminar el seguimiento de los vídeos\nhermoso nombre de estado",
-        "pl": "usunąć śledzenie z wideo\npiękna nazwa stanu",
-        "uk": "видалення відстеження з відео\nкрасива назва держави",
-        "zh-cn": "从视频中删除跟踪\n美丽的州名"
       }
     },
     "titleLang": {

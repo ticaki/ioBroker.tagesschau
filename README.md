@@ -33,7 +33,7 @@ Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.4.1 (2025-01-17)
 * (ticaki) videos always in the same order.
 
 ### 0.4.0 (2025-01-07)
