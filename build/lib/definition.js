@@ -29,7 +29,7 @@ __export(definition_exports, {
 module.exports = __toCommonJS(definition_exports);
 const defaultChannel = {
   _id: "",
-  type: "channel",
+  type: "folder",
   common: {
     name: "Hey no description... "
   },
@@ -38,7 +38,7 @@ const defaultChannel = {
 const imageVariants = {
   _channel: {
     _id: "",
-    type: "channel",
+    type: "folder",
     common: {
       name: "Bildvarianten"
     },
@@ -205,7 +205,7 @@ const newsChannel = {
   news: {
     _channel: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Nachrichten"
       },
@@ -213,7 +213,7 @@ const newsChannel = {
     },
     _array: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Nachricht"
       },
@@ -295,7 +295,7 @@ const newsChannel = {
     teaserImage: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Teaserbild"
         },
@@ -330,7 +330,7 @@ const newsChannel = {
     tags: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Schl\xFCsselw\xF6rter"
         },
@@ -338,7 +338,7 @@ const newsChannel = {
       },
       _array: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Schl\xFCsselwort"
         },
@@ -531,7 +531,7 @@ const videoChannel = {
   channels: {
     _channel: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Kan\xE4le"
       },
@@ -539,7 +539,7 @@ const videoChannel = {
     },
     _array: {
       _id: "",
-      type: "channel",
+      type: "folder",
       common: {
         name: "Kanal"
       },
@@ -608,7 +608,7 @@ const videoChannel = {
     teaserImage: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Teaserbild"
         },
@@ -667,7 +667,7 @@ const videoChannel = {
     tags: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Schl\xFCsselw\xF6rter"
         },
@@ -675,7 +675,7 @@ const videoChannel = {
       },
       _array: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Schl\xFCsselwort"
         },
@@ -722,7 +722,7 @@ const videoChannel = {
     streams: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Streams"
         },
@@ -816,7 +816,7 @@ const videoChannel = {
     content: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Inhalt"
         },
@@ -952,7 +952,7 @@ const genericStateObjects = {
     common: {
       name: "Ab welcher Nachricht soll die Liste beginnen",
       type: "number",
-      role: "value",
+      role: "level",
       min: 0,
       step: 1,
       read: true,
@@ -1007,7 +1007,7 @@ const statesObjects = {
     ausland: {
       _channel: {
         _id: "",
-        type: "channel",
+        type: "folder",
         common: {
           name: "Auslandsnachrichten"
         },

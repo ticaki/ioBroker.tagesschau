@@ -12,18 +12,21 @@
 
 ## tagesschau adapter for ioBroker
 
-[Deutsche Anleitung](README-GER.md)
+Ruft News und Videolinks von Tagesschau ab.
 
-Retrieves news and video links from Tagesschau.
+Installieren - Im Admin gewünschtes einstellen - fertig.
 
-Install - set the desired settings in the admin - done.
+**Laut Tagesschau api sind 60 Abfragen pro Stunde in Ordnung. Jedes Themengebiet und Video sind 1 Abfrage. 30 Minuten pro Aktualisierung passen immer. Keine Ahnung wie genau die das nehmen.**
 
-**According to the Tagesschau api, 60 queries per hour are OK. Each topic and video is 1 query. 30 minutes per update always fits. No idea how exactly they take this **.
+Beachten: 
+1. Wenn nicht Nachrichten aktivieren oder Videonachrichten aktivieren ausgewählt sind pausiert der Adapter
+2. Bei aktivieren Nachrichten läuft der Adapter nur, wenn in der Konfiguration 1 Thema und 1 Bundesland ausgewählt sind.
+3. Die Schlüsselwörter werden aus den Nachrichten gewonnen und sind erst nach dem ersten Durchlauf verfügbar. Es werden mit der Zeit immer mehr! Diese greifen nur bei den Nachrichten.
 
-Please note: 
-1. if Enable messages or Enable video messages are not selected, the adapter pauses
-2. if activate messages is selected, the adapter only runs if 1 topic and 1 federal state are selected in the configuration.
-3. the keywords are extracted from the messages and are only available after the first run. There will be more and more over time! These only apply to the messages.
+Beispiel was mit VIS möglich ist: 
+![Videoansicht von Armilar](img/BeispielVideoansicht1.png)
+![Videoansicht von bahnuhr](img/BeispielVideoansicht2.png)
+Weiteres zu den Bilder: https://forum.iobroker.net/post/1235111
 
 ## Changelog
 <!--

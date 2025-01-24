@@ -25,9 +25,9 @@ export type customChannelType = {
     _array?: ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.FolderObject;
 };
 
-export const defaultChannel: ioBroker.ChannelObject = {
+export const defaultChannel: ioBroker.FolderObject = {
     _id: '',
-    type: 'channel',
+    type: 'folder',
     common: {
         name: 'Hey no description... ',
     },
@@ -85,7 +85,7 @@ type newsChannel = {
 const imageVariants: imageVariants = {
     _channel: {
         _id: '',
-        type: 'channel',
+        type: 'folder',
         common: {
             name: 'Bildvarianten',
         },
@@ -254,7 +254,7 @@ export const newsChannel: newsChannel = {
     news: {
         _channel: {
             _id: '',
-            type: 'channel',
+            type: 'folder',
             common: {
                 name: 'Nachrichten',
             },
@@ -262,7 +262,7 @@ export const newsChannel: newsChannel = {
         },
         _array: {
             _id: '',
-            type: 'channel',
+            type: 'folder',
             common: {
                 name: 'Nachricht',
             },
@@ -344,7 +344,7 @@ export const newsChannel: newsChannel = {
         teaserImage: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Teaserbild',
                 },
@@ -379,7 +379,7 @@ export const newsChannel: newsChannel = {
         tags: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Schlüsselwörter',
                 },
@@ -387,7 +387,7 @@ export const newsChannel: newsChannel = {
             },
             _array: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Schlüsselwort',
                 },
@@ -617,7 +617,7 @@ const videoChannel: videoChannel = {
     channels: {
         _channel: {
             _id: '',
-            type: 'channel',
+            type: 'folder',
             common: {
                 name: 'Kanäle',
             },
@@ -625,7 +625,7 @@ const videoChannel: videoChannel = {
         },
         _array: {
             _id: '',
-            type: 'channel',
+            type: 'folder',
             common: {
                 name: 'Kanal',
             },
@@ -694,7 +694,7 @@ const videoChannel: videoChannel = {
         teaserImage: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Teaserbild',
                 },
@@ -753,7 +753,7 @@ const videoChannel: videoChannel = {
         tags: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Schlüsselwörter',
                 },
@@ -761,7 +761,7 @@ const videoChannel: videoChannel = {
             },
             _array: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Schlüsselwort',
                 },
@@ -809,7 +809,7 @@ const videoChannel: videoChannel = {
         streams: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Streams',
                 },
@@ -903,7 +903,7 @@ const videoChannel: videoChannel = {
         content: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Inhalt',
                 },
@@ -1050,7 +1050,7 @@ export const genericStateObjects: {
         common: {
             name: 'Ab welcher Nachricht soll die Liste beginnen',
             type: 'number',
-            role: 'value',
+            role: 'level',
             min: 0,
             step: 1,
             read: true,
@@ -1120,7 +1120,7 @@ export const statesObjects: statesObjectsType = {
         ausland: {
             _channel: {
                 _id: '',
-                type: 'channel',
+                type: 'folder',
                 common: {
                     name: 'Auslandsnachrichten',
                 },
