@@ -16,8 +16,8 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var definition_exports = {};
-__export(definition_exports, {
+var test_exports = {};
+__export(test_exports, {
   Defaults: () => Defaults,
   defaultChannel: () => defaultChannel,
   filterPartOfNews: () => filterPartOfNews,
@@ -26,7 +26,7 @@ __export(definition_exports, {
   newsDefault: () => newsDefault,
   statesObjects: () => statesObjects
 });
-module.exports = __toCommonJS(definition_exports);
+module.exports = __toCommonJS(test_exports);
 const defaultChannel = {
   _id: "",
   type: "folder",
@@ -40,7 +40,7 @@ const imageVariants = {
     _id: "",
     type: "folder",
     common: {
-      name: "teaserImage.imageVariants"
+      name: "Bildvarianten"
     },
     native: {}
   },
@@ -48,7 +48,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "1x1-144",
+      name: "Format: 1x1 - Aufl\xF6sung: 144",
       type: "string",
       role: "text.url",
       read: true,
@@ -61,7 +61,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "1x1-256",
+      name: "Format: 1x1 - Aufl\xF6sung: 256",
       type: "string",
       role: "text.url",
       read: true,
@@ -74,7 +74,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "1x1-432",
+      name: "Format: 1x1 - Aufl\xF6sung: 432",
       type: "string",
       role: "text.url",
       read: true,
@@ -87,7 +87,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "1x1-640",
+      name: "Format: 1x1 - Aufl\xF6sung: 640",
       type: "string",
       role: "text.url",
       read: true,
@@ -100,7 +100,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "1x1-840",
+      name: "Format: 1x1 - Aufl\xF6sung: 840",
       type: "string",
       role: "text.url",
       read: true,
@@ -113,7 +113,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-256",
+      name: "Format: 16x9 - Aufl\xF6sung: 256",
       type: "string",
       role: "text.url",
       read: true,
@@ -126,7 +126,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-384",
+      name: "Format: 16x9 - Aufl\xF6sung: 384",
       type: "string",
       role: "text.url",
       read: true,
@@ -139,7 +139,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-512",
+      name: "Format: 16x9 - Aufl\xF6sung: 512",
       type: "string",
       role: "text.url",
       read: true,
@@ -152,7 +152,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-640",
+      name: "Format: 16x9 - Aufl\xF6sung: 640",
       type: "string",
       role: "text.url",
       read: true,
@@ -165,7 +165,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-960",
+      name: "Format: 16x9 - Aufl\xF6sung: 960",
       type: "string",
       role: "text.url",
       read: true,
@@ -178,7 +178,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-1280",
+      name: "Format: 16x9 - Aufl\xF6sung: 1280",
       type: "string",
       role: "text.url",
       read: true,
@@ -191,7 +191,7 @@ const imageVariants = {
     _id: "",
     type: "state",
     common: {
-      name: "16x9-1920",
+      name: "Format: 16x9 - Aufl\xF6sung: 1920",
       type: "string",
       role: "text.url",
       read: true,
@@ -207,7 +207,7 @@ const newsChannel = {
       _id: "",
       type: "folder",
       common: {
-        name: "newsmessage"
+        name: "Nachrichten"
       },
       native: {}
     },
@@ -215,7 +215,7 @@ const newsChannel = {
       _id: "",
       type: "folder",
       common: {
-        name: "onenews"
+        name: "Nachricht"
       },
       native: { name: "Nachricht" }
     },
@@ -223,7 +223,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "sophoraId",
+        name: "Sophora ID",
         type: "string",
         role: "text",
         read: true,
@@ -235,7 +235,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "externalId",
+        name: "Externe ID",
         type: "string",
         role: "text",
         read: true,
@@ -247,7 +247,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "title",
+        name: "Titel",
         type: "string",
         role: "text",
         read: true,
@@ -259,7 +259,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "date",
+        name: "Datum/Uhrzeit",
         type: "string",
         role: "date",
         read: true,
@@ -271,7 +271,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "jsDate",
+        name: "Datum/Uhrzeit",
         type: "number",
         role: "date",
         read: true,
@@ -283,7 +283,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "regional",
+        name: "Regional",
         type: "boolean",
         role: "indicator",
         read: true,
@@ -297,7 +297,7 @@ const newsChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "teaserImage"
+          name: "Teaserbild"
         },
         native: {}
       },
@@ -305,7 +305,7 @@ const newsChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "teaserImage.alttext",
+          name: "Alternativer Text",
           type: "string",
           role: "text",
           read: true,
@@ -318,7 +318,7 @@ const newsChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "teaserImage.type",
+          name: "Typ",
           type: "string",
           role: "text",
           read: true,
@@ -332,7 +332,7 @@ const newsChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "tags"
+          name: "Schl\xFCsselw\xF6rter"
         },
         native: {}
       },
@@ -340,9 +340,9 @@ const newsChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "tag"
+          name: "Schl\xFCsselwort"
         },
-        native: { name: "Keyword" }
+        native: { name: "Schl\xFCsselwort" }
       },
       tag: {
         _id: "",
@@ -361,7 +361,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "updateCheckUrl",
+        name: "Update Check URL",
         type: "string",
         role: "text.url",
         read: true,
@@ -373,7 +373,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "topline",
+        name: "Topline",
         type: "string",
         role: "text",
         read: true,
@@ -385,7 +385,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "firstSentence",
+        name: "Erster Satz",
         type: "string",
         role: "text",
         read: true,
@@ -397,7 +397,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "details",
+        name: "Details",
         type: "string",
         role: "text",
         read: true,
@@ -409,7 +409,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "detailsweb",
+        name: "Detailsweb",
         type: "string",
         role: "text.url",
         read: true,
@@ -421,7 +421,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "shareURL",
+        name: "Share URL",
         type: "string",
         role: "text.url",
         read: true,
@@ -445,7 +445,7 @@ const newsChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "breakingNews",
+        name: "Breaking News",
         type: "boolean",
         role: "indicator",
         read: true,
@@ -482,7 +482,7 @@ const newsChannel = {
     _id: "",
     type: "state",
     common: {
-      name: "newStoriesCountLink",
+      name: "Link zu den neuen Nachrichten",
       type: "string",
       role: "text.url",
       read: true,
@@ -506,7 +506,7 @@ const newsChannel = {
     _id: "",
     type: "state",
     common: {
-      name: "nextPage",
+      name: "N\xE4chste Seite",
       type: "string",
       role: "text.url",
       read: true,
@@ -518,7 +518,7 @@ const newsChannel = {
     _id: "",
     type: "state",
     common: {
-      name: "newsCount",
+      name: "Anzahl der Nachrichten",
       type: "number",
       role: "value",
       read: true,
@@ -533,7 +533,7 @@ const videoChannel = {
       _id: "",
       type: "folder",
       common: {
-        name: "channels"
+        name: "Kan\xE4le"
       },
       native: {}
     },
@@ -541,15 +541,15 @@ const videoChannel = {
       _id: "",
       type: "folder",
       common: {
-        name: "channel"
+        name: "Kanal"
       },
-      native: { name: "channel" }
+      native: { name: "Kanal" }
     },
     sophoraId: {
       _id: "",
       type: "state",
       common: {
-        name: "sophoraId",
+        name: "Eindeutige ID",
         type: "string",
         role: "text",
         read: true,
@@ -561,7 +561,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "externalId",
+        name: "Externe ID",
         type: "string",
         role: "text",
         read: true,
@@ -573,7 +573,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "titel",
+        name: "Titel",
         type: "string",
         role: "text",
         read: true,
@@ -585,7 +585,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "date",
+        name: "Datum/Uhrzeit",
         type: "string",
         role: "date",
         read: true,
@@ -597,7 +597,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "jsDate",
+        name: "Datum/Uhrzeit",
         type: "number",
         role: "date",
         read: true,
@@ -610,7 +610,7 @@ const videoChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "teaserImage"
+          name: "Teaserbild"
         },
         native: {}
       },
@@ -618,7 +618,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "alttext",
+          name: "Alternativer Text",
           type: "string",
           role: "text",
           read: true,
@@ -631,7 +631,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "type",
+          name: "Typ",
           type: "string",
           role: "text",
           read: true,
@@ -643,7 +643,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "copyright",
+          name: "Urheberrecht",
           type: "string",
           role: "text",
           read: true,
@@ -655,7 +655,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "title",
+          name: "Titel",
           type: "string",
           role: "text",
           read: true,
@@ -669,7 +669,7 @@ const videoChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "tags"
+          name: "Schl\xFCsselw\xF6rter"
         },
         native: {}
       },
@@ -677,15 +677,15 @@ const videoChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "tag"
+          name: "Schl\xFCsselwort"
         },
-        native: { name: "tag" }
+        native: { name: "Schl\xFCsselwort" }
       },
       tag: {
         _id: "",
         type: "state",
         common: {
-          name: "tag",
+          name: "Wert",
           type: "string",
           role: "text",
           read: true,
@@ -698,7 +698,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "length",
+        name: "L\xE4nge des Videos",
         type: "number",
         role: "media.duration",
         read: true,
@@ -711,7 +711,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "updateCheckUrl",
+        name: "Update Check URL",
         type: "string",
         role: "text.url",
         read: true,
@@ -732,7 +732,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "adaptivestreaming",
+          name: "Adaptive Streaming",
           type: "string",
           role: "text.url",
           read: true,
@@ -781,7 +781,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "alttext",
+        name: "Alternativer Text",
         type: "string",
         role: "text",
         read: true,
@@ -793,7 +793,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "copyright",
+        name: "Urheberrecht",
         type: "string",
         role: "text",
         read: true,
@@ -805,7 +805,7 @@ const videoChannel = {
       _id: "",
       type: "state",
       common: {
-        name: "type",
+        name: "Typ",
         type: "string",
         role: "text",
         read: true,
@@ -818,7 +818,7 @@ const videoChannel = {
         _id: "",
         type: "folder",
         common: {
-          name: "content"
+          name: "Inhalt"
         },
         native: {}
       },
@@ -826,7 +826,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "value",
+          name: "Wert",
           type: "string",
           role: "text",
           read: true,
@@ -838,7 +838,7 @@ const videoChannel = {
         _id: "",
         type: "state",
         common: {
-          name: "type",
+          name: "Typ",
           type: "string",
           role: "text",
           read: true,
@@ -866,7 +866,7 @@ const genericStateObjects = {
     _id: "",
     type: "state",
     common: {
-      name: "breakingNewsCount",
+      name: "Anzahl der Breaking News",
       type: "number",
       role: "value",
       read: true,
@@ -926,7 +926,7 @@ const genericStateObjects = {
     _id: "",
     type: "state",
     common: {
-      name: "totalNewsCount",
+      name: "Gesamtanzahl der Nachrichten vor Filterung",
       type: "number",
       role: "value",
       read: true,
@@ -938,7 +938,7 @@ const genericStateObjects = {
     _id: "",
     type: "state",
     common: {
-      name: "lastUpdate",
+      name: "Letztes Update",
       type: "number",
       role: "value.time",
       read: true,
@@ -950,7 +950,7 @@ const genericStateObjects = {
     _id: "",
     type: "state",
     common: {
-      name: "firstNewsAt",
+      name: "Ab welcher Nachricht soll die Liste beginnen",
       type: "number",
       role: "level",
       min: 0,
@@ -967,7 +967,7 @@ const statesObjects = {
       _id: "",
       type: "folder",
       common: {
-        name: "videos"
+        name: "Nachrichtenvideos"
       },
       native: {}
     },
@@ -978,7 +978,7 @@ const statesObjects = {
       _id: "",
       type: "folder",
       common: {
-        name: "newsmessage"
+        name: "Nachrichten"
       },
       native: {}
     },
@@ -987,7 +987,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "breakingNews"
+          name: "Breaking News"
         },
         native: {}
       },
@@ -998,7 +998,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "inland"
+          name: "Inlandsnachrichten"
         },
         native: {}
       },
@@ -1009,7 +1009,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "ausland"
+          name: "Auslandsnachrichten"
         },
         native: {}
       },
@@ -1020,7 +1020,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "wirtschaft"
+          name: "Wirtschaftsnachrichten"
         },
         native: {}
       },
@@ -1031,7 +1031,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "sport"
+          name: "Sportnachrichten"
         },
         native: {}
       },
@@ -1053,7 +1053,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "investigativ"
+          name: "Investigative Nachrichten"
         },
         native: {}
       },
@@ -1064,7 +1064,7 @@ const statesObjects = {
         _id: "",
         type: "folder",
         common: {
-          name: "wissen"
+          name: "Wissensnachrichten"
         },
         native: {}
       },
@@ -1148,4 +1148,4 @@ const newsDefault = {
   newsDefault,
   statesObjects
 });
-//# sourceMappingURL=definition.js.map
+//# sourceMappingURL=test.js.map

@@ -18,7 +18,7 @@ Retrieves news and video links from Tagesschau.
 
 Install - set the desired settings in the admin - done.
 
-**According to the Tagesschau api, 60 queries per hour are OK. Each topic and video is 1 query. 30 minutes per update always fits. No idea how exactly they take this **.
+**According to the Tagesschau api, 60 queries per hour are OK. Each topic and video is 1 query. 30 minutes per update always fits. No idea how exactly they take this.**
 
 Please note: 
 1. if Enable messages or Enable video messages are not selected, the adapter pauses

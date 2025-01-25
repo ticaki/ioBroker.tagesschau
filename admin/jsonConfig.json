@@ -4,7 +4,7 @@
     "items": {
         "newsEnabled": {
             "type": "checkbox",
-            "label": "Nachrichten aktivieren (Auswahl der Regionen und Themen erforderlich)",
+            "label": "newsEnabled",
             "newLine": false,
             "default": true,
             "xs": 12,
@@ -15,7 +15,7 @@
         },
         "videosEnabled": {
             "type": "checkbox",
-            "label": "Nachrichtenvideos aktivieren (immer alle Videos)",
+            "label": "videosEnabled",
             "newLine": false,
             "default": false,
             "xs": 12,
@@ -26,7 +26,7 @@
         },
         "L0": {
             "type": "header",
-            "text": "Regionen",
+            "text": "L0",
             "size": 2,
             "newLine": true,
             "xs": 12,
@@ -197,7 +197,7 @@
         },
         "_topic": {
             "type": "header",
-            "text": "Themen",
+            "text": "topics",
             "size": 2,
             "newLine": true,
             "xs": 12,
@@ -208,7 +208,7 @@
         },
         "inland": {
             "type": "checkbox",
-            "label": "Inland",
+            "label": "inland",
             "newLine": true,
             "xs": 12,
             "sm": 12,
@@ -218,7 +218,7 @@
         },
         "ausland": {
             "type": "checkbox",
-            "label": "Ausland",
+            "label": "ausland",
             "newLine": false,
             "xs": 12,
             "sm": 12,
@@ -228,7 +228,7 @@
         },
         "wirtschaft": {
             "type": "checkbox",
-            "label": "Wirtschaft",
+            "label": "wirtschaft",
             "newLine": false,
             "xs": 12,
             "sm": 12,
@@ -238,7 +238,7 @@
         },
         "sport": {
             "type": "checkbox",
-            "label": "Sport",
+            "label": "sport",
             "newLine": false,
             "xs": 12,
             "sm": 12,
@@ -258,7 +258,7 @@
         },
         "investigativ": {
             "type": "checkbox",
-            "label": "Investigativ",
+            "label": "investigativ",
             "newLine": false,
             "xs": 12,
             "sm": 12,
@@ -268,7 +268,7 @@
         },
         "wissen": {
             "type": "checkbox",
-            "label": "Wissen",
+            "label": "wissen",
             "newLine": false,
             "xs": 12,
             "sm": 12,
@@ -278,7 +278,7 @@
         },
         "__tags": {
             "type": "header",
-            "text": "Schlüsselwörter",
+            "text": "tags",
             "size": 2,
             "newLine": true,
             "xs": 12,
@@ -290,8 +290,8 @@
         "selectedTags":
         {
             "type": "selectSendTo",
-            "label": "Erwünschte Schlüsselwörter(keine Auswahl = alle)",
-            "tooltip": "Wählen Sie die Schlüsselwörter aus, die Sie interessieren! Keine Auswahl bedeutet alle werden angezeigt!",
+            "label": "selectTags",
+            "tooltip": "selectTagsTooltip",  
             "command": "selectNewsTags",
             "jsonData": "{\"type\":\"tags\"}",
             "multiple": true,
@@ -306,8 +306,8 @@
         "selectedUserTags":
         {
             "type": "chips",
-            "label": "Schlüsselwörter (Benutzerdefiniert) - Tooltip beachten!",
-            "tooltip": "Schlüsselworter können mit führendem * und/oder endendem * eingegeben werden. Beispiel: *tagesschau*. Dann werden alle Schlüsselwörter die zutreffen automatisch ausgewählt. Das wird nicht im Nachbarfeld angezeigt, sondern beim Start des Adapters im Log!",
+            "label": "selectedUserTags",
+            "tooltip": "selectedUserTagsTooltip",
             "noTranslation": true,
             "newLine": false,
             "xs": 12,
@@ -329,8 +329,8 @@
         },
         "interval": {
             "type": "number",
-            "label": "Aktualisierungsintervall (in Minuten)",
-            "tooltip": "Intervall in Minuten, in dem die Nachrichten aktualisiert werden sollen",
+            "label": "interval",
+            "tooltip": "intervalTooltip",
             "min": 5,
             "max": 1000000,
             "step": 1,
@@ -343,8 +343,8 @@
         },
         "maxEntries": {
             "type": "number",
-            "label": "Maximale Anzahl an Nachrichten",
-            "tooltip": "Maximale Anzahl an Nachrichten pro Unterkategorie, die angezeigt werden sollen",
+            "label": "maxEntries",
+            "tooltip": "maxEntriesTooltip",
             "min": 1,
             "max": 200,
             "default": 20,

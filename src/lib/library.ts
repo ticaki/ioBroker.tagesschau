@@ -92,6 +92,7 @@ export class Library extends BaseClass {
     private language: ioBroker.Languages | 'uk' = 'en';
     private translation: { [key: string]: string } = {};
 
+    private justToGetStatesFori18n: { [key: string]: string } | null = null;
     /**
      * use extendObject always on folder, devices and channels always
      */
@@ -119,6 +120,9 @@ export class Library extends BaseClass {
             await this.setLanguage(obj.common.language, true);
         } else {
             await this.setLanguage('en', true);
+        }
+        if (this.justToGetStatesFori18n !== null) {
+            this.adapter.log.error('justToGetStatesFori18n is activated, not for latest!');
         }
     }
 
@@ -171,7 +175,8 @@ export class Library extends BaseClass {
                 }
                 if (objectDefinition.type !== 'state' || expandTree) {
                     const defChannel = this.getChannelObject(objectDefinition, prefix);
-                    await this.writedp(prefix, null, defChannel);
+                    //await this.writedp(prefix, null, defChannel);
+                    await this.writedp(prefix, null, { ...defChannel, native: { objnode: objNode } });
                     for (let i = 0; i < data.length; i++) {
                         const d = data[i];
                         const dp = `${prefix}.${`00${i}`.slice(-2)}`;
@@ -204,7 +209,7 @@ export class Library extends BaseClass {
                         defChannel.common.name = data.title;
                     }
 
-                    await this.writedp(prefix, null, defChannel);
+                    await this.writedp(prefix, null, { ...defChannel, native: { objnode: objNode } });
 
                     // reset the extendedFolderAlways to the old value
                     this.extendedFolderAlways = valbefore;
@@ -221,7 +226,7 @@ export class Library extends BaseClass {
             if (!objectDefinition) {
                 return;
             }
-            await this.writedp(prefix, data, objectDefinition, true, onlyCreate);
+            await this.writedp(prefix, data, { ...objectDefinition, native: { objnode: objNode } }, true, onlyCreate);
         }
     }
 
@@ -233,7 +238,11 @@ export class Library extends BaseClass {
      * @param data  is the definition dataset
      * @returns ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.StateObject
      */
-    getObjectDefFromJson(key: string, def: any, data: any): ioBroker.Object {
+    getObjectDefFromJson(
+        key: string,
+        def: any,
+        data: any,
+    ): ioBroker.ChannelObject | ioBroker.StateObject | ioBroker.DeviceObject | ioBroker.FolderObject {
         let result = this.deepJsonValue(key, def);
         if (result === null || result === undefined) {
             const k = key.split('.');
@@ -360,7 +369,12 @@ export class Library extends BaseClass {
     async writedp(
         dp: string,
         val: ioBroker.StateValue | undefined,
-        obj: ioBroker.Object | null = null,
+        obj:
+            | ioBroker.ChannelObject
+            | ioBroker.StateObject
+            | ioBroker.DeviceObject
+            | ioBroker.FolderObject
+            | null = null,
         ack: boolean = true,
         onlyCreate: boolean = false,
         forceExtend: boolean = false,
@@ -368,6 +382,28 @@ export class Library extends BaseClass {
         dp = this.cleandp(dp);
         let node = this.readdb(dp);
         let nodeIsNew = false;
+
+        if (
+            obj &&
+            this.justToGetStatesFori18n !== null &&
+            obj.native.objnode &&
+            !this.justToGetStatesFori18n[obj.native.objnode] &&
+            typeof obj.common.name == 'string'
+        ) {
+            let found: undefined | string = undefined;
+            for (const key in this.justToGetStatesFori18n) {
+                if (this.justToGetStatesFori18n[key] == obj.common.name) {
+                    found = key;
+                    break;
+                }
+            }
+            if (!found) {
+                this.justToGetStatesFori18n[obj.native.objnode] = obj.common.name;
+                obj.common.name = obj.native.objnode;
+            } else {
+                obj.common.name = found;
+            }
+        }
 
         if (node === undefined) {
             if (!obj) {
@@ -383,9 +419,9 @@ export class Library extends BaseClass {
             }
 
             await this.adapter.extendObject(dp, obj);
-            await sleep(2);
+            await this.adapter.delay(2);
 
-            const stateType = obj && obj.common && obj.common.type;
+            const stateType = obj && obj.common && 'type' in obj.common && obj.common.type;
             node = this.setdb(dp, obj.type, undefined, stateType, true, Date.now(), obj);
         } else if ((node.init || this.extendedFolderAlways || forceExtend) && obj) {
             if (typeof obj.common.name == 'string') {
@@ -396,7 +432,7 @@ export class Library extends BaseClass {
             }
 
             await this.adapter.extendObject(dp, obj);
-            await sleep(2);
+            await this.adapter.delay(2);
         }
 
         if ((obj && obj.type !== 'state') || (onlyCreate && !nodeIsNew)) {
@@ -881,12 +917,4 @@ export class Library extends BaseClass {
             return this.getTranslation(x);
         })}`;
     }
-}
-/**
- * Sleep for the specified time.
- *
- * @param time The time to sleep.
- */
-export async function sleep(time: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, time));
 }

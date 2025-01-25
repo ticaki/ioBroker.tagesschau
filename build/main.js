@@ -58,31 +58,24 @@ class Tagesschau extends utils.Adapter {
    * Is called when databases are connected and adapter received configuration.....
    */
   async onReady() {
-    await this.library.init();
-    await this.library.initStates(await this.getStatesAsync("*"));
-    await (0, import_library.sleep)(500);
-    const maxRegions = 16;
     this.log.info(
       "Thanks for using this adapter. I hope you enjoy it! We not in hurry so please give me some time to get the news."
     );
+    await this.library.init();
+    await this.library.initStates(await this.getStatesAsync("*"));
+    await this.delay(500);
+    const maxRegions = 16;
     const interval = this.config.interval * 6e4;
     this.config.interval = (typeof this.config.interval !== "number" || this.config.interval < 5 || this.config.interval > 1e5 ? 30 : this.config.interval) * 6e4;
     const changed = interval !== this.config.interval;
     this.log.info(
       `${changed ? "I" : "You"} set the refresh interval to ${this.config.interval / 6e4} minutes. ${changed ? "Sorry, we have rules here!" : "I am happy with that."}`
     );
-    let obj;
-    try {
-      obj = await this.getForeignObjectAsync(this.namespace);
-    } catch {
-    }
-    if (!obj) {
-      await this.setForeignObject(this.namespace, {
-        type: "meta",
-        common: { name: "Tagesschau Instanze", type: "meta.folder" },
-        native: {}
-      });
-    }
+    await this.extendForeignObjectAsync(this.namespace, {
+      type: "meta",
+      common: { name: { en: "Tagesschau Instance", de: "Tagesschau Instanze" }, type: "meta.folder" },
+      native: {}
+    });
     for (let i = 1; i <= maxRegions; i++) {
       const k = `L${i.toString()}`;
       this.regions += this.config[k] === true ? (this.regions ? "," : "") + i : "";
@@ -122,7 +115,7 @@ class Tagesschau extends utils.Adapter {
       await this.library.writedp(`news.${topic}.firstNewsAt`, 0, import_definition.genericStateObjects.firstNewsAt);
       await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
     }
-    obj = await this.getForeignObjectAsync(this.namespace);
+    const obj = await this.getForeignObjectAsync(this.namespace);
     if (obj && obj.native && obj.native.additionalConfig) {
       this.additionalConfig = obj.native.additionalConfig;
     }
@@ -143,7 +136,7 @@ class Tagesschau extends utils.Adapter {
     } else {
       await this.library.garbageColleting(`news.`, 6e4, false);
     }
-    await (0, import_library.sleep)(300);
+    await this.delay(300);
     if (this.config.videosEnabled) {
       await this.updateVideos();
     } else {
@@ -421,7 +414,9 @@ class Tagesschau extends utils.Adapter {
         this.sendTo(obj.from, obj.command, json, obj.callback);
         return;
       }
-      this.sendTo(obj.from, obj.command, "Message received", obj.callback);
+      if (obj.callback) {
+        this.sendTo(obj.from, obj.command, "Message received", obj.callback);
+      }
     }
   }
   async onStateChange(id, state) {

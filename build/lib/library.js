@@ -47,8 +47,7 @@ var __privateSet = (obj, member, value, setter) => {
 var library_exports = {};
 __export(library_exports, {
   BaseClass: () => BaseClass,
-  Library: () => Library,
-  sleep: () => sleep
+  Library: () => Library
 });
 module.exports = __toCommonJS(library_exports);
 var import_fs = __toESM(require("fs"));
@@ -119,6 +118,7 @@ class Library extends BaseClass {
   stateDataBase = {};
   language = "en";
   translation = {};
+  justToGetStatesFori18n = null;
   /**
    * use extendObject always on folder, devices and channels always
    */
@@ -145,6 +145,9 @@ class Library extends BaseClass {
       await this.setLanguage(obj.common.language, true);
     } else {
       await this.setLanguage("en", true);
+    }
+    if (this.justToGetStatesFori18n !== null) {
+      this.adapter.log.error("justToGetStatesFori18n is activated, not for latest!");
     }
   }
   /**
@@ -183,7 +186,7 @@ class Library extends BaseClass {
         }
         if (objectDefinition.type !== "state" || expandTree) {
           const defChannel = this.getChannelObject(objectDefinition, prefix);
-          await this.writedp(prefix, null, defChannel);
+          await this.writedp(prefix, null, { ...defChannel, native: { objnode: objNode } });
           for (let i = 0; i < data.length; i++) {
             const d = data[i];
             const dp = `${prefix}.${`00${i}`.slice(-2)}`;
@@ -210,7 +213,7 @@ class Library extends BaseClass {
             this.extendedFolderAlways = true;
             defChannel.common.name = data.title;
           }
-          await this.writedp(prefix, null, defChannel);
+          await this.writedp(prefix, null, { ...defChannel, native: { objnode: objNode } });
           this.extendedFolderAlways = valbefore;
         }
         if (data === null) {
@@ -224,7 +227,7 @@ class Library extends BaseClass {
       if (!objectDefinition) {
         return;
       }
-      await this.writedp(prefix, data, objectDefinition, true, onlyCreate);
+      await this.writedp(prefix, data, { ...objectDefinition, native: { objnode: objNode } }, true, onlyCreate);
     }
   }
   /**
@@ -333,6 +336,21 @@ class Library extends BaseClass {
     dp = this.cleandp(dp);
     let node = this.readdb(dp);
     let nodeIsNew = false;
+    if (obj && this.justToGetStatesFori18n !== null && obj.native.objnode && !this.justToGetStatesFori18n[obj.native.objnode] && typeof obj.common.name == "string") {
+      let found = void 0;
+      for (const key in this.justToGetStatesFori18n) {
+        if (this.justToGetStatesFori18n[key] == obj.common.name) {
+          found = key;
+          break;
+        }
+      }
+      if (!found) {
+        this.justToGetStatesFori18n[obj.native.objnode] = obj.common.name;
+        obj.common.name = obj.native.objnode;
+      } else {
+        obj.common.name = found;
+      }
+    }
     if (node === void 0) {
       if (!obj) {
         throw new Error("writedp try to create a state without object informations.");
@@ -346,8 +364,8 @@ class Library extends BaseClass {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
       await this.adapter.extendObject(dp, obj);
-      await sleep(2);
-      const stateType = obj && obj.common && obj.common.type;
+      await this.adapter.delay(2);
+      const stateType = obj && obj.common && "type" in obj.common && obj.common.type;
       node = this.setdb(dp, obj.type, void 0, stateType, true, Date.now(), obj);
     } else if ((node.init || this.extendedFolderAlways || forceExtend) && obj) {
       if (typeof obj.common.name == "string") {
@@ -357,7 +375,7 @@ class Library extends BaseClass {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
       await this.adapter.extendObject(dp, obj);
-      await sleep(2);
+      await this.adapter.delay(2);
     }
     if (obj && obj.type !== "state" || onlyCreate && !nodeIsNew) {
       return;
@@ -793,13 +811,9 @@ class Library extends BaseClass {
     })}`;
   }
 }
-async function sleep(time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   BaseClass,
-  Library,
-  sleep
+  Library
 });
 //# sourceMappingURL=library.js.map

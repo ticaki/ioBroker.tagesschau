@@ -6,7 +6,7 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 import type { NewsEntity, responseType, videosType } from './lib/types-d';
-import { Library, sleep } from './lib/library';
+import { Library } from './lib/library';
 import {
     filterPartOfNews,
     genericStateObjects,
@@ -61,14 +61,14 @@ class Tagesschau extends utils.Adapter {
     private async onReady(): Promise<void> {
         // 1=Baden-Württemberg, 2=Bayern, 3=Berlin, 4=Brandenburg, 5=Bremen, 6=Hamburg, 7=Hessen, 8=Mecklenburg-Vorpommern, 9=Niedersachsen, 10=Nordrhein-Westfalen, 11=Rheinland-Pfalz, 12=Saarland, 13=Sachsen, 14=Sachsen-Anhalt, 15=Schleswig-Holstein, 16=Thüringen
         //  inland, ausland, wirtschaft, sport, video, investigativ, wissen.
-        await this.library.init();
-        await this.library.initStates(await this.getStatesAsync('*'));
-        await sleep(500);
-        const maxRegions = 16;
-
         this.log.info(
             'Thanks for using this adapter. I hope you enjoy it! We not in hurry so please give me some time to get the news.',
         );
+        await this.library.init();
+        await this.library.initStates(await this.getStatesAsync('*'));
+        await this.delay(500);
+
+        const maxRegions = 16;
         const interval = this.config.interval * 60000;
         this.config.interval =
             (typeof this.config.interval !== 'number' || this.config.interval < 5 || this.config.interval > 100000
@@ -78,19 +78,13 @@ class Tagesschau extends utils.Adapter {
         this.log.info(
             `${changed ? 'I' : 'You'} set the refresh interval to ${this.config.interval / 60000} minutes. ${changed ? 'Sorry, we have rules here!' : 'I am happy with that.'}`,
         );
-        let obj;
-        try {
-            obj = await this.getForeignObjectAsync(this.namespace);
-        } catch {
-            // ignore
-        }
-        if (!obj) {
-            await this.setForeignObject(this.namespace, {
-                type: 'meta',
-                common: { name: 'Tagesschau Instanze', type: 'meta.folder' },
-                native: {},
-            });
-        }
+
+        await this.extendForeignObjectAsync(this.namespace, {
+            type: 'meta',
+            common: { name: { en: 'Tagesschau Instance', de: 'Tagesschau Instanze' }, type: 'meta.folder' },
+            native: {},
+        });
+
         for (let i = 1; i <= maxRegions; i++) {
             const k = `L${i.toString()}` as keyof typeof this.config;
             this.regions += this.config[k] === true ? (this.regions ? ',' : '') + i : '';
@@ -132,7 +126,7 @@ class Tagesschau extends utils.Adapter {
             await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
         }
         // get all tags
-        obj = await this.getForeignObjectAsync(this.namespace);
+        const obj = await this.getForeignObjectAsync(this.namespace);
         if (obj && obj.native && obj.native.additionalConfig) {
             this.additionalConfig = obj.native.additionalConfig;
         }
@@ -143,8 +137,8 @@ class Tagesschau extends utils.Adapter {
         } else {
             this.updateSelectedTags();
         }
-
         this.log.debug(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
+
         await this.library.writedp(`breakingNewsCount`, 0, genericStateObjects.breakingNewsCount);
         const data: { news?: [NewsEntity, NewsEntity, NewsEntity, NewsEntity, NewsEntity]; newsCount: number } = {
             newsCount: 0,
@@ -159,7 +153,7 @@ class Tagesschau extends utils.Adapter {
         } else {
             await this.library.garbageColleting(`news.`, 60000, false);
         }
-        await sleep(300);
+        await this.delay(300);
         if (this.config.videosEnabled) {
             await this.updateVideos();
         } else {
@@ -464,7 +458,9 @@ class Tagesschau extends utils.Adapter {
                 return;
             }
 
-            this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+            if (obj.callback) {
+                this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+            }
         }
     }
 
