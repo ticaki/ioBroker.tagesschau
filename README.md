@@ -30,6 +30,9 @@ Please note:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.4.2 (2025-01-25)
+* (ticaki) make the code fit for latest
+
 ### 0.4.1 (2025-01-17)
 * (ticaki) videos always in the same order.
 

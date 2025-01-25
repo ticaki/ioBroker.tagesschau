@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "news": {
+      "0.4.2": {
+        "en": "make the code fit for latest",
+        "de": "den code für die neuesten",
+        "ru": "сделать код пригодным для последнего",
+        "pt": "fazer o código encaixar para mais recente",
+        "nl": "maak de code geschikt voor nieuwste",
+        "fr": "rendre le code adapté pour la dernière",
+        "it": "rendere il codice adatto per più recenti",
+        "es": "hacer que el código se ajuste a lo último",
+        "pl": "aby kod pasował do najnowszego",
+        "uk": "зробити код, який підходить для останніх",
+        "zh-cn": "使代码适合最新的"
+      },
       "0.4.1": {
         "en": "videos always in the same order.",
         "de": "videos immer in der gleichen reihenfolge.",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono: Adapter usuwa stany własne",
         "uk": "Виправлено: Адаптер видаляє власні стани",
         "zh-cn": "固定: 适配器删除自己的状态"
-      },
-      "0.2.1": {
-        "en": "fix refresh interval & add axios timeouts",
-        "de": "axios timeouts fixieren",
-        "ru": "фиксация интервала обновления & добавить тайм-ауты axios",
-        "pt": "corrigir intervalo de atualização & adicionar intervalos de axios",
-        "nl": "verversen interval repareren en axio's time-outs toevoegen",
-        "fr": "correction de l'intervalle de rafraîchissement & ajouter des timeouts axios",
-        "it": "fissare l'intervallo di aggiornamento e aggiungere timeout assios",
-        "es": "fijar intervalo de actualización & añadir axios timeouts",
-        "pl": "naprawić odświeżający odstęp i dodać axios timeout",
-        "uk": "фіксувати інтервал оновлення і додати осі",
-        "zh-cn": "修复刷新间隔并添加轴超时( a)"
       }
     },
     "titleLang": {
