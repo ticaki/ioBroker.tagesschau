@@ -118,7 +118,6 @@ class Library extends BaseClass {
   stateDataBase = {};
   language = "en";
   translation = {};
-  justToGetStatesFori18n = null;
   /**
    * use extendObject always on folder, devices and channels always
    */
@@ -145,9 +144,6 @@ class Library extends BaseClass {
       await this.setLanguage(obj.common.language, true);
     } else {
       await this.setLanguage("en", true);
-    }
-    if (this.justToGetStatesFori18n !== null) {
-      this.adapter.log.error("justToGetStatesFori18n is activated, not for latest!");
     }
   }
   /**
@@ -336,21 +332,6 @@ class Library extends BaseClass {
     dp = this.cleandp(dp);
     let node = this.readdb(dp);
     let nodeIsNew = false;
-    if (obj && this.justToGetStatesFori18n !== null && obj.native.objnode && !this.justToGetStatesFori18n[obj.native.objnode] && typeof obj.common.name == "string") {
-      let found = void 0;
-      for (const key in this.justToGetStatesFori18n) {
-        if (this.justToGetStatesFori18n[key] == obj.common.name) {
-          found = key;
-          break;
-        }
-      }
-      if (!found) {
-        this.justToGetStatesFori18n[obj.native.objnode] = obj.common.name;
-        obj.common.name = obj.native.objnode;
-      } else {
-        obj.common.name = found;
-      }
-    }
     if (node === void 0) {
       if (!obj) {
         throw new Error("writedp try to create a state without object informations.");

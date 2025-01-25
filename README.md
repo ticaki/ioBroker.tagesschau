@@ -30,6 +30,9 @@ Please note:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### 0.4.3 (2025-01-25)
+* (ticaki) remove some helper code to do translations
+
 ### 0.4.2 (2025-01-25)
 * (ticaki) make the code fit for latest
 

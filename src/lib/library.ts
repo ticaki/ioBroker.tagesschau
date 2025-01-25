@@ -92,7 +92,6 @@ export class Library extends BaseClass {
     private language: ioBroker.Languages | 'uk' = 'en';
     private translation: { [key: string]: string } = {};
 
-    private justToGetStatesFori18n: { [key: string]: string } | null = null;
     /**
      * use extendObject always on folder, devices and channels always
      */
@@ -120,9 +119,6 @@ export class Library extends BaseClass {
             await this.setLanguage(obj.common.language, true);
         } else {
             await this.setLanguage('en', true);
-        }
-        if (this.justToGetStatesFori18n !== null) {
-            this.adapter.log.error('justToGetStatesFori18n is activated, not for latest!');
         }
     }
 
@@ -382,28 +378,6 @@ export class Library extends BaseClass {
         dp = this.cleandp(dp);
         let node = this.readdb(dp);
         let nodeIsNew = false;
-
-        if (
-            obj &&
-            this.justToGetStatesFori18n !== null &&
-            obj.native.objnode &&
-            !this.justToGetStatesFori18n[obj.native.objnode] &&
-            typeof obj.common.name == 'string'
-        ) {
-            let found: undefined | string = undefined;
-            for (const key in this.justToGetStatesFori18n) {
-                if (this.justToGetStatesFori18n[key] == obj.common.name) {
-                    found = key;
-                    break;
-                }
-            }
-            if (!found) {
-                this.justToGetStatesFori18n[obj.native.objnode] = obj.common.name;
-                obj.common.name = obj.native.objnode;
-            } else {
-                obj.common.name = found;
-            }
-        }
 
         if (node === undefined) {
             if (!obj) {

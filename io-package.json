@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "news": {
+      "0.4.3": {
+        "en": "remove some helper code to do translations",
+        "de": "entfernen sie einen hilfecode, um übersetzungen zu machen",
+        "ru": "удалить код помощника для выполнения переводов",
+        "pt": "remover algum código auxiliar para fazer traduções",
+        "nl": "verwijderen van sommige helper code om vertalingen te doen",
+        "fr": "supprimer un code d'aide pour faire des traductions",
+        "it": "rimuovere qualche codice helper per fare traduzioni",
+        "es": "eliminar algún código de ayuda para hacer traducciones",
+        "pl": "usunąć jakiś kod pomocniczy do tłumaczenia",
+        "uk": "видалення коду помічника для перекладу",
+        "zh-cn": "删除一些要翻译的助手代码"
+      },
       "0.4.2": {
         "en": "make the code fit for latest",
         "de": "den code für die neuesten",
@@ -80,19 +93,6 @@
         "pl": "Państwa są aktualizowane dopiero po wprowadzeniu zmian.\nOstatnia aktualizacja Punkt danych dodany ze znacznikiem czasu ostatniego udanego dostępu do danych\nOpróżnianie punktów danych poprawiło się\nObrazy na planszy wstawione dla żadnych wiadomości.\nUser- zdefiniowane słowa kluczowe z '*'\nWymaga wersji admin 7.4.9 lub wyższej",
         "uk": "США оновлюються лише при внесенні змін.\nОстаннє оновлення точки даних додано з таймером останнього успішного доступу до даних\nПоліпшення показників даних\nЗнімки власників не вставляються на новини.\nВизначені ключові слова з `*`\nПотрібна версія адміністратора 7.4.9 або вище",
         "zh-cn": "只有在作出修改时才更新国家.\n上次更新 数据点加上上次成功数据访问的时间戳\n清理数据点的工作得到改善\n无新闻插入占位符图像 .\n用户定义的带有QQ的关键字\n需要7.4.9或更高版本的管理员"
-      },
-      "0.2.3": {
-        "en": "Fixed: Adapter deletes own states",
-        "de": "Fixed: Adapter löscht eigene Zustände",
-        "ru": "Исправлено: Адаптер удаляет собственные состояния",
-        "pt": "Corrigido: Adapter elimina estados próprios",
-        "nl": "Vast: Adapter verwijdert eigen staten",
-        "fr": "Correction : l'adaptateur supprime ses propres états",
-        "it": "Risolto: l'adattatore cancella i propri stati",
-        "es": "Corregido: Adaptador elimina estados propios",
-        "pl": "Naprawiono: Adapter usuwa stany własne",
-        "uk": "Виправлено: Адаптер видаляє власні стани",
-        "zh-cn": "固定: 适配器删除自己的状态"
       }
     },
     "titleLang": {
