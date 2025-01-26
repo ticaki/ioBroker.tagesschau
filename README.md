@@ -12,9 +12,11 @@
 
 ## tagesschau adapter for ioBroker
 
-[Deutsche Anleitung](README-GER.md)
+[Deutsche Anleitung (aktueller)](README-GER.md)
 
 Retrieves news and video links from Tagesschau.
+
+Content is only available in German.
 
 Install - set the desired settings in the admin - done.
 
