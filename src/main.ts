@@ -595,7 +595,12 @@ class Tagesschau extends utils.Adapter {
                             : this.config.maxEntries + state.val;
                     news = news.slice(state.val, end);
                     await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
-                    await this.library.writedp(ownId, state.val, genericStateObjects.firstNewsAt, true);
+                    await this.library.writedp(
+                        `news.${topic}.controls.firstNewsAt`,
+                        state.val,
+                        genericStateObjects.firstNewsAt,
+                        true,
+                    );
                 }
                 break;
             }
