@@ -387,9 +387,6 @@ class Tagesschau extends utils.Adapter {
                         pti: 'tagesschau_in_100_Sekunden',
                     },
                     {
-                        pti: 'video-',
-                    },
-                    {
                         pti: 'tagesschau',
                     },
                     {
