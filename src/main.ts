@@ -603,7 +603,12 @@ class Tagesschau extends utils.Adapter {
                 break;
             }
             case 'autoScrollInterval': {
-                await this.library.writedp(ownId, state.val, genericStateObjects.autoScrollInterval, true);
+                await this.library.writedp(
+                    ownId,
+                    ((state.val as number) || 0) < 2 ? 2 : state.val,
+                    genericStateObjects.autoScrollInterval,
+                    true,
+                );
                 await this.updateScrollIntervals(topic, undefined);
                 break;
             }
