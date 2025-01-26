@@ -80,5 +80,8 @@
     "firstNewsAt": "列表应从哪条消息开始",
     "lastUpdate": "最后更新",
     "breakingNewsCount": "突发新闻数量",
-    "Sonstiges": "其他"
+    "Sonstiges": "其他",
+    "scrollStep": "每卷新闻",
+    "scrollForward": "下一个消息",
+    "scrollBackward": "以前的消息"
 }

@@ -77,5 +77,8 @@
     "firstNewsAt": "From which message should the list start",
     "lastUpdate": "Last update",
     "breakingNewsCount": "Number of breaking news",
-    "Sonstiges": "Other"
+    "Sonstiges": "Other",
+    "scrollStep": "News per Scroll",
+    "scrollForward": "Next Messages",
+    "scrollBackward": "Previous Messages"
 }

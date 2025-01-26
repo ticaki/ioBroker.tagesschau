@@ -80,5 +80,8 @@
     "firstNewsAt": "Van welk bericht moet de lijst beginnen",
     "lastUpdate": "Laatste update",
     "breakingNewsCount": "Aantal actueel nieuws",
-    "Sonstiges": "Ander"
+    "Sonstiges": "Ander",
+    "scrollStep": "Nieuws per scroll",
+    "scrollForward": "Volgende berichten",
+    "scrollBackward": "Vorige berichten"
 }

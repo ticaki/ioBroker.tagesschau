@@ -114,6 +114,12 @@ class Tagesschau extends utils.Adapter {
       );
       await this.library.writedp(`news.${topic}.firstNewsAt`, 0, import_definition.genericStateObjects.firstNewsAt);
       await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
+      await this.library.writedp(`news.${topic}.scrollStep`, 5, import_definition.genericStateObjects.scrollStep);
+      await this.subscribeStatesAsync(`news.${topic}.scrollStep`);
+      await this.library.writedp(`news.${topic}.scrollForward`, false, import_definition.genericStateObjects.scrollForward);
+      await this.subscribeStatesAsync(`news.${topic}.scrollForward`);
+      await this.library.writedp(`news.${topic}.scrollBackward`, false, import_definition.genericStateObjects.scrollBackward);
+      await this.subscribeStatesAsync(`news.${topic}.scrollBackward`);
     }
     const obj = await this.getForeignObjectAsync(this.namespace);
     if (obj && obj.native && obj.native.additionalConfig) {
@@ -136,7 +142,6 @@ class Tagesschau extends utils.Adapter {
     } else {
       await this.library.garbageColleting(`news.`, 6e4, false);
     }
-    await this.delay(300);
     if (this.config.videosEnabled) {
       await this.updateVideos();
     } else {
@@ -234,6 +239,7 @@ class Tagesschau extends utils.Adapter {
           this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
         }
         this.log.debug(`Time to write ${topic}: ${(/* @__PURE__ */ new Date()).getTime() - start}`);
+        await this.delay(50);
       }
       const obj = await this.getForeignObjectAsync(this.namespace);
       if (obj) {
@@ -428,40 +434,60 @@ class Tagesschau extends utils.Adapter {
       return;
     }
     const topic = parts[3];
-    if (parts[4] === "firstNewsAt") {
-      if (typeof state.val !== "number") {
-        if (typeof state.val === "string") {
-          try {
-            state.val = parseInt(state.val);
-            if (isNaN(state.val)) {
-              throw new Error("Invalid number");
-            }
-          } catch {
-            this.log.error(`Failed to parse state value. Number expected`);
-            return;
-          }
+    const ownId = parts.slice(2).join(".");
+    const ownPath = parts.slice(2, -1).join(".");
+    switch (parts[4]) {
+      case "scrollStep": {
+        await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.scrollStep, true);
+        break;
+      }
+      case "scrollForward":
+      case "scrollBackward": {
+        if (parts[4] === "scrollForward") {
+          await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.scrollForward, true);
+          state.val = ((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val || 0) + ((this.library.readdb(`${ownPath}.scrollStep`) || {}).val || 0);
         } else {
-          this.log.error(`Invalid state value. Number expected`);
-          return;
+          await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.scrollBackward, true);
+          state.val = ((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val || 0) - ((this.library.readdb(`${ownPath}.scrollStep`) || {}).val || 0);
         }
       }
-      let news = this.receivedNews[topic];
-      if (news) {
-        news = this.library.cloneGenericObject(news);
-        state.val = Math.round(state.val);
-        state.val = state.val % news.length;
-        state.val = state.val < 0 ? news.length + state.val : state.val;
-        news = news.concat(news.slice(0, state.val));
-        const end = this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
-        news = news.slice(state.val, end);
-        await this.writeNews({ news, newsCount: news.length }, topic, void 0);
-        await this.library.writedp(
-          `news.${topic}.firstNewsAt`,
-          state.val,
-          import_definition.genericStateObjects.firstNewsAt,
-          true
-        );
+      case "firstNewsAt": {
+        if (typeof state.val !== "number") {
+          if (typeof state.val === "string") {
+            try {
+              state.val = parseInt(state.val);
+              if (isNaN(state.val)) {
+                throw new Error("Invalid number");
+              }
+            } catch {
+              this.log.error(`Failed to parse state value. Number expected`);
+              return;
+            }
+          } else {
+            this.log.error(`Invalid state value. Number expected`);
+            return;
+          }
+        }
+        let news = this.receivedNews[topic];
+        if (news) {
+          news = this.library.cloneGenericObject(news);
+          state.val = Math.round(state.val);
+          state.val = state.val % news.length;
+          state.val = state.val < 0 ? news.length + state.val : state.val;
+          news = news.concat(news.slice(0, state.val));
+          const end = this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
+          news = news.slice(state.val, end);
+          await this.writeNews({ news, newsCount: news.length }, topic, void 0);
+          await this.library.writedp(
+            `news.${topic}.firstNewsAt`,
+            state.val,
+            import_definition.genericStateObjects.firstNewsAt,
+            true
+          );
+        }
+        break;
       }
+      case "default":
     }
   }
   /**

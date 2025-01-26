@@ -30,6 +30,9 @@ Please note:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (ticaki) States added for browsing
+
 ### 0.4.3 (2025-01-25)
 * (ticaki) remove some helper code to do translations
 

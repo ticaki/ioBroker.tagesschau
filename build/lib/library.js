@@ -345,7 +345,6 @@ class Library extends BaseClass {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
       await this.adapter.extendObject(dp, obj);
-      await this.adapter.delay(2);
       const stateType = obj && obj.common && "type" in obj.common && obj.common.type;
       node = this.setdb(dp, obj.type, void 0, stateType, true, Date.now(), obj);
     } else if ((node.init || this.extendedFolderAlways || forceExtend) && obj) {
@@ -356,7 +355,6 @@ class Library extends BaseClass {
         obj.common.desc = await this.getTranslationObj(obj.common.desc);
       }
       await this.adapter.extendObject(dp, obj);
-      await this.adapter.delay(2);
     }
     if (obj && obj.type !== "state" || onlyCreate && !nodeIsNew) {
       return;

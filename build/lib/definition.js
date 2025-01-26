@@ -959,6 +959,44 @@ const genericStateObjects = {
       write: true
     },
     native: {}
+  },
+  scrollStep: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollStep",
+      type: "number",
+      role: "level",
+      min: 0,
+      step: 1,
+      read: true,
+      write: true
+    },
+    native: {}
+  },
+  scrollForward: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollForward",
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true
+    },
+    native: {}
+  },
+  scrollBackward: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollBackward",
+      type: "boolean",
+      role: "button",
+      read: false,
+      write: true
+    },
+    native: {}
   }
 };
 const statesObjects = {

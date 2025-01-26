@@ -124,6 +124,15 @@ class Tagesschau extends utils.Adapter {
             );
             await this.library.writedp(`news.${topic}.firstNewsAt`, 0, genericStateObjects.firstNewsAt);
             await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
+
+            await this.library.writedp(`news.${topic}.scrollStep`, 5, genericStateObjects.scrollStep);
+            await this.subscribeStatesAsync(`news.${topic}.scrollStep`);
+
+            await this.library.writedp(`news.${topic}.scrollForward`, false, genericStateObjects.scrollForward);
+            await this.subscribeStatesAsync(`news.${topic}.scrollForward`);
+
+            await this.library.writedp(`news.${topic}.scrollBackward`, false, genericStateObjects.scrollBackward);
+            await this.subscribeStatesAsync(`news.${topic}.scrollBackward`);
         }
         // get all tags
         const obj = await this.getForeignObjectAsync(this.namespace);
@@ -153,7 +162,6 @@ class Tagesschau extends utils.Adapter {
         } else {
             await this.library.garbageColleting(`news.`, 60000, false);
         }
-        await this.delay(300);
         if (this.config.videosEnabled) {
             await this.updateVideos();
         } else {
@@ -254,6 +262,7 @@ class Tagesschau extends utils.Adapter {
                     this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
                 }
                 this.log.debug(`Time to write ${topic}: ${new Date().getTime() - start}`);
+                await this.delay(50);
             }
             const obj = await this.getForeignObjectAsync(this.namespace);
             if (obj) {
@@ -473,44 +482,72 @@ class Tagesschau extends utils.Adapter {
             return;
         }
         const topic = parts[3];
-
-        if (parts[4] === 'firstNewsAt') {
-            // Is user input a number?
-            if (typeof state.val !== 'number') {
-                if (typeof state.val === 'string') {
-                    try {
-                        state.val = parseInt(state.val);
-                        if (isNaN(state.val)) {
-                            throw new Error('Invalid number');
-                        }
-                    } catch {
-                        this.log.error(`Failed to parse state value. Number expected`);
-                        return;
-                    }
+        // remove namespace
+        const ownId = parts.slice(2).join('.');
+        // remove namespace and command
+        const ownPath = parts.slice(2, -1).join('.');
+        switch (parts[4] as keyof typeof genericStateObjects) {
+            case 'scrollStep': {
+                await this.library.writedp(ownId, state.val, genericStateObjects.scrollStep, true);
+                break;
+            }
+            case 'scrollForward':
+            case 'scrollBackward': {
+                if (parts[4] === 'scrollForward') {
+                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollForward, true);
+                    state.val =
+                        (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) +
+                        (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
                 } else {
-                    this.log.error(`Invalid state value. Number expected`);
-                    return;
+                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollBackward, true);
+                    state.val =
+                        (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) -
+                        (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
                 }
             }
-            let news = this.receivedNews[topic];
-            if (news) {
-                // is the number in the range of the news?
-                news = this.library.cloneGenericObject(news) as NewsEntity[];
-                state.val = Math.round(state.val);
-                state.val = state.val % news.length;
-                state.val = state.val < 0 ? news.length + state.val : state.val;
-                news = news.concat(news.slice(0, state.val));
-                const end =
-                    this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
-                news = news.slice(state.val, end);
-                await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
-                await this.library.writedp(
-                    `news.${topic}.firstNewsAt`,
-                    state.val,
-                    genericStateObjects.firstNewsAt,
-                    true,
-                );
+            // eslint-disable-next-line no-fallthrough
+            case 'firstNewsAt': {
+                // Is user input a number?
+                if (typeof state.val !== 'number') {
+                    if (typeof state.val === 'string') {
+                        try {
+                            state.val = parseInt(state.val);
+                            if (isNaN(state.val)) {
+                                throw new Error('Invalid number');
+                            }
+                        } catch {
+                            this.log.error(`Failed to parse state value. Number expected`);
+                            return;
+                        }
+                    } else {
+                        this.log.error(`Invalid state value. Number expected`);
+                        return;
+                    }
+                }
+                let news = this.receivedNews[topic];
+                if (news) {
+                    // is the number in the range of the news?
+                    news = this.library.cloneGenericObject(news) as NewsEntity[];
+                    state.val = Math.round(state.val);
+                    state.val = state.val % news.length;
+                    state.val = state.val < 0 ? news.length + state.val : state.val;
+                    news = news.concat(news.slice(0, state.val));
+                    const end =
+                        this.config.maxEntries + state.val > news.length
+                            ? news.length
+                            : this.config.maxEntries + state.val;
+                    news = news.slice(state.val, end);
+                    await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
+                    await this.library.writedp(
+                        `news.${topic}.firstNewsAt`,
+                        state.val,
+                        genericStateObjects.firstNewsAt,
+                        true,
+                    );
+                }
+                break;
             }
+            case 'default':
         }
     }
 

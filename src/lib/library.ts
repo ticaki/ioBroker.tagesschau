@@ -393,7 +393,6 @@ export class Library extends BaseClass {
             }
 
             await this.adapter.extendObject(dp, obj);
-            await this.adapter.delay(2);
 
             const stateType = obj && obj.common && 'type' in obj.common && obj.common.type;
             node = this.setdb(dp, obj.type, undefined, stateType, true, Date.now(), obj);
@@ -406,7 +405,6 @@ export class Library extends BaseClass {
             }
 
             await this.adapter.extendObject(dp, obj);
-            await this.adapter.delay(2);
         }
 
         if ((obj && obj.type !== 'state') || (onlyCreate && !nodeIsNew)) {
