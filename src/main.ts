@@ -636,6 +636,11 @@ class Tagesschau extends utils.Adapter {
             if (this.updateTimeout) {
                 this.clearTimeout(this.updateTimeout);
             }
+            for (const t in this.scrollIntervals) {
+                if (this.scrollIntervals[t]) {
+                    this.clearInterval(this.scrollIntervals[t]);
+                }
+            }
             callback();
         } catch {
             callback();
