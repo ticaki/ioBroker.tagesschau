@@ -298,7 +298,7 @@ export const newsChannel: newsChannel = {
             common: {
                 name: 'title',
                 type: 'string',
-                role: 'text',
+                role: 'media.title',
                 read: true,
                 write: false,
             },
@@ -950,6 +950,8 @@ export const genericStateObjects: {
     scrollStep: ioBroker.StateObject;
     scrollForward: ioBroker.StateObject;
     scrollBackward: ioBroker.StateObject;
+    autoScrollInterval: ioBroker.StateObject;
+    autoScrollEnabled: ioBroker.StateObject;
 } = {
     default: {
         _id: 'No_definition',
@@ -1081,7 +1083,7 @@ export const genericStateObjects: {
         common: {
             name: 'scrollForward',
             type: 'boolean',
-            role: 'button',
+            role: 'button.next',
             read: false,
             write: true,
         },
@@ -1093,8 +1095,34 @@ export const genericStateObjects: {
         common: {
             name: 'scrollBackward',
             type: 'boolean',
-            role: 'button',
+            role: 'button.prev',
             read: false,
+            write: true,
+        },
+        native: {},
+    },
+    autoScrollInterval: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'autoScrollInterval',
+            type: 'number',
+            role: 'level',
+            unit: 's',
+            min: 2,
+            read: true,
+            write: true,
+        },
+        native: {},
+    },
+    autoScrollEnabled: {
+        _id: '',
+        type: 'state',
+        common: {
+            name: 'autoScrollEnabled',
+            type: 'boolean',
+            role: 'switch',
+            read: true,
             write: true,
         },
         native: {},

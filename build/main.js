@@ -43,6 +43,7 @@ class Tagesschau extends utils.Adapter {
   breakingNewsDatapointExists = false;
   isOnline = false;
   receivedNews = {};
+  scrollIntervals = {};
   constructor(options = {}) {
     super({
       ...options,
@@ -112,15 +113,31 @@ class Tagesschau extends utils.Adapter {
         // @ts-expect-error
         import_definition.statesObjects.news[topic]._channel
       );
-      await this.library.writedp(`news.${topic}.firstNewsAt`, 0, import_definition.genericStateObjects.firstNewsAt);
-      await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
-      await this.library.writedp(`news.${topic}.scrollStep`, 5, import_definition.genericStateObjects.scrollStep);
-      await this.subscribeStatesAsync(`news.${topic}.scrollStep`);
-      await this.library.writedp(`news.${topic}.scrollForward`, false, import_definition.genericStateObjects.scrollForward);
-      await this.subscribeStatesAsync(`news.${topic}.scrollForward`);
-      await this.library.writedp(`news.${topic}.scrollBackward`, false, import_definition.genericStateObjects.scrollBackward);
-      await this.subscribeStatesAsync(`news.${topic}.scrollBackward`);
+      await this.library.writedp(`news.${topic}.controls.firstNewsAt`, 0, import_definition.genericStateObjects.firstNewsAt);
+      await this.library.writedp(`news.${topic}.controls.scrollStep`, 5, import_definition.genericStateObjects.scrollStep);
+      await this.library.writedp(
+        `news.${topic}.controls.scrollForward`,
+        false,
+        import_definition.genericStateObjects.scrollForward
+      );
+      await this.library.writedp(
+        `news.${topic}.controls.scrollBackward`,
+        false,
+        import_definition.genericStateObjects.scrollBackward
+      );
+      await this.library.writedp(
+        `news.${topic}.controls.autoScrollEnabled`,
+        false,
+        import_definition.genericStateObjects.autoScrollEnabled
+      );
+      await this.library.writedp(
+        `news.${topic}.controls.autoScrollInterval`,
+        30,
+        import_definition.genericStateObjects.autoScrollInterval
+      );
+      await this.subscribeStatesAsync(`news.${topic}.controls.*`);
     }
+    await this.updateScrollIntervals(null, void 0);
     const obj = await this.getForeignObjectAsync(this.namespace);
     if (obj && obj.native && obj.native.additionalConfig) {
       this.additionalConfig = obj.native.additionalConfig;
@@ -328,31 +345,31 @@ class Tagesschau extends utils.Adapter {
         const data = response.data;
         const titlesSort = [
           {
-            title: "Im Livestream:"
+            pti: "tagesschau24_im_Livestream"
           },
           {
-            title: "tagesschau in 100 Sekunden"
+            pti: "tagesschau_in_100_Sekunden"
           },
           {
-            sophoraId: "video-"
+            pti: "video-"
           },
           {
-            title: "tagesschau"
+            pti: "tagesschau"
           },
           {
-            title: "tagesschau"
+            pti: "tagesschau"
           },
           {
-            title: "tagesthemen"
+            pti: "tagesthemen"
           },
           {
-            sophoraId: "tse-"
+            pti: "tagesschau_in_Einfacher_Sprache"
           },
           {
-            sophoraId: "tsg-"
+            pti: "tagesschau_mit_Gebaerdensprache"
           },
           {
-            sophoraId: "tsvorzwanzig-"
+            pti: "tagesschau_vor_20_Jahren"
           }
         ];
         const newChannel = [];
@@ -361,7 +378,7 @@ class Tagesschau extends utils.Adapter {
         for (let i = 1; i < titlesSort.length; i++) {
           const index = data.channels.findIndex((c) => {
             const element = titlesSort[i];
-            return c && (element.title && c.title === element.title || element.sophoraId !== void 0 && c.sophoraId.startsWith(element.sophoraId));
+            return c && c.tracking && c.tracking[0] && c.tracking[0].pti === element.pti;
           });
           if (index === -1) {
             newChannel[i] = void 0;
@@ -403,6 +420,51 @@ class Tagesschau extends utils.Adapter {
     }
   }
   /**
+   * Updates the scroll intervals for news topics.
+   *
+   * This function enables or disables the auto-scroll feature for a specific topic
+   * and updates the scroll intervals for all topics. If a topic is provided, it will
+   * specifically update the scroll interval for that topic. If no topic is provided,
+   * it will update the scroll intervals for all topics.
+   *
+   * @param topic - The news topic to update. If null, all topics will be updated.
+   * @param [val] - The value to set for the auto-scroll feature. If undefined, the current value will be used.
+   * @returns A promise that resolves when the update is complete.
+   */
+  async updateScrollIntervals(topic, val) {
+    if (topic !== null && val !== void 0) {
+      await this.library.writedp(
+        `news.${topic}.autoScrollEnabled`,
+        val,
+        import_definition.genericStateObjects.autoScrollEnabled,
+        true
+      );
+    }
+    for (const t of this.topics) {
+      if (topic !== null && t !== topic) {
+        continue;
+      }
+      if (this.scrollIntervals[t]) {
+        this.clearInterval(this.scrollIntervals[t]);
+        this.scrollIntervals[t] = void 0;
+      }
+      if ((this.library.readdb(`news.${t}.autoScrollEnabled`) || {}).val) {
+        this.scrollIntervals[t] = this.setInterval(
+          async () => {
+            await this.onStateChange(`tagesschau.0.news.${t}.scrollForward`, {
+              val: true,
+              ack: false,
+              ts: (/* @__PURE__ */ new Date()).getTime(),
+              lc: (/* @__PURE__ */ new Date()).getTime(),
+              from: this.namespace
+            });
+          },
+          (this.library.readdb(`news.${t}.autoScrollInterval`) || { val: 30 }).val * 1e3
+        );
+      }
+    }
+  }
+  /**
    * Is called when adapter receives a message
    *
    * @param obj The message object
@@ -430,13 +492,13 @@ class Tagesschau extends utils.Adapter {
       return;
     }
     const parts = id.split(".");
-    if (parts.length !== 5) {
+    if (parts.length !== 6) {
       return;
     }
     const topic = parts[3];
     const ownId = parts.slice(2).join(".");
     const ownPath = parts.slice(2, -1).join(".");
-    switch (parts[4]) {
+    switch (parts[5]) {
       case "scrollStep": {
         await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.scrollStep, true);
         break;
@@ -478,16 +540,23 @@ class Tagesschau extends utils.Adapter {
           const end = this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
           news = news.slice(state.val, end);
           await this.writeNews({ news, newsCount: news.length }, topic, void 0);
-          await this.library.writedp(
-            `news.${topic}.firstNewsAt`,
-            state.val,
-            import_definition.genericStateObjects.firstNewsAt,
-            true
-          );
+          await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.firstNewsAt, true);
         }
         break;
       }
-      case "default":
+      case "autoScrollInterval": {
+        await this.library.writedp(ownId, state.val, import_definition.genericStateObjects.autoScrollInterval, true);
+        await this.updateScrollIntervals(topic, void 0);
+        break;
+      }
+      case "autoScrollEnabled": {
+        await this.updateScrollIntervals(topic, !!state.val);
+        break;
+      }
+      case "default": {
+        this.log.error(`Why we are here? Report to developer: Command not processed! state: ${id}`);
+        break;
+      }
     }
   }
   /**

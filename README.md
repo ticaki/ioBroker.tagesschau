@@ -31,7 +31,9 @@ Please note:
 	### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-* (ticaki) States added for browsing
+* (ticaki) States added for browsing.
+* (ticaki) Another attempt to constantly sort the videos in the same way.
+* (ticaki) Control states reorganised.
 
 ### 0.4.3 (2025-01-25)
 * (ticaki) remove some helper code to do translations
