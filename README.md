@@ -32,10 +32,11 @@ Please note:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.5.0 (2025-01-27)
 * (ticaki) States added for browsing.
 * (ticaki) Another attempt to constantly sort the videos in the same way.
 * (ticaki) Control states reorganised.
+* (ticaki) Placeholder images for no news now work
 
 ### 0.4.3 (2025-01-25)
 * (ticaki) remove some helper code to do translations
