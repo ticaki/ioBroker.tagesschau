@@ -22,10 +22,10 @@ axios.defaults.timeout = 10000;
 // import * as fs from "fs";
 
 class Tagesschau extends utils.Adapter {
-    library: Library;
-    additionalConfig: { allTags: string[] } = { allTags: [] };
-    updateTimeout: ioBroker.Timeout | undefined = undefined;
-    topics = [
+    public library: Library;
+    private additionalConfig: { allTags: string[] } = { allTags: [] };
+    private updateTimeout: ioBroker.Timeout | undefined = undefined;
+    private topics = [
         'inland',
         'ausland',
         'wirtschaft',
@@ -34,13 +34,15 @@ class Tagesschau extends utils.Adapter {
         'investigativ',
         'wissen',
     ] as (keyof typeof this.config)[];
-    regions = '';
+    private regions = '';
 
-    breakingNewsDatapointExists = false;
+    private breakingNewsDatapointExists = false;
 
-    isOnline = false;
+    private isOnline = false;
 
-    receivedNews: { [key: string]: NewsEntity[] } = {};
+    private receivedNews: { [key: string]: NewsEntity[] } = {};
+
+    private scrollIntervals: { [key: string]: ioBroker.Interval | undefined } = {};
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -122,9 +124,33 @@ class Tagesschau extends utils.Adapter {
                 // @ts-expect-error
                 statesObjects.news[topic]._channel,
             );
-            await this.library.writedp(`news.${topic}.firstNewsAt`, 0, genericStateObjects.firstNewsAt);
-            await this.subscribeStatesAsync(`news.${topic}.firstNewsAt`);
+            await this.library.writedp(`news.${topic}.controls.firstNewsAt`, 0, genericStateObjects.firstNewsAt);
+            await this.library.writedp(`news.${topic}.controls.scrollStep`, 5, genericStateObjects.scrollStep);
+            await this.library.writedp(
+                `news.${topic}.controls.scrollForward`,
+                false,
+                genericStateObjects.scrollForward,
+            );
+            await this.library.writedp(
+                `news.${topic}.controls.scrollBackward`,
+                false,
+                genericStateObjects.scrollBackward,
+            );
+            await this.library.writedp(
+                `news.${topic}.controls.autoScrollEnabled`,
+                false,
+                genericStateObjects.autoScrollEnabled,
+            );
+            await this.library.writedp(
+                `news.${topic}.controls.autoScrollInterval`,
+                30,
+                genericStateObjects.autoScrollInterval,
+            );
+            await this.subscribeStatesAsync(`news.${topic}.controls.*`);
         }
+
+        await this.updateScrollIntervals(null, undefined);
+
         // get all tags
         const obj = await this.getForeignObjectAsync(this.namespace);
         if (obj && obj.native && obj.native.additionalConfig) {
@@ -153,7 +179,6 @@ class Tagesschau extends utils.Adapter {
         } else {
             await this.library.garbageColleting(`news.`, 60000, false);
         }
-        await this.delay(300);
         if (this.config.videosEnabled) {
             await this.updateVideos();
         } else {
@@ -254,6 +279,7 @@ class Tagesschau extends utils.Adapter {
                     this.log.warn(`Response status: ${response.status} response statusText: ${response.statusText}`);
                 }
                 this.log.debug(`Time to write ${topic}: ${new Date().getTime() - start}`);
+                await this.delay(50);
             }
             const obj = await this.getForeignObjectAsync(this.namespace);
             if (obj) {
@@ -353,33 +379,30 @@ class Tagesschau extends utils.Adapter {
                 // always the same order of videos
                 const data = response.data as videosType;
 
-                const titlesSort: { title?: string; sophoraId?: string }[] = [
+                const titlesSort: { pti?: string }[] = [
                     {
-                        title: 'Im Livestream:',
+                        pti: 'tagesschau24_im_Livestream',
                     },
                     {
-                        title: 'tagesschau in 100 Sekunden',
+                        pti: 'tagesschau_in_100_Sekunden',
                     },
                     {
-                        sophoraId: 'video-',
+                        pti: 'tagesschau',
                     },
                     {
-                        title: 'tagesschau',
+                        pti: 'tagesschau',
                     },
                     {
-                        title: 'tagesschau',
+                        pti: 'tagesthemen',
                     },
                     {
-                        title: 'tagesthemen',
+                        pti: 'tagesschau_in_Einfacher_Sprache',
                     },
                     {
-                        sophoraId: 'tse-',
+                        pti: 'tagesschau_mit_Gebaerdensprache',
                     },
                     {
-                        sophoraId: 'tsg-',
-                    },
-                    {
-                        sophoraId: 'tsvorzwanzig-',
+                        pti: 'tagesschau_vor_20_Jahren',
                     },
                 ];
 
@@ -390,11 +413,7 @@ class Tagesschau extends utils.Adapter {
                 for (let i = 1; i < titlesSort.length; i++) {
                     const index = data.channels.findIndex(c => {
                         const element = titlesSort[i];
-                        return (
-                            c &&
-                            ((element.title && c.title === element.title) ||
-                                (element.sophoraId !== undefined && c.sophoraId.startsWith(element.sophoraId)))
-                        );
+                        return c && c.tracking && c.tracking[0] && c.tracking[0].pti === element.pti;
                     });
                     if (index === -1) {
                         newChannel[i] = undefined;
@@ -440,6 +459,53 @@ class Tagesschau extends utils.Adapter {
     }
 
     /**
+     * Updates the scroll intervals for news topics.
+     *
+     * This function enables or disables the auto-scroll feature for a specific topic
+     * and updates the scroll intervals for all topics. If a topic is provided, it will
+     * specifically update the scroll interval for that topic. If no topic is provided,
+     * it will update the scroll intervals for all topics.
+     *
+     * @param topic - The news topic to update. If null, all topics will be updated.
+     * @param [val] - The value to set for the auto-scroll feature. If undefined, the current value will be used.
+     * @returns A promise that resolves when the update is complete.
+     */
+    async updateScrollIntervals(topic: string | null, val?: boolean): Promise<void> {
+        if (topic !== null && val !== undefined) {
+            await this.library.writedp(
+                `news.${topic}.autoScrollEnabled`,
+                val,
+                genericStateObjects.autoScrollEnabled,
+                true,
+            );
+        }
+
+        for (const t of this.topics) {
+            if (topic !== null && t !== topic) {
+                continue;
+            }
+            if (this.scrollIntervals[t]) {
+                this.clearInterval(this.scrollIntervals[t]);
+                this.scrollIntervals[t] = undefined;
+            }
+            if ((this.library.readdb(`news.${t}.autoScrollEnabled`) || {}).val) {
+                this.scrollIntervals[t] = this.setInterval(
+                    async () => {
+                        await this.onStateChange(`tagesschau.0.news.${t}.scrollForward`, {
+                            val: true,
+                            ack: false,
+                            ts: new Date().getTime(),
+                            lc: new Date().getTime(),
+                            from: this.namespace,
+                        });
+                    },
+                    ((this.library.readdb(`news.${t}.autoScrollInterval`) || { val: 30 }).val as number) * 1000,
+                );
+            }
+        }
+    }
+
+    /**
      * Is called when adapter receives a message
      *
      * @param obj The message object
@@ -469,47 +535,92 @@ class Tagesschau extends utils.Adapter {
             return;
         }
         const parts = id.split('.');
-        if (parts.length !== 5) {
+        if (parts.length !== 6) {
             return;
         }
         const topic = parts[3];
-
-        if (parts[4] === 'firstNewsAt') {
-            // Is user input a number?
-            if (typeof state.val !== 'number') {
-                if (typeof state.val === 'string') {
-                    try {
-                        state.val = parseInt(state.val);
-                        if (isNaN(state.val)) {
-                            throw new Error('Invalid number');
-                        }
-                    } catch {
-                        this.log.error(`Failed to parse state value. Number expected`);
-                        return;
-                    }
+        // remove namespace
+        const ownId = parts.slice(2).join('.');
+        // remove namespace and command
+        const ownPath = parts.slice(2, -1).join('.');
+        switch (parts[5] as keyof typeof genericStateObjects) {
+            case 'scrollStep': {
+                await this.library.writedp(ownId, state.val, genericStateObjects.scrollStep, true);
+                break;
+            }
+            case 'scrollForward':
+            case 'scrollBackward': {
+                if (parts[4] === 'scrollForward') {
+                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollForward, true);
+                    state.val =
+                        (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) +
+                        (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
                 } else {
-                    this.log.error(`Invalid state value. Number expected`);
-                    return;
+                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollBackward, true);
+                    state.val =
+                        (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) -
+                        (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
                 }
             }
-            let news = this.receivedNews[topic];
-            if (news) {
-                // is the number in the range of the news?
-                news = this.library.cloneGenericObject(news) as NewsEntity[];
-                state.val = Math.round(state.val);
-                state.val = state.val % news.length;
-                state.val = state.val < 0 ? news.length + state.val : state.val;
-                news = news.concat(news.slice(0, state.val));
-                const end =
-                    this.config.maxEntries + state.val > news.length ? news.length : this.config.maxEntries + state.val;
-                news = news.slice(state.val, end);
-                await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
+            // eslint-disable-next-line no-fallthrough
+            case 'firstNewsAt': {
+                // Is user input a number?
+                if (typeof state.val !== 'number') {
+                    if (typeof state.val === 'string') {
+                        try {
+                            state.val = parseInt(state.val);
+                            if (isNaN(state.val)) {
+                                throw new Error('Invalid number');
+                            }
+                        } catch {
+                            this.log.error(`Failed to parse state value. Number expected`);
+                            return;
+                        }
+                    } else {
+                        this.log.error(`Invalid state value. Number expected`);
+                        return;
+                    }
+                }
+                let news = this.receivedNews[topic];
+                if (news) {
+                    // is the number in the range of the news?
+                    news = this.library.cloneGenericObject(news) as NewsEntity[];
+                    state.val = Math.round(state.val);
+                    state.val = state.val % news.length;
+                    state.val = state.val < 0 ? news.length + state.val : state.val;
+                    news = news.concat(news.slice(0, state.val));
+                    const end =
+                        this.config.maxEntries + state.val > news.length
+                            ? news.length
+                            : this.config.maxEntries + state.val;
+                    news = news.slice(state.val, end);
+                    await this.writeNews({ news: news, newsCount: news.length }, topic, undefined);
+                    await this.library.writedp(
+                        `news.${topic}.controls.firstNewsAt`,
+                        state.val,
+                        genericStateObjects.firstNewsAt,
+                        true,
+                    );
+                }
+                break;
+            }
+            case 'autoScrollInterval': {
                 await this.library.writedp(
-                    `news.${topic}.firstNewsAt`,
-                    state.val,
-                    genericStateObjects.firstNewsAt,
+                    ownId,
+                    ((state.val as number) || 0) < 2 ? 2 : state.val,
+                    genericStateObjects.autoScrollInterval,
                     true,
                 );
+                await this.updateScrollIntervals(topic, undefined);
+                break;
+            }
+            case 'autoScrollEnabled': {
+                await this.updateScrollIntervals(topic, !!state.val);
+                break;
+            }
+            case 'default': {
+                this.log.error(`Why we are here? Report to developer: Command not processed! state: ${id}`);
+                break;
             }
         }
     }
@@ -526,6 +637,11 @@ class Tagesschau extends utils.Adapter {
             );
             if (this.updateTimeout) {
                 this.clearTimeout(this.updateTimeout);
+            }
+            for (const t in this.scrollIntervals) {
+                if (this.scrollIntervals[t]) {
+                    this.clearInterval(this.scrollIntervals[t]);
+                }
             }
             callback();
         } catch {

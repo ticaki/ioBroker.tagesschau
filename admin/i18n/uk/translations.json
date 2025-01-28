@@ -80,5 +80,8 @@
     "firstNewsAt": "З якого повідомлення повинен починатися список",
     "lastUpdate": "Останнє оновлення",
     "breakingNewsCount": "Кількість екстрених новин",
-    "Sonstiges": "інше"
+    "Sonstiges": "інше",
+    "scrollStep": "Новини за сувій",
+    "scrollForward": "Наступні повідомлення",
+    "scrollBackward": "Попередні повідомлення"
 }

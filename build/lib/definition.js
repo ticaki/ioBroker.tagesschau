@@ -53,7 +53,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/1x1-144.png"
+      def: "/adapter/tagesschau/img/tagesschau-1x1-144.png"
     },
     native: {}
   },
@@ -66,7 +66,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/1x1-256.png"
+      def: "/adapter/tagesschau/img/tagesschau-1x1-256.png"
     },
     native: {}
   },
@@ -79,7 +79,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/1x1-432.png"
+      def: "/adapter/tagesschau/img/tagesschau-1x1-432.png"
     },
     native: {}
   },
@@ -92,7 +92,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/1x1-640.png"
+      def: "/adapter/tagesschau/img/tagesschau-1x1-640.png"
     },
     native: {}
   },
@@ -105,7 +105,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/1x1-840.png"
+      def: "/adapter/tagesschau/img/tagesschau-1x1-840.png"
     },
     native: {}
   },
@@ -118,7 +118,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-256.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-256.png"
     },
     native: {}
   },
@@ -131,7 +131,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-384.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-384.png"
     },
     native: {}
   },
@@ -144,7 +144,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-512.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-512.png"
     },
     native: {}
   },
@@ -157,7 +157,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-640.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-640.png"
     },
     native: {}
   },
@@ -170,7 +170,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-960.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-960.png"
     },
     native: {}
   },
@@ -183,7 +183,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-1280.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-1280.png"
     },
     native: {}
   },
@@ -196,7 +196,7 @@ const imageVariants = {
       role: "text.url",
       read: true,
       write: false,
-      def: "/adapter/tagesschau/img/16x9-1920.png"
+      def: "/adapter/tagesschau/img/tagesschau-16x9-1920.png"
     },
     native: {}
   }
@@ -249,7 +249,7 @@ const newsChannel = {
       common: {
         name: "title",
         type: "string",
-        role: "text",
+        role: "media.title",
         read: true,
         write: false
       },
@@ -955,6 +955,70 @@ const genericStateObjects = {
       role: "level",
       min: 0,
       step: 1,
+      read: true,
+      write: true
+    },
+    native: {}
+  },
+  scrollStep: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollStep",
+      type: "number",
+      role: "level",
+      min: 0,
+      step: 1,
+      read: true,
+      write: true
+    },
+    native: {}
+  },
+  scrollForward: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollForward",
+      type: "boolean",
+      role: "button.next",
+      read: false,
+      write: true
+    },
+    native: {}
+  },
+  scrollBackward: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "scrollBackward",
+      type: "boolean",
+      role: "button.prev",
+      read: false,
+      write: true
+    },
+    native: {}
+  },
+  autoScrollInterval: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "autoScrollInterval",
+      type: "number",
+      role: "level",
+      unit: "s",
+      min: 2,
+      read: true,
+      write: true
+    },
+    native: {}
+  },
+  autoScrollEnabled: {
+    _id: "",
+    type: "state",
+    common: {
+      name: "autoScrollEnabled",
+      type: "boolean",
+      role: "switch",
       read: true,
       write: true
     },

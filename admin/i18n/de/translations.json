@@ -84,5 +84,8 @@
     "sophoraId": "Sophora id",
     "sport": "Sportnachrichten",
     "tags.tag": "Wert",
-    "wirtschaft": "Wirtschaftsnachrichten"
+    "wirtschaft": "Wirtschaftsnachrichten",
+    "scrollStep": "Nachrichten pro Scroll",
+    "scrollForward": "Nächste Nachrichten",
+    "scrollBackward": "Vorherige Nachrichten"
 }

@@ -80,5 +80,8 @@
     "firstNewsAt": "Od jakiego komunikatu powinna zaczynać się lista",
     "lastUpdate": "Ostatnia aktualizacja",
     "breakingNewsCount": "Liczba najświeższych wiadomości",
-    "Sonstiges": "Inny"
+    "Sonstiges": "Inny",
+    "scrollStep": "Wiadomości na zwój",
+    "scrollForward": "Następne wiadomości",
+    "scrollBackward": "Poprzednie wiadomości"
 }

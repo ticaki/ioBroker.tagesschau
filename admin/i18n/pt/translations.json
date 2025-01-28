@@ -80,5 +80,8 @@
     "firstNewsAt": "De que mensagem deve começar a lista",
     "lastUpdate": "Última atualização",
     "breakingNewsCount": "Número de notícias de última hora",
-    "Sonstiges": "Outro"
+    "Sonstiges": "Outro",
+    "scrollStep": "Notícias por rolagem",
+    "scrollForward": "Próximas mensagens",
+    "scrollBackward": "Mensagens anteriores"
 }
