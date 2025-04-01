@@ -33,7 +33,7 @@
     "@iobroker/adapter-dev": "^1.4.0",
     "@iobroker/eslint-config": "^1.0.0",
     "@iobroker/testing": "^5.0.4",
-    "@tsconfig/node20": "^20.1.4",
+    "@tsconfig/node20": "^20.1.5",
     "@types/axios": "^0.14.4",
     "@types/chai": "^4.3.20",
     "@types/chai-as-promised": "^8.0.2",
