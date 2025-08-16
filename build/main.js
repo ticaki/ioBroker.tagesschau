@@ -510,6 +510,7 @@ class Tagesschau extends utils.Adapter {
           state.val = ((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val || 0) - ((this.library.readdb(`${ownPath}.scrollStep`) || {}).val || 0);
         }
       }
+      // eslint-disable-next-line no-fallthrough
       case "firstNewsAt": {
         if (typeof state.val !== "number") {
           if (typeof state.val === "string") {
