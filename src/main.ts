@@ -44,7 +44,7 @@ class Tagesschau extends utils.Adapter {
 
     private scrollIntervals: { [key: string]: ioBroker.Interval | undefined } = {};
 
-    private homepageInterval: ioBroker.Timeout | undefined = undefined;
+    private homepageInterval: ioBroker.Interval | undefined = undefined;
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
@@ -70,10 +70,17 @@ class Tagesschau extends utils.Adapter {
         await this.library.init();
         await this.library.initStates(await this.getStatesAsync('*'));
         await this.delay(500);
-    // Breaking News Homepage Datenpunkte anlegen
-    await this.library.writedp(`breakingNewsHomepageCount`, 0, genericStateObjects.breakingNewsCount);
-    const homepageData: { news?: any[]; newsCount: number } = { newsCount: 0, news: [] };
-    await this.library.writeFromJson(`news.breakingNewsHomepage`, `news.breakingNewsHomepage`, statesObjects, homepageData, true, true);
+        // Breaking News Homepage Datenpunkte anlegen
+        await this.library.writedp(`breakingNewsHomepageCount`, 0, genericStateObjects.breakingNewsCount);
+        const homepageData: { news?: any[]; newsCount: number } = { newsCount: 0, news: [] };
+        await this.library.writeFromJson(
+            `news.breakingNewsHomepage`,
+            `news.breakingNewsHomepage`,
+            statesObjects,
+            homepageData,
+            true,
+            true,
+        );
 
         const maxRegions = 16;
         const interval = this.config.interval * 60000;
@@ -190,7 +197,7 @@ class Tagesschau extends utils.Adapter {
             await this.library.garbageColleting(`videos.`, 60000, false);
         }
         this.update();
-    this.updateHomepageBreakingNews();
+        this.updateHomepageBreakingNews();
         this.log.info('Initialize stuff completed and new news are available. Old ones too. No more text for now on.');
     }
 
@@ -209,44 +216,61 @@ class Tagesschau extends utils.Adapter {
 
     updateHomepageBreakingNews(): void {
         // Intervall: alle 2 Minuten
-        this.homepageInterval = this.setInterval(async () => {
-            try {
-                const url = 'https://www.tagesschau.de/api2u/homepage';
-                const response = await axios.get(url, { headers: { 'User-Agent': 'ioBroker', accept: 'application/json' } });
-                if (response.status === 200 && response.data) {
-                    const homepage = response.data;
-                    let breakingNews: any[] = [];
-                    if (homepage.news) {
-                        breakingNews = breakingNews.concat(homepage.news.filter((n: any) => n.breakingNews === true));
-                    }
-                    if (homepage.regional) {
-                        breakingNews = breakingNews.concat(homepage.regional.filter((n: any) => n.breakingNews === true));
-                    }
-                    await this.library.writedp(`breakingNewsHomepageCount`, breakingNews.length, genericStateObjects.breakingNewsCount);
-                    await this.library.writeFromJson(
-                        `news.breakingNewsHomepage`,
-                        `news.breakingNewsHomepage`,
-                        statesObjects,
-                        { news: breakingNews, newsCount: breakingNews.length },
-                        true,
-                        true,
-                    );
-                    for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
-                        await this.library.garbageColleting(`news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`, 60000, false);
+        this.homepageInterval = this.setInterval(
+            async () => {
+                try {
+                    const url = 'https://www.tagesschau.de/api2u/homepage';
+                    const response = await axios.get(url, {
+                        headers: { 'User-Agent': 'ioBroker', accept: 'application/json' },
+                    });
+                    if (response.status === 200 && response.data) {
+                        const homepage = response.data;
+                        let breakingNews: any[] = [];
+                        if (homepage.news) {
+                            breakingNews = breakingNews.concat(
+                                homepage.news.filter((n: any) => n.breakingNews === true),
+                            );
+                        }
+                        if (homepage.regional) {
+                            breakingNews = breakingNews.concat(
+                                homepage.regional.filter((n: any) => n.breakingNews === true),
+                            );
+                        }
                         await this.library.writedp(
-                            `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
-                            undefined,
-                            newsChannel.news._array,
-                            undefined,
-                            undefined,
+                            `breakingNewsHomepageCount`,
+                            breakingNews.length,
+                            genericStateObjects.breakingNewsCount,
+                        );
+                        await this.library.writeFromJson(
+                            `news.breakingNewsHomepage`,
+                            `news.breakingNewsHomepage`,
+                            statesObjects,
+                            { news: breakingNews, newsCount: breakingNews.length },
+                            true,
                             true,
                         );
+                        for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
+                            await this.library.garbageColleting(
+                                `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+                                60000,
+                                false,
+                            );
+                            await this.library.writedp(
+                                `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+                                undefined,
+                                newsChannel.news._array,
+                                undefined,
+                                undefined,
+                                true,
+                            );
+                        }
                     }
+                } catch (e) {
+                    this.log.warn(`Error fetching homepage breaking news: ${String(e)}`);
                 }
-            } catch (e) {
-                this.log.warn(`Error fetching homepage breaking news: ${e}`);
-            }
-        }, 2 * 60 * 1000); // alle 2 Minuten
+            },
+            2 * 60 * 1000,
+        ); // alle 2 Minuten
     }
 
     updateSelectedTags(): void {

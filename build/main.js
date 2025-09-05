@@ -68,7 +68,14 @@ class Tagesschau extends utils.Adapter {
     await this.delay(500);
     await this.library.writedp(`breakingNewsHomepageCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
     const homepageData = { newsCount: 0, news: [] };
-    await this.library.writeFromJson(`news.breakingNewsHomepage`, `news.breakingNewsHomepage`, import_definition.statesObjects, homepageData, true, true);
+    await this.library.writeFromJson(
+      `news.breakingNewsHomepage`,
+      `news.breakingNewsHomepage`,
+      import_definition.statesObjects,
+      homepageData,
+      true,
+      true
+    );
     const maxRegions = 16;
     const interval = this.config.interval * 6e4;
     this.config.interval = (typeof this.config.interval !== "number" || this.config.interval < 5 || this.config.interval > 1e5 ? 30 : this.config.interval) * 6e4;
@@ -185,44 +192,61 @@ class Tagesschau extends utils.Adapter {
     }, this.config.interval);
   }
   updateHomepageBreakingNews() {
-    this.homepageInterval = this.setInterval(async () => {
-      try {
-        const url = "https://www.tagesschau.de/api2u/homepage";
-        const response = await import_axios.default.get(url, { headers: { "User-Agent": "ioBroker", accept: "application/json" } });
-        if (response.status === 200 && response.data) {
-          const homepage = response.data;
-          let breakingNews = [];
-          if (homepage.news) {
-            breakingNews = breakingNews.concat(homepage.news.filter((n) => n.breakingNews === true));
-          }
-          if (homepage.regional) {
-            breakingNews = breakingNews.concat(homepage.regional.filter((n) => n.breakingNews === true));
-          }
-          await this.library.writedp(`breakingNewsHomepageCount`, breakingNews.length, import_definition.genericStateObjects.breakingNewsCount);
-          await this.library.writeFromJson(
-            `news.breakingNewsHomepage`,
-            `news.breakingNewsHomepage`,
-            import_definition.statesObjects,
-            { news: breakingNews, newsCount: breakingNews.length },
-            true,
-            true
-          );
-          for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
-            await this.library.garbageColleting(`news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`, 6e4, false);
+    this.homepageInterval = this.setInterval(
+      async () => {
+        try {
+          const url = "https://www.tagesschau.de/api2u/homepage";
+          const response = await import_axios.default.get(url, {
+            headers: { "User-Agent": "ioBroker", accept: "application/json" }
+          });
+          if (response.status === 200 && response.data) {
+            const homepage = response.data;
+            let breakingNews = [];
+            if (homepage.news) {
+              breakingNews = breakingNews.concat(
+                homepage.news.filter((n) => n.breakingNews === true)
+              );
+            }
+            if (homepage.regional) {
+              breakingNews = breakingNews.concat(
+                homepage.regional.filter((n) => n.breakingNews === true)
+              );
+            }
             await this.library.writedp(
-              `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
-              void 0,
-              import_definition.newsChannel.news._array,
-              void 0,
-              void 0,
+              `breakingNewsHomepageCount`,
+              breakingNews.length,
+              import_definition.genericStateObjects.breakingNewsCount
+            );
+            await this.library.writeFromJson(
+              `news.breakingNewsHomepage`,
+              `news.breakingNewsHomepage`,
+              import_definition.statesObjects,
+              { news: breakingNews, newsCount: breakingNews.length },
+              true,
               true
             );
+            for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
+              await this.library.garbageColleting(
+                `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+                6e4,
+                false
+              );
+              await this.library.writedp(
+                `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+                void 0,
+                import_definition.newsChannel.news._array,
+                void 0,
+                void 0,
+                true
+              );
+            }
           }
+        } catch (e) {
+          this.log.warn(`Error fetching homepage breaking news: ${String(e)}`);
         }
-      } catch (e) {
-        this.log.warn(`Error fetching homepage breaking news: ${e}`);
-      }
-    }, 2 * 60 * 1e3);
+      },
+      2 * 60 * 1e3
+    );
   }
   updateSelectedTags() {
     const selectedUserTags = this.config.selectedUserTags || [];
