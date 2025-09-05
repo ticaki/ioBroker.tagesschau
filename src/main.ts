@@ -238,6 +238,10 @@ class Tagesschau extends utils.Adapter {
                     `breakingNewsHomepageCount`,
                     breakingNews.length,
                     genericStateObjects.breakingNewsCount,
+                    undefined,
+                    undefined,
+                    undefined,
+                    true,
                 );
                 await this.library.writeFromJson(
                     `news.breakingNewsHomepage`,
