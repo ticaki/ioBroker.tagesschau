@@ -273,7 +273,7 @@ class Tagesschau extends utils.Adapter {
             }
         } catch (e) {
             if (this.warnedNotReachable === false) {
-                this.log.warn(`Could not reach Tagesschau homepage API: ${e}`);
+                this.log.warn(`Could not reach Tagesschau homepage API: ${e instanceof Error ? e.message : String(e)}`);
                 this.warnedNotReachable = true;
             }
         }
