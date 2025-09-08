@@ -315,9 +315,10 @@ class Library extends BaseClass {
    * @param ack set ack to false if needed - NEVER after u subscript to states)
    * @param onlyCreate only extended the objects, do not write the values in exists states
    * @param forceExtend force the extend of the object
+   * @param forceWrite force the write of the state even if val == oldval
    * @returns void
    */
-  async writedp(dp, val, obj = null, ack = true, onlyCreate = false, forceExtend = false) {
+  async writedp(dp, val, obj = null, ack = true, onlyCreate = false, forceExtend = false, forceWrite = false) {
     dp = this.cleandp(dp);
     let node = this.readdb(dp);
     let nodeIsNew = false;
@@ -351,7 +352,7 @@ class Library extends BaseClass {
     if (node) {
       this.setdb(dp, node.type, val, node.stateTyp, true);
     }
-    if (node && (!this.defaults.updateStateOnChangeOnly || node.val !== val || !node.ack)) {
+    if (node && (!this.defaults.updateStateOnChangeOnly || forceWrite || node.val !== val || !node.ack)) {
       const typ = obj && obj.common && obj.common.type || node.stateTyp;
       if (typ && typ != typeof val && val !== void 0) {
         val = this.convertToType(val, typ);

@@ -42,8 +42,10 @@ class Tagesschau extends utils.Adapter {
   regions = "";
   breakingNewsDatapointExists = false;
   isOnline = false;
+  warnedNotReachable = false;
   receivedNews = {};
   scrollIntervals = {};
+  homepageTimeout = void 0;
   constructor(options = {}) {
     super({
       ...options,
@@ -65,6 +67,16 @@ class Tagesschau extends utils.Adapter {
     await this.library.init();
     await this.library.initStates(await this.getStatesAsync("*"));
     await this.delay(500);
+    await this.library.writedp(`breakingNewsHomepageCount`, 0, import_definition.genericStateObjects.breakingNewsCount);
+    const homepageData = { newsCount: 0, news: [] };
+    await this.library.writeFromJson(
+      `news.breakingNewsHomepage`,
+      `news.breakingNewsHomepage`,
+      import_definition.statesObjects,
+      homepageData,
+      true,
+      true
+    );
     const maxRegions = 16;
     const interval = this.config.interval * 6e4;
     this.config.interval = (typeof this.config.interval !== "number" || this.config.interval < 5 || this.config.interval > 1e5 ? 30 : this.config.interval) * 6e4;
@@ -165,6 +177,8 @@ class Tagesschau extends utils.Adapter {
       await this.library.garbageColleting(`videos.`, 6e4, false);
     }
     this.update();
+    this.log.debug(`Breaking News!`);
+    await this.updateHomepageBreakingNews();
     this.log.info("Initialize stuff completed and new news are available. Old ones too. No more text for now on.");
   }
   update() {
@@ -178,6 +192,66 @@ class Tagesschau extends utils.Adapter {
       }
       this.update();
     }, this.config.interval);
+  }
+  async updateHomepageBreakingNews() {
+    try {
+      const url = "https://www.tagesschau.de/api2u/homepage";
+      const response = await import_axios.default.get(url, {
+        headers: { "User-Agent": "ioBroker", accept: "application/json" }
+      });
+      if (response.status === 200 && response.data) {
+        const homepage = response.data;
+        let breakingNews = [];
+        if (homepage.news) {
+          breakingNews = breakingNews.concat(homepage.news.filter((n) => n.breakingNews === true));
+        }
+        if (homepage.regional) {
+          breakingNews = breakingNews.concat(homepage.regional.filter((n) => n.breakingNews === true));
+        }
+        await this.library.writedp(
+          `breakingNewsHomepageCount`,
+          breakingNews.length,
+          import_definition.genericStateObjects.breakingNewsCount,
+          void 0,
+          void 0,
+          void 0,
+          true
+        );
+        await this.library.writeFromJson(
+          `news.breakingNewsHomepage`,
+          `news.breakingNewsHomepage`,
+          import_definition.statesObjects,
+          { news: breakingNews, newsCount: breakingNews.length },
+          true,
+          true
+        );
+        for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
+          await this.library.garbageColleting(
+            `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+            6e4,
+            false
+          );
+          await this.library.writedp(
+            `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
+            void 0,
+            import_definition.newsChannel.news._array,
+            void 0,
+            void 0,
+            true
+          );
+        }
+        if (this.warnedNotReachable) {
+          this.log.info("Tagesschau homepage API reachable again.");
+          this.warnedNotReachable = false;
+        }
+      }
+    } catch (e) {
+      if (this.warnedNotReachable === false) {
+        this.log.warn(`Could not reach Tagesschau homepage API: ${e instanceof Error ? e.message : String(e)}`);
+        this.warnedNotReachable = true;
+      }
+    }
+    this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 2 * 60 * 1e3);
   }
   updateSelectedTags() {
     const selectedUserTags = this.config.selectedUserTags || [];
@@ -579,6 +653,9 @@ class Tagesschau extends utils.Adapter {
       );
       if (this.updateTimeout) {
         this.clearTimeout(this.updateTimeout);
+      }
+      if (this.homepageTimeout) {
+        this.clearTimeout(this.homepageTimeout);
       }
       for (const t in this.scrollIntervals) {
         if (this.scrollIntervals[t]) {
