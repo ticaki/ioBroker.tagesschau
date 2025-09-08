@@ -251,7 +251,7 @@ class Tagesschau extends utils.Adapter {
         this.warnedNotReachable = true;
       }
     }
-    this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 2 * 60 * 1e3);
+    this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 5 * 6e4);
   }
   updateSelectedTags() {
     const selectedUserTags = this.config.selectedUserTags || [];

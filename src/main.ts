@@ -277,7 +277,7 @@ class Tagesschau extends utils.Adapter {
                 this.warnedNotReachable = true;
             }
         }
-        this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 2 * 60 * 1000); // alle 2 Minuten
+        this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 5 * 60000); // alle 5 Minuten
     }
 
     updateSelectedTags(): void {
