@@ -612,6 +612,44 @@ type videoChannel = {
         };
     };
 };
+/*
+type breakingHomeChannel = {
+    sophoraId: ioBroker.StateObject;
+    externalId: ioBroker.StateObject;
+    title: ioBroker.StateObject;
+    date: ioBroker.StateObject;
+    tags: customChannelType & {
+        tag: ioBroker.StateObject;
+    };
+    updateCheckUrl: ioBroker.StateObject;
+    content: customChannelType & {
+        value: ioBroker.StateObject;
+        type: ioBroker.StateObject;
+    };
+    tracking: customChannelType & {
+        sid: ioBroker.StateObject;
+        src: ioBroker.StateObject;
+        ctp: ioBroker.StateObject;
+        pdt: ioBroker.StateObject;
+        otp: ioBroker.StateObject;
+        cid: ioBroker.StateObject;
+        pti: ioBroker.StateObject;
+        bcr: ioBroker.StateObject;
+        type: ioBroker.StateObject;
+        av_full_show: ioBroker.StateObject;
+    };
+    topline: ioBroker.StateObject;
+    firstSentence: ioBroker.StateObject;
+    images: ioBroker.StateObject;
+    details: ioBroker.StateObject;
+    detailsweb: ioBroker.StateObject;
+    shareURL: ioBroker.StateObject;
+    geotags: Array<any>;
+    regionId: number;
+    regionIds: Array<any>;
+    breakingNews: ioBroker.StateObject;
+    type: ioBroker.StateObject;
+};*/
 
 const videoChannel: videoChannel = {
     channels: {
@@ -1323,4 +1361,632 @@ export const newsDefault: NewsEntity = {
     ressort: '',
     breakingNews: false,
     type: '',
+};
+
+export type Root = {
+    news: Array<{
+        sophoraId: string;
+        externalId: string;
+        title: string;
+        date: string;
+        tags: Array<{
+            tag: string;
+        }>;
+        updateCheckUrl: string;
+        content: Array<{
+            value?: string;
+            type: string;
+            video?: {
+                sophoraId: string;
+                externalId: string;
+                title: string;
+                date: string;
+                teaserImage: {
+                    title?: string;
+                    copyright?: string;
+                    alttext: string;
+                    imageVariants: {
+                        '1x1-144': string;
+                        '1x1-256': string;
+                        '1x1-432': string;
+                        '1x1-640': string;
+                        '1x1-840': string;
+                        '16x9-256': string;
+                        '16x9-384': string;
+                        '16x9-512': string;
+                        '16x9-640': string;
+                        '16x9-960': string;
+                        '16x9-1280': string;
+                        '16x9-1920': string;
+                    };
+                    type: string;
+                };
+                tags: Array<{
+                    tag: string;
+                }>;
+                updateCheckUrl: string;
+                tracking: Array<{
+                    sid?: string;
+                    src?: string;
+                    ctp?: string;
+                    pdt?: string;
+                    otp?: string;
+                    cid?: string;
+                    pti?: string;
+                    bcr?: string;
+                    type: string;
+                    av_full_show?: boolean;
+                    av_air_time?: string;
+                    assetid?: string;
+                    program?: string;
+                    title?: string;
+                    length?: string;
+                    c2?: string;
+                    c5?: string;
+                    c7?: string;
+                    c8?: string;
+                    c9?: string;
+                    c10?: string;
+                    c12?: string;
+                    c16?: string;
+                    c18?: string;
+                    type_nielsen?: string;
+                    c15?: string;
+                }>;
+                streams: {
+                    h264s?: string;
+                    h264m?: string;
+                    h264xl?: string;
+                    adaptivestreaming: string;
+                    avc720?: string;
+                    avc360?: string;
+                    avc270?: string;
+                };
+                alttext: string;
+                copyright: string;
+                type: string;
+            };
+            social?: {
+                account: string;
+                htmlEmbed: string;
+                shorttext: string;
+                title: string;
+                url: string;
+                username: string;
+                type: string;
+            };
+            gallery?: Array<{
+                title?: string;
+                copyright?: string;
+                alttext: string;
+                imageVariants: {
+                    '1x1-144': string;
+                    '1x1-256': string;
+                    '1x1-432': string;
+                    '1x1-640': string;
+                    '1x1-840': string;
+                    '16x9-256': string;
+                    '16x9-384': string;
+                    '16x9-512': string;
+                    '16x9-640': string;
+                    '16x9-960': string;
+                    '16x9-1280': string;
+                    '16x9-1920': string;
+                };
+                type: string;
+            }>;
+            box?: {
+                image?: {
+                    alttext: string;
+                    imageVariants: {
+                        '1x1-144': string;
+                        '1x1-256': string;
+                        '1x1-432': string;
+                        '1x1-640': string;
+                        '1x1-840': string;
+                        '16x9-256': string;
+                        '16x9-384': string;
+                        '16x9-512': string;
+                        '16x9-640': string;
+                        '16x9-960': string;
+                        '16x9-1280': string;
+                        '16x9-1920': string;
+                    };
+                    type: string;
+                    copyright?: string;
+                    title?: string;
+                };
+                date?: string;
+                link?: string;
+                subtitle?: string;
+                text?: string;
+                title: string;
+            };
+            title?: string;
+            date?: string;
+            teaserImage?: {
+                title?: string;
+                copyright: string;
+                alttext: string;
+                imageVariants: {
+                    '1x1-144': string;
+                    '1x1-256': string;
+                    '1x1-432': string;
+                    '1x1-640': string;
+                    '1x1-840': string;
+                    '16x9-256': string;
+                    '16x9-384': string;
+                    '16x9-512': string;
+                    '16x9-640': string;
+                    '16x9-960': string;
+                    '16x9-1280': string;
+                    '16x9-1920': string;
+                };
+                type: string;
+            };
+            tracking?: Array<{
+                sid: string;
+                src: string;
+                ctp: string;
+                pdt: string;
+                otp: string;
+                cid: string;
+                pti: string;
+                bcr: string;
+                type: string;
+                av_full_show: boolean;
+                av_air_time: string;
+            }>;
+            text?: string;
+            stream?: string;
+            related?: Array<{
+                teaserImage: {
+                    alttext: string;
+                    imageVariants: {
+                        '1x1-144': string;
+                        '1x1-256': string;
+                        '1x1-432': string;
+                        '1x1-640': string;
+                        '1x1-840': string;
+                        '16x9-256': string;
+                        '16x9-384': string;
+                        '16x9-512': string;
+                        '16x9-640': string;
+                        '16x9-960': string;
+                        '16x9-1280': string;
+                        '16x9-1920': string;
+                    };
+                    type: string;
+                    title?: string;
+                    copyright?: string;
+                };
+                date: string;
+                sophoraId: string;
+                externalId: string;
+                topline?: string;
+                title: string;
+                details: string;
+                detailsweb?: string;
+                type: string;
+                streams?: {
+                    avc720: string;
+                    avc360: string;
+                    avc270: string;
+                    adaptivestreaming: string;
+                };
+            }>;
+        }>;
+        tracking: Array<{
+            sid: string;
+            src: string;
+            ctp: string;
+            pdt: string;
+            otp: string;
+            cid: string;
+            pti: string;
+            bcr: string;
+            type: string;
+            av_full_show: boolean;
+        }>;
+        topline: string;
+        firstSentence?: string;
+        images: Array<{
+            title: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                '1x1-144': string;
+                '1x1-256': string;
+                '1x1-432': string;
+                '1x1-640': string;
+                '1x1-840': string;
+                '16x9-256': string;
+                '16x9-384': string;
+                '16x9-512': string;
+                '16x9-640': string;
+                '16x9-960': string;
+                '16x9-1280': string;
+                '16x9-1920': string;
+            };
+            type: string;
+        }>;
+        details: string;
+        detailsweb: string;
+        shareURL: string;
+        geotags: Array<any>;
+        regionId: number;
+        regionIds: Array<number>;
+        breakingNews: boolean;
+        type: string;
+        teaserImage?: {
+            copyright?: string;
+            alttext: string;
+            imageVariants: {
+                '1x1-144': string;
+                '1x1-256': string;
+                '1x1-432': string;
+                '1x1-640': string;
+                '1x1-840': string;
+                '16x9-256': string;
+                '16x9-384': string;
+                '16x9-512': string;
+                '16x9-640': string;
+                '16x9-960': string;
+                '16x9-1280': string;
+                '16x9-1920': string;
+            };
+            type: string;
+            title?: string;
+        };
+        video?: {
+            sophoraId: string;
+            externalId: string;
+            title: string;
+            date: string;
+            teaserImage: {
+                title: string;
+                copyright: string;
+                alttext: string;
+                imageVariants: {
+                    '1x1-144': string;
+                    '1x1-256': string;
+                    '1x1-432': string;
+                    '1x1-640': string;
+                    '1x1-840': string;
+                    '16x9-256': string;
+                    '16x9-384': string;
+                    '16x9-512': string;
+                    '16x9-640': string;
+                    '16x9-960': string;
+                    '16x9-1280': string;
+                    '16x9-1920': string;
+                };
+                type: string;
+            };
+            tags: Array<any>;
+            updateCheckUrl: string;
+            tracking: Array<{
+                sid?: string;
+                src?: string;
+                ctp?: string;
+                pdt?: string;
+                otp?: string;
+                cid?: string;
+                pti?: string;
+                bcr?: string;
+                type: string;
+                av_full_show?: boolean;
+                assetid?: string;
+                program?: string;
+                title?: string;
+                length?: string;
+                c2?: string;
+                c5?: string;
+                c7?: string;
+                c8?: string;
+                c9?: string;
+                c10?: string;
+                c12?: string;
+                c16?: string;
+                c18?: string;
+                type_nielsen?: string;
+            }>;
+            streams: {
+                h264s: string;
+                h264m: string;
+                h264xl: string;
+                adaptivestreaming: string;
+            };
+            alttext: string;
+            copyright: string;
+            type: string;
+        };
+        firstFrame?: {
+            title: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                '1x1-144': string;
+                '1x1-256': string;
+                '1x1-432': string;
+                '1x1-640': string;
+                '1x1-840': string;
+                '16x9-256': string;
+                '16x9-384': string;
+                '16x9-512': string;
+                '16x9-640': string;
+                '16x9-960': string;
+                '16x9-1280': string;
+                '16x9-1920': string;
+            };
+            type: string;
+        };
+        ressort?: string;
+        crop?: {
+            id: string;
+            type: string;
+            croppingApiVersion: string;
+            croppingUIVersion: string;
+            croppingServiceVersion: string;
+            noSound: boolean;
+            videoSrc: string;
+            imageSrc: Array<any>;
+            imageNames: Array<any>;
+            headerText: string;
+            mainTexts: Array<string>;
+            sceneSrcTexts: Array<string>;
+            cameraMoves: Array<{
+                point1X: number;
+                point1Y: number;
+                point2X: number;
+                point2Y: number;
+                startLeft: number;
+                endLeft: number;
+                duration: number;
+            }>;
+            events: Array<Array<number>>;
+        };
+        comments?: string;
+        brandingImage?: {
+            title: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                original: string;
+            };
+            type: string;
+        };
+    }>;
+    regional: Array<{
+        sophoraId: string;
+        externalId: string;
+        title: string;
+        date: string;
+        teaserImage: {
+            title?: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                '1x1-144': string;
+                '1x1-256': string;
+                '1x1-432': string;
+                '1x1-640': string;
+                '1x1-840': string;
+                '16x9-256': string;
+                '16x9-384': string;
+                '16x9-512': string;
+                '16x9-640': string;
+                '16x9-960': string;
+                '16x9-1280': string;
+                '16x9-1920'?: string;
+            };
+            type: string;
+        };
+        tags: Array<{
+            tag: string;
+        }>;
+        updateCheckUrl: string;
+        content: Array<{
+            value?: string;
+            type: string;
+            title?: string;
+            date?: string;
+            teaserImage?: {
+                title?: string;
+                copyright: string;
+                alttext: string;
+                imageVariants: {
+                    '1x1-144': string;
+                    '1x1-256': string;
+                    '1x1-432': string;
+                    '1x1-640': string;
+                    '1x1-840': string;
+                    '16x9-256': string;
+                    '16x9-384': string;
+                    '16x9-512': string;
+                    '16x9-640': string;
+                    '16x9-960': string;
+                    '16x9-1280': string;
+                    '16x9-1920': string;
+                };
+                type: string;
+            };
+            tracking?: Array<{
+                sid: string;
+                src: string;
+                ctp: string;
+                pdt: string;
+                otp: string;
+                cid: string;
+                pti: string;
+                bcr: string;
+                type: string;
+                av_full_show: boolean;
+            }>;
+            stream?: string;
+            box?: {
+                image?: {
+                    title?: string;
+                    copyright: string;
+                    alttext: string;
+                    imageVariants: {
+                        '1x1-144': string;
+                        '1x1-256': string;
+                        '1x1-432': string;
+                        '1x1-640': string;
+                        '1x1-840': string;
+                        '16x9-256': string;
+                        '16x9-384': string;
+                        '16x9-512': string;
+                        '16x9-640': string;
+                        '16x9-960': string;
+                        '16x9-1280': string;
+                        '16x9-1920': string;
+                    };
+                    type: string;
+                };
+                date?: string;
+                link?: string;
+                text?: string;
+                title: string;
+            };
+            video?: {
+                sophoraId: string;
+                externalId: string;
+                title: string;
+                date: string;
+                teaserImage: {
+                    copyright: string;
+                    alttext: string;
+                    imageVariants: {
+                        '1x1-144': string;
+                        '1x1-256': string;
+                        '1x1-432': string;
+                        '1x1-640': string;
+                        '1x1-840': string;
+                        '16x9-256': string;
+                        '16x9-384': string;
+                        '16x9-512': string;
+                        '16x9-640': string;
+                        '16x9-960': string;
+                        '16x9-1280': string;
+                        '16x9-1920': string;
+                    };
+                    type: string;
+                    title?: string;
+                };
+                tags: Array<any>;
+                updateCheckUrl: string;
+                tracking: Array<{
+                    sid?: string;
+                    src?: string;
+                    ctp?: string;
+                    pdt?: string;
+                    otp?: string;
+                    cid?: string;
+                    pti?: string;
+                    bcr?: string;
+                    type: string;
+                    av_full_show?: boolean;
+                    assetid?: string;
+                    program?: string;
+                    title?: string;
+                    length?: string;
+                    c2?: string;
+                    c5?: string;
+                    c7?: string;
+                    c8?: string;
+                    c9?: string;
+                    c10?: string;
+                    c12?: string;
+                    c16?: string;
+                    c18?: string;
+                    type_nielsen?: string;
+                }>;
+                streams: {
+                    h264xl: string;
+                    adaptivestreaming: string;
+                };
+                alttext: string;
+                copyright: string;
+                type: string;
+            };
+            gallery?: Array<{
+                title: string;
+                copyright: string;
+                alttext: string;
+                imageVariants: {
+                    '1x1-144': string;
+                    '1x1-256': string;
+                    '1x1-432': string;
+                    '1x1-640': string;
+                    '1x1-840': string;
+                    '16x9-256': string;
+                    '16x9-384': string;
+                    '16x9-512': string;
+                    '16x9-640': string;
+                    '16x9-960': string;
+                    '16x9-1280': string;
+                    '16x9-1920'?: string;
+                };
+                type: string;
+            }>;
+            quotation?: {
+                text: string;
+            };
+        }>;
+        tracking: Array<{
+            sid: string;
+            src: string;
+            ctp: string;
+            pdt: string;
+            otp: string;
+            cid: string;
+            pti: string;
+            bcr: string;
+            type: string;
+            av_full_show: boolean;
+        }>;
+        topline: string;
+        firstSentence?: string;
+        images: Array<{
+            title?: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                '1x1-144': string;
+                '1x1-256': string;
+                '1x1-432': string;
+                '1x1-640': string;
+                '1x1-840': string;
+                '16x9-256': string;
+                '16x9-384': string;
+                '16x9-512': string;
+                '16x9-640': string;
+                '16x9-960': string;
+                '16x9-1280': string;
+                '16x9-1920'?: string;
+            };
+            type: string;
+        }>;
+        brandingImage: {
+            title: string;
+            copyright: string;
+            alttext: string;
+            imageVariants: {
+                original: string;
+            };
+            type: string;
+        };
+        details: string;
+        detailsweb: string;
+        shareURL: string;
+        geotags: Array<any>;
+        regionId: number;
+        regionIds: Array<number>;
+        breakingNews: boolean;
+        type: string;
+    }>;
+    newStoriesCountLink: string;
+    type: string;
 };
