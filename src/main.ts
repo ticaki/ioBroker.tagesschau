@@ -7,14 +7,7 @@
 import * as utils from '@iobroker/adapter-core';
 import type { NewsEntity, responseType, videosType } from './lib/types-d';
 import { Library } from './lib/library';
-import {
-    filterPartOfNews,
-    genericStateObjects,
-    newsChannel,
-    newsDefault,
-    statesObjects,
-    type statesObjectsType,
-} from './lib/definition';
+import * as definition from './lib/definition';
 import axios from 'axios';
 axios.defaults.timeout = 10000;
 
@@ -71,12 +64,12 @@ class Tagesschau extends utils.Adapter {
         await this.library.initStates(await this.getStatesAsync('*'));
         await this.delay(500);
         // Breaking News Homepage Datenpunkte anlegen
-        await this.library.writedp(`breakingNewsHomepageCount`, 0, genericStateObjects.breakingNewsCount);
+        await this.library.writedp(`breakingNewsHomepageCount`, 0, definition.genericStateObjects.breakingNewsCount);
         const homepageData: { news?: any[]; newsCount: number } = { newsCount: 0, news: [] };
         await this.library.writeFromJson(
             `news.breakingNewsHomepage`,
             `news.breakingNewsHomepage`,
-            statesObjects,
+            definition.statesObjects,
             homepageData,
             true,
             true,
@@ -134,29 +127,37 @@ class Tagesschau extends utils.Adapter {
                 `news.${topic}`,
                 undefined,
                 // @ts-expect-error
-                statesObjects.news[topic]._channel,
+                definition.statesObjects.news[topic]._channel,
             );
-            await this.library.writedp(`news.${topic}.controls.firstNewsAt`, 0, genericStateObjects.firstNewsAt);
-            await this.library.writedp(`news.${topic}.controls.scrollStep`, 5, genericStateObjects.scrollStep);
+            await this.library.writedp(
+                `news.${topic}.controls.firstNewsAt`,
+                0,
+                definition.genericStateObjects.firstNewsAt,
+            );
+            await this.library.writedp(
+                `news.${topic}.controls.scrollStep`,
+                5,
+                definition.genericStateObjects.scrollStep,
+            );
             await this.library.writedp(
                 `news.${topic}.controls.scrollForward`,
                 false,
-                genericStateObjects.scrollForward,
+                definition.genericStateObjects.scrollForward,
             );
             await this.library.writedp(
                 `news.${topic}.controls.scrollBackward`,
                 false,
-                genericStateObjects.scrollBackward,
+                definition.genericStateObjects.scrollBackward,
             );
             await this.library.writedp(
                 `news.${topic}.controls.autoScrollEnabled`,
                 false,
-                genericStateObjects.autoScrollEnabled,
+                definition.genericStateObjects.autoScrollEnabled,
             );
             await this.library.writedp(
                 `news.${topic}.controls.autoScrollInterval`,
                 30,
-                genericStateObjects.autoScrollInterval,
+                definition.genericStateObjects.autoScrollInterval,
             );
             await this.subscribeStatesAsync(`news.${topic}.controls.*`);
         }
@@ -177,12 +178,25 @@ class Tagesschau extends utils.Adapter {
         }
         this.log.debug(`Selected Tags: ${JSON.stringify(this.config.selectedTags)}`);
 
-        await this.library.writedp(`breakingNewsCount`, 0, genericStateObjects.breakingNewsCount);
+        await this.library.writedp(`breakingNewsCount`, 0, definition.genericStateObjects.breakingNewsCount);
         const data: { news?: [NewsEntity, NewsEntity, NewsEntity, NewsEntity, NewsEntity]; newsCount: number } = {
             newsCount: 0,
-            news: [newsDefault, newsDefault, newsDefault, newsDefault, newsDefault],
+            news: [
+                definition.newsDefault,
+                definition.newsDefault,
+                definition.newsDefault,
+                definition.newsDefault,
+                definition.newsDefault,
+            ],
         };
-        await this.library.writeFromJson(`news.breakingNews`, `news.breakingNews`, statesObjects, data, true, true);
+        await this.library.writeFromJson(
+            `news.breakingNews`,
+            `news.breakingNews`,
+            definition.statesObjects,
+            data,
+            true,
+            true,
+        );
 
         // start working
 
@@ -237,7 +251,7 @@ class Tagesschau extends utils.Adapter {
                 await this.library.writedp(
                     `breakingNewsHomepageCount`,
                     breakingNews.length,
-                    genericStateObjects.breakingNewsCount,
+                    definition.genericStateObjects.breakingNewsCount,
                     undefined,
                     undefined,
                     undefined,
@@ -246,7 +260,7 @@ class Tagesschau extends utils.Adapter {
                 await this.library.writeFromJson(
                     `news.breakingNewsHomepage`,
                     `news.breakingNewsHomepage`,
-                    statesObjects,
+                    definition.statesObjects,
                     { news: breakingNews, newsCount: breakingNews.length },
                     true,
                     true,
@@ -261,7 +275,7 @@ class Tagesschau extends utils.Adapter {
                     await this.library.writedp(
                         `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
                         undefined,
-                        newsChannel.news._array,
+                        definition.newsChannel.news._array,
                         undefined,
                         undefined,
                         true,
@@ -314,7 +328,11 @@ class Tagesschau extends utils.Adapter {
      */
     async updateNews(): Promise<void> {
         const bnews: NewsEntity[] = [];
-        await this.library.writedp(`news`, undefined, statesObjects[`news` as keyof statesObjectsType]._channel);
+        await this.library.writedp(
+            `news`,
+            undefined,
+            definition.statesObjects[`news` as keyof definition.statesObjectsType]._channel,
+        );
         try {
             for (const topic of this.topics) {
                 const url = `https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}`;
@@ -367,11 +385,15 @@ class Tagesschau extends utils.Adapter {
                 obj.native.additionalConfig = this.additionalConfig;
                 await this.setForeignObject(this.namespace, obj);
             }
-            await this.library.writedp(`breakingNewsCount`, bnews.length, genericStateObjects.breakingNewsCount);
+            await this.library.writedp(
+                `breakingNewsCount`,
+                bnews.length,
+                definition.genericStateObjects.breakingNewsCount,
+            );
             await this.library.writeFromJson(
                 `news.breakingNews`,
                 `news.breakingNews`,
-                statesObjects,
+                definition.statesObjects,
                 { news: bnews, newsCount: bnews.length },
                 true,
             );
@@ -380,7 +402,7 @@ class Tagesschau extends utils.Adapter {
                 await this.library.writedp(
                     `news.breakingNews.news.${`00${i}`.slice(-2)}`,
                     undefined,
-                    newsChannel.news._array,
+                    definition.newsChannel.news._array,
                     undefined,
                     undefined,
                     true,
@@ -414,7 +436,7 @@ class Tagesschau extends utils.Adapter {
         data.news = data.news.slice(0, this.config.maxEntries);
         data.newsCount = data.news.length;
         for (const news of data.news) {
-            for (const key of filterPartOfNews) {
+            for (const key of definition.filterPartOfNews) {
                 const k = key as keyof NewsEntity;
                 delete news[k];
             }
@@ -425,17 +447,21 @@ class Tagesschau extends utils.Adapter {
             //this.log.debug(`News: ${JSON.stringify(news)}`);
         }
         // At this point we sure that the data is valid!
-        await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, statesObjects, data, true);
-        await this.library.writedp(`news.lastUpdate`, new Date().getTime(), genericStateObjects.lastUpdate);
+        await this.library.writeFromJson(`news.${topic}`, `news.${topic}`, definition.statesObjects, data, true);
+        await this.library.writedp(`news.lastUpdate`, new Date().getTime(), definition.genericStateObjects.lastUpdate);
         if (totalNews !== undefined) {
-            await this.library.writedp(`news.${topic}.totalNewsCount`, totalNews, genericStateObjects.totalNewsCount);
+            await this.library.writedp(
+                `news.${topic}.totalNewsCount`,
+                totalNews,
+                definition.genericStateObjects.totalNewsCount,
+            );
         }
         for (let i = data.news.length; i < this.config.maxEntries; i++) {
             await this.library.garbageColleting(`news.${topic}.news.${`00${i}`.slice(-2)}`, 60000, false);
             await this.library.writedp(
                 `news.${topic}.news.${`00${i}`.slice(-2)}`,
                 undefined,
-                newsChannel.news._array,
+                definition.newsChannel.news._array,
                 undefined,
                 undefined,
                 true,
@@ -447,7 +473,7 @@ class Tagesschau extends utils.Adapter {
      * update videos from tagesschau..
      */
     async updateVideos(): Promise<void> {
-        await this.library.writedp(`videos`, undefined, statesObjects.videos._channel);
+        await this.library.writedp(`videos`, undefined, definition.statesObjects.videos._channel);
         const url = `https://www.tagesschau.de/api2u/channels`;
         this.log.debug(`Videos URL: ${url}`);
         try {
@@ -527,8 +553,12 @@ class Tagesschau extends utils.Adapter {
                     }
                 }
 
-                await this.library.writeFromJson(`videos`, `videos`, statesObjects, data, true);
-                await this.library.writedp('videos.lastUpdate', new Date().getTime(), genericStateObjects.lastUpdate);
+                await this.library.writeFromJson(`videos`, `videos`, definition.statesObjects, data, true);
+                await this.library.writedp(
+                    'videos.lastUpdate',
+                    new Date().getTime(),
+                    definition.genericStateObjects.lastUpdate,
+                );
             }
         } catch (e) {
             if (this.isOnline) {
@@ -555,7 +585,7 @@ class Tagesschau extends utils.Adapter {
             await this.library.writedp(
                 `news.${topic}.autoScrollEnabled`,
                 val,
-                genericStateObjects.autoScrollEnabled,
+                definition.genericStateObjects.autoScrollEnabled,
                 true,
             );
         }
@@ -623,20 +653,20 @@ class Tagesschau extends utils.Adapter {
         const ownId = parts.slice(2).join('.');
         // remove namespace and command
         const ownPath = parts.slice(2, -1).join('.');
-        switch (parts[5] as keyof typeof genericStateObjects) {
+        switch (parts[5] as keyof typeof definition.genericStateObjects) {
             case 'scrollStep': {
-                await this.library.writedp(ownId, state.val, genericStateObjects.scrollStep, true);
+                await this.library.writedp(ownId, state.val, definition.genericStateObjects.scrollStep, true);
                 break;
             }
             case 'scrollForward':
             case 'scrollBackward': {
                 if (parts[4] === 'scrollForward') {
-                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollForward, true);
+                    await this.library.writedp(ownId, state.val, definition.genericStateObjects.scrollForward, true);
                     state.val =
                         (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) +
                         (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
                 } else {
-                    await this.library.writedp(ownId, state.val, genericStateObjects.scrollBackward, true);
+                    await this.library.writedp(ownId, state.val, definition.genericStateObjects.scrollBackward, true);
                     state.val =
                         (((this.library.readdb(`${ownPath}.firstNewsAt`) || {}).val as number) || 0) -
                         (((this.library.readdb(`${ownPath}.scrollStep`) || {}).val as number) || 0);
@@ -678,7 +708,7 @@ class Tagesschau extends utils.Adapter {
                     await this.library.writedp(
                         `news.${topic}.controls.firstNewsAt`,
                         state.val,
-                        genericStateObjects.firstNewsAt,
+                        definition.genericStateObjects.firstNewsAt,
                         true,
                     );
                 }
@@ -688,7 +718,7 @@ class Tagesschau extends utils.Adapter {
                 await this.library.writedp(
                     ownId,
                     ((state.val as number) || 0) < 2 ? 2 : state.val,
-                    genericStateObjects.autoScrollInterval,
+                    definition.genericStateObjects.autoScrollInterval,
                     true,
                 );
                 await this.updateScrollIntervals(topic, undefined);
