@@ -225,7 +225,10 @@ class Tagesschau extends utils.Adapter {
           true,
           true
         );
+<<<<<<< HEAD
         await this.writeNews({ news: breakingNews }, "breakingNewsHomepage", breakingNews.length);
+=======
+>>>>>>> origin/main
         for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
           await this.library.garbageColleting(
             `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
@@ -252,7 +255,11 @@ class Tagesschau extends utils.Adapter {
         this.warnedNotReachable = true;
       }
     }
+<<<<<<< HEAD
     this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 5 * 6e4);
+=======
+    this.homepageTimeout = this.setTimeout(async () => this.updateHomepageBreakingNews(), 2 * 60 * 1e3);
+>>>>>>> origin/main
   }
   updateSelectedTags() {
     const selectedUserTags = this.config.selectedUserTags || [];
