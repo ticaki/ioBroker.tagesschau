@@ -226,8 +226,8 @@ class Tagesschau extends utils.Adapter {
                 headers: { 'User-Agent': 'ioBroker', accept: 'application/json' },
             });
             if (response.status === 200 && response.data) {
-                const homepage = response.data;
-                let breakingNews: any[] = [];
+                const homepage = response.data as responseType;
+                let breakingNews: NewsEntity[] = [];
                 if (homepage.news) {
                     breakingNews = breakingNews.concat(homepage.news.filter((n: any) => n.breakingNews === true));
                 }
@@ -251,6 +251,7 @@ class Tagesschau extends utils.Adapter {
                     true,
                     true,
                 );
+                await this.writeNews({ news: breakingNews }, 'breakingNewsHomepage', breakingNews.length);
                 for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
                     await this.library.garbageColleting(
                         `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,

@@ -225,6 +225,7 @@ class Tagesschau extends utils.Adapter {
           true,
           true
         );
+        await this.writeNews({ news: breakingNews }, "breakingNewsHomepage", breakingNews.length);
         for (let i = breakingNews.length; i < this.config.maxEntries; i++) {
           await this.library.garbageColleting(
             `news.breakingNewsHomepage.news.${`00${i}`.slice(-2)}`,
