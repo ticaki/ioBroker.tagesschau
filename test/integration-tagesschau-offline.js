@@ -9,13 +9,13 @@ require('./test-setup');
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
-// German news configuration for testing
+// German news configuration for testing - reduced scope for cleaner testing
 const TEST_CONFIG = {
     newsEnabled: true,
     interval: 5, // minutes
     inland: true,
     ausland: true,
-    wirtschaft: true,
+    wirtschaft: false, // Disable to reduce state count for testing
     sport: false,
     video: false,
     investigativ: false,
@@ -123,7 +123,7 @@ tests.integration(path.join(__dirname, '..'), {
                                     harness.states.getStates(stateIds, (err, allStates) => {
                                         if (err) {
                                             console.error('❌ Error getting states:', err);
-                                            resolve(); // Properly handle the error instead of masking it
+                                            reject(err); // Properly fail the test instead of just resolving
                                             return;
                                         }
 
@@ -134,11 +134,11 @@ tests.integration(path.join(__dirname, '..'), {
                                         if (stateCount > 0) {
                                             console.log('✅ Step 8: Adapter successfully created states using offline data');
                                             
-                                            // Show sample of created states
+                                            // Show sample of created states - FIX: access states correctly by index
                                             console.log('📋 Sample states created:');
-                                            stateIds.slice(0, 10).forEach(stateId => {
-                                                const state = allStates[stateId];
-                                                console.log(`   ${stateId}: ${state ? state.val : 'undefined'}`);
+                                            stateIds.slice(0, 10).forEach((stateId, index) => {
+                                                const state = allStates[index]; // FIX: Use index, not stateId as key
+                                                console.log(`   ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
                                             });
 
                                             // Check for specific news states
@@ -151,8 +151,10 @@ tests.integration(path.join(__dirname, '..'), {
 
                                             if (newsStates.length > 0) {
                                                 console.log(`✅ Found ${newsStates.length} news-specific datapoints:`);
-                                                newsStates.slice(0, 5).forEach(key => {
-                                                    console.log(`   📊 ${key}: ${allStates[key] ? allStates[key].val : 'undefined'}`);
+                                                newsStates.slice(0, 5).forEach(stateId => {
+                                                    const index = stateIds.indexOf(stateId); // FIX: Get correct index
+                                                    const state = allStates[index];
+                                                    console.log(`   📊 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
                                                 });
                                             }
 
@@ -167,6 +169,17 @@ tests.integration(path.join(__dirname, '..'), {
                                                 const inlandStates = stateIds.filter(key => key.includes('inland'));
                                                 if (inlandStates.length > 0) {
                                                     console.log(`✅ Found ${inlandStates.length} inland news datapoints`);
+                                                    // Show sample inland NEWS CONTENT states (not just control states)
+                                                    const inlandNewsContent = inlandStates.filter(key => 
+                                                        key.includes('.0.title') || key.includes('.0.date') || 
+                                                        key.includes('.0.firstSentence') || key.includes('.newsCount')
+                                                    );
+                                                    console.log(`   📰 Inland news content states: ${inlandNewsContent.length}`);
+                                                    inlandNewsContent.slice(0, 3).forEach(stateId => {
+                                                        const index = stateIds.indexOf(stateId);
+                                                        const state = allStates[index];
+                                                        console.log(`     📰 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                                    });
                                                 }
                                             }
 
@@ -175,6 +188,17 @@ tests.integration(path.join(__dirname, '..'), {
                                                 const auslandStates = stateIds.filter(key => key.includes('ausland'));
                                                 if (auslandStates.length > 0) {
                                                     console.log(`✅ Found ${auslandStates.length} ausland news datapoints`);
+                                                    // Show sample ausland NEWS CONTENT states to verify expected content
+                                                    const auslandNewsContent = auslandStates.filter(key => 
+                                                        key.includes('.0.title') || key.includes('.0.date') || 
+                                                        key.includes('.0.firstSentence') || key.includes('.newsCount')
+                                                    );
+                                                    console.log(`   🌍 Ausland news content states: ${auslandNewsContent.length}`);
+                                                    auslandNewsContent.slice(0, 3).forEach(stateId => {
+                                                        const index = stateIds.indexOf(stateId);
+                                                        const state = allStates[index];
+                                                        console.log(`     🌍 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                                    });
                                                 }
                                             }
 
@@ -186,37 +210,56 @@ tests.integration(path.join(__dirname, '..'), {
                                                 }
                                             }
 
+                                            // Validate that we have actual data values, not just undefined
+                                            let statesWithValues = 0;
+                                            allStates.forEach(state => {
+                                                if (state && state.val !== undefined && state.val !== null) {
+                                                    statesWithValues++;
+                                                }
+                                            });
+
+                                            console.log(`📊 States with actual values: ${statesWithValues}/${stateCount}`);
+
+                                            // Check connection state
+                                            if (connectionState && connectionState.val === true) {
+                                                console.log('✅ Connection state indicates successful processing');
+                                            } else {
+                                                console.log('⚠️ Connection state indicates potential issues');
+                                            }
+
                                             console.log('\n🎉 === OFFLINE INTEGRATION TEST SUMMARY ===');
                                             console.log(`✅ Adapter initialized with German news configuration`);
                                             console.log(`✅ Adapter started successfully using offline test data`);
                                             console.log(`✅ Adapter created ${stateCount} total datapoints`);
+                                            console.log(`✅ States with values: ${statesWithValues}/${stateCount}`);
                                             console.log(`✅ News-specific datapoints: ${newsStates.length}`);
                                             console.log(`✅ Connection state properly handled: ${connectionState ? connectionState.val : 'null'}`);
                                             console.log(`✅ No real API calls were made - all data from offline test files`);
+
+                                            // FAIL the test if we don't have sufficient valid states
+                                            if (statesWithValues < (stateCount * 0.5)) { // At least 50% should have values
+                                                console.log('❌ FAILURE: Too few states have actual values - this indicates a problem');
+                                                reject(new Error(`Only ${statesWithValues}/${stateCount} states have values`));
+                                                return;
+                                            }
+
                                             console.log(`✅ Integration test completed successfully\\n`);
 
                                         } else {
                                             console.log('❌ No states created by adapter');
+                                            reject(new Error('No states were created by the adapter')); // FAIL the test
+                                            return;
                                         }
 
                                         resolve();
                                     });
                                 } else {
-                                    console.log('ℹ️ No state IDs found matching pattern tagesschau.0.*');
-                                    console.log('✅ Step 8: Test completed - no states found but adapter processed correctly');
-                                    
-                                    console.log('\n🎉 === OFFLINE INTEGRATION TEST SUMMARY ===');
-                                    console.log(`✅ Adapter initialized with German news configuration`);
-                                    console.log(`✅ Adapter started successfully using offline test data`);
-                                    console.log(`✅ Adapter processed data but no states persisted (may be expected in test environment)`);
-                                    console.log(`✅ Connection state properly handled: ${connectionState ? connectionState.val : 'null'}`);
-                                    console.log(`✅ No real API calls were made - all data from offline test files`);
-                                    console.log(`✅ Integration test completed successfully\\n`);
-                                    resolve();
+                                    console.log('❌ No state IDs found matching pattern tagesschau.0.*');
+                                    reject(new Error('No states found matching pattern tagesschau.0.*')); // FAIL the test
                                 }
                             }).catch(err => {
                                 console.error('❌ Error getting state IDs:', err);
-                                resolve();
+                                reject(err); // FAIL the test properly
                             });
                         });
                     }, 30000); // Wait 30 seconds for offline data processing
