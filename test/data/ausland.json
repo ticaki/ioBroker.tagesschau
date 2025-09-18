@@ -1,0 +1,43 @@
+{
+  "news": [
+    {
+      "sophoraId": "story-ausland-001",
+      "externalId": "ausland-international-001",
+      "title": "EU-Gipfel berät über Klimaziele",
+      "date": "2025-09-18T10:27:53.820Z",
+      "teaserImage": {
+        "title": "EU-Flaggen",
+        "alttext": "Flaggen der EU-Mitgliedstaaten",
+        "copyright": "AFP",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-eu-flags-1x1-144.jpg",
+          "16x9-384": "https://images.tagesschau.de/image/test-eu-flags-16x9-384.jpg",
+          "16x9-512": "https://images.tagesschau.de/image/test-eu-flags-16x9-512.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Europäische Union",
+      "firstSentence": "Die EU-Staats- und Regierungschefs beraten heute über verschärfte Klimaziele.",
+      "details": "Im Zentrum der Diskussion stehen die Pläne zur CO2-Reduzierung bis 2030 und die Finanzierung grüner Technologien.",
+      "shareURL": "https://www.tagesschau.de/ausland/eu-gipfel-klima-test",
+      "tags": [
+        {
+          "tag": "EU"
+        },
+        {
+          "tag": "Klimawandel"
+        },
+        {
+          "tag": "Umwelt"
+        },
+        {
+          "tag": "Politik"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "ressort": "ausland"
+    }
+  ],
+  "newsCount": 1
+}

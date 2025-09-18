@@ -1,0 +1,40 @@
+{
+  "news": [
+    {
+      "sophoraId": "story-inland-001",
+      "externalId": "inland-politik-001",
+      "title": "Regierung plant Steuerreform",
+      "date": "2025-09-18T11:27:53.820Z",
+      "teaserImage": {
+        "title": "Bundeskanzleramt",
+        "alttext": "Das Bundeskanzleramt in Berlin",
+        "copyright": "ARD",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-kanzleramt-1x1-144.jpg",
+          "1x1-256": "https://images.tagesschau.de/image/test-kanzleramt-1x1-256.jpg",
+          "16x9-512": "https://images.tagesschau.de/image/test-kanzleramt-16x9-512.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Steuerpolitik",
+      "firstSentence": "Die Bundesregierung hat Pläne für eine umfassende Steuerreform vorgestellt.",
+      "details": "Die Reform sieht Entlastungen für mittlere Einkommen und eine Vereinfachung des Steuersystems vor.",
+      "shareURL": "https://www.tagesschau.de/inland/steuerreform-plaene-test",
+      "tags": [
+        {
+          "tag": "Steuern"
+        },
+        {
+          "tag": "Bundesregierung"
+        },
+        {
+          "tag": "Politik"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "ressort": "inland"
+    }
+  ],
+  "newsCount": 1
+}

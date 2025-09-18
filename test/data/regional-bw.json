@@ -1,0 +1,38 @@
+{
+  "regional": [
+    {
+      "sophoraId": "story-regional-1-001",
+      "externalId": "regional-1-test-001",
+      "title": "Neue Entwicklungen in Baden-Württemberg",
+      "date": "2025-09-18T08:27:53.820Z",
+      "teaserImage": {
+        "title": "Baden-Württemberg Landtag",
+        "alttext": "Gebäude des Baden-Württemberg Landtags",
+        "copyright": "ARD",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-1-landtag-1x1-144.jpg",
+          "16x9-384": "https://images.tagesschau.de/image/test-1-landtag-16x9-384.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Baden-Württemberg",
+      "firstSentence": "In Baden-Württemberg gibt es wichtige politische Entwicklungen zu berichten.",
+      "details": "Der Landtag von Baden-Württemberg hat heute über wichtige regionale Themen debattiert.",
+      "shareURL": "https://www.tagesschau.de/regional/baden-wuerttemberg/politik-test",
+      "tags": [
+        {
+          "tag": "Baden-Württemberg"
+        },
+        {
+          "tag": "Regional"
+        },
+        {
+          "tag": "Politik"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "regionalId": 1
+    }
+  ]
+}
