@@ -91,13 +91,16 @@ function disableMocking() {
  * Get mock homepage data simulating Tagesschau API response
  */
 function getMockHomepageData() {
+    // Generate current timestamps for mock data
+    const now = new Date();
+
     return {
         news: [
             {
                 sophoraId: 'story-12345',
                 externalId: 'meldung-12345',
                 title: 'Test Breaking News Title',
-                date: new Date().toISOString(),
+                date: now.toISOString(),
                 teaserImage: {
                     imageVariants: {
                         '1x1-144': 'https://test.example.com/image-144.jpg',
@@ -128,13 +131,17 @@ function getMockHomepageData() {
  * Get mock news data for specific categories
  */
 function getMockNewsData() {
+    // Generate current timestamps for mock data
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
     return {
         news: [
             {
                 sophoraId: 'story-inland-123',
                 externalId: 'inland-meldung-123',
                 title: 'Test Inland News Article',
-                date: new Date().toISOString(),
+                date: now.toISOString(),
                 teaserImage: {
                     imageVariants: {
                         '1x1-144': 'https://test.example.com/inland-144.jpg',
@@ -154,7 +161,7 @@ function getMockNewsData() {
                 sophoraId: 'story-ausland-456',
                 externalId: 'ausland-meldung-456',
                 title: 'Test International News Article',
-                date: new Date().toISOString(),
+                date: oneHourAgo.toISOString(),
                 teaserImage: {
                     imageVariants: {
                         '1x1-256': 'https://test.example.com/ausland-256.jpg',
@@ -179,13 +186,16 @@ function getMockNewsData() {
  * Get mock regional data
  */
 function getMockRegionalData() {
+    // Generate current timestamps for mock data
+    const now = new Date();
+
     return {
         regional: [
             {
                 sophoraId: 'regional-bw-789',
                 externalId: 'bw-meldung-789',
                 title: 'Test Baden-Württemberg News',
-                date: new Date().toISOString(),
+                date: now.toISOString(),
                 teaserImage: {
                     imageVariants: {
                         '1x1-144': 'https://test.example.com/bw-144.jpg'

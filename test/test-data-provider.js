@@ -10,13 +10,18 @@ const path = require('path');
  * Get test data for homepage endpoint
  */
 function getHomepageTestData() {
+    // Generate current timestamps for test data to avoid date-related issues
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+    const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+
     return {
         news: [
             {
                 sophoraId: 'story-homepage-001',
                 externalId: 'homepage-breaking-001',
                 title: 'Bundestag beschließt wichtiges Gesetz',
-                date: '2024-01-15T14:30:00.000Z',
+                date: oneHourAgo.toISOString(),
                 teaserImage: {
                     title: 'Bundestag Sitzung',
                     alttext: 'Plenarsaal des Deutschen Bundestages',
@@ -49,7 +54,7 @@ function getHomepageTestData() {
                 sophoraId: 'story-homepage-002', 
                 externalId: 'homepage-wirtschaft-002',
                 title: 'DAX erreicht neues Allzeithoch',
-                date: '2024-01-15T13:15:00.000Z',
+                date: twoHoursAgo.toISOString(),
                 teaserImage: {
                     title: 'Frankfurter Börse',
                     alttext: 'Händler an der Frankfurter Börse',
@@ -83,7 +88,7 @@ function getHomepageTestData() {
                 sophoraId: 'story-regional-bayern-001',
                 externalId: 'bayern-regional-001',
                 title: 'Neues Verkehrskonzept für München',
-                date: '2024-01-15T12:00:00.000Z',
+                date: new Date(now.getTime() - 4 * 60 * 60 * 1000).toISOString(),
                 topline: 'Bayern',
                 firstSentence: 'München plant ein neues Verkehrskonzept zur Reduzierung der Innenstadtbelastung.',
                 details: 'Das neue Konzept sieht eine Ausweitung der Fußgängerzonen und bessere ÖPNV-Anbindung vor.',
@@ -102,13 +107,17 @@ function getHomepageTestData() {
  * Get test data for inland news
  */
 function getInlandTestData() {
+    // Generate current timestamps for test data
+    const now = new Date();
+    const threeHoursAgo = new Date(now.getTime() - 3 * 60 * 60 * 1000);
+
     return {
         news: [
             {
                 sophoraId: 'story-inland-001',
                 externalId: 'inland-politik-001',
                 title: 'Regierung plant Steuerreform',
-                date: '2024-01-15T11:30:00.000Z',
+                date: threeHoursAgo.toISOString(),
                 teaserImage: {
                     title: 'Bundeskanzleramt',
                     alttext: 'Das Bundeskanzleramt in Berlin',
@@ -142,13 +151,17 @@ function getInlandTestData() {
  * Get test data for ausland news
  */
 function getAuslandTestData() {
+    // Generate current timestamps for test data
+    const now = new Date();
+    const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
+
     return {
         news: [
             {
                 sophoraId: 'story-ausland-001',
                 externalId: 'ausland-international-001',
                 title: 'EU-Gipfel berät über Klimaziele',
-                date: '2024-01-15T10:45:00.000Z',
+                date: fourHoursAgo.toISOString(),
                 teaserImage: {
                     title: 'EU-Flaggen',
                     alttext: 'Flaggen der EU-Mitgliedstaaten',
@@ -183,13 +196,17 @@ function getAuslandTestData() {
  * Get test data for wirtschaft news
  */
 function getWirtschaftTestData() {
+    // Generate current timestamps for test data
+    const now = new Date();
+    const fiveHoursAgo = new Date(now.getTime() - 5 * 60 * 60 * 1000);
+
     return {
         news: [
             {
                 sophoraId: 'story-wirtschaft-001',
                 externalId: 'wirtschaft-unternehmen-001',
                 title: 'Deutsche Autoindustrie investiert in E-Mobilität',
-                date: '2024-01-15T09:20:00.000Z',
+                date: fiveHoursAgo.toISOString(),
                 teaserImage: {
                     title: 'Elektroauto Produktion',
                     alttext: 'Produktionslinie für Elektrofahrzeuge',
@@ -224,6 +241,10 @@ function getWirtschaftTestData() {
  * Get test data for regional news (Baden-Württemberg)
  */
 function getRegionalTestData(regionalId = 1) {
+    // Generate current timestamps for test data
+    const now = new Date();
+    const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+
     const regionalNames = {
         1: 'Baden-Württemberg',
         2: 'Bayern',
@@ -251,7 +272,7 @@ function getRegionalTestData(regionalId = 1) {
                 sophoraId: `story-regional-${regionalId}-001`,
                 externalId: `regional-${regionalId}-test-001`,
                 title: `Neue Entwicklungen in ${regionName}`,
-                date: '2024-01-15T08:30:00.000Z',
+                date: sixHoursAgo.toISOString(),
                 teaserImage: {
                     title: `${regionName} Landtag`,
                     alttext: `Gebäude des ${regionName} Landtags`,

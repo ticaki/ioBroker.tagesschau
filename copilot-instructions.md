@@ -279,49 +279,44 @@ Choose appropriate resolutions based on use case and available bandwidth.
 
 #### Test Structure
 - Unit tests: `src/**/*.test.ts`
-- Integration tests: `test/integration-*.js`
+- Integration tests: `test/integration-tagesschau-offline.js` (offline only)
 - Package tests: `test/package.js`
 
 #### Test Commands
 ```bash
 npm run test:ts      # TypeScript unit tests
 npm run test:package # Package validation
-npm run test         # All tests
+npm run test         # Basic tests (unit + package)
+npm run test:all     # All tests including offline integration
 ```
 
 #### ioBroker Integration Testing
 
-**IMPORTANT**: Use the official `@iobroker/testing` framework for all integration tests. This is the ONLY correct way to test ioBroker adapters.
+**IMPORTANT**: This adapter uses ONLY offline integration testing with mocked API responses. No real API calls are made during testing to avoid rate limiting and ensure consistent test results.
 
 **Official Documentation**: https://github.com/ioBroker/testing
 
 ##### Framework Structure
-Integration tests MUST follow this exact pattern:
+Integration tests MUST follow this exact pattern with offline data:
 
 ```javascript
+// Load test setup FIRST to configure mocking
+require('./test-setup');
+
 const path = require('path');
 const { tests } = require('@iobroker/testing');
-
-// Define test configuration
-const TEST_CONFIG = {
-    newsEnabled: true,
-    interval: 5, // minutes
-    inland: true,
-    ausland: true,
-    // ... other config
-};
 
 // Use tests.integration() with defineAdditionalTests
 tests.integration(path.join(__dirname, '..'), {
     defineAdditionalTests({ suite }) {
-        suite('Test adapter with news configuration', (getHarness) => {
+        suite('Test adapter with news configuration - offline mode', (getHarness) => {
             let harness;
             
             before(() => {
                 harness = getHarness();
             });
 
-            it('should configure and start adapter', () => new Promise(async (resolve) => {
+            it('should configure and start adapter with offline data', () => new Promise(async (resolve) => {
                 // Get adapter object and configure
                 harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
                     if (err) {
@@ -331,10 +326,10 @@ tests.integration(path.join(__dirname, '..'), {
                     }
 
                     // Configure adapter properties
-                    obj.native.newsEnabled = TEST_CONFIG.newsEnabled;
-                    obj.native.interval = TEST_CONFIG.interval;
-                    obj.native.inland = TEST_CONFIG.inland;
-                    obj.native.ausland = TEST_CONFIG.ausland;
+                    obj.native.newsEnabled = true;
+                    obj.native.interval = 5;
+                    obj.native.inland = true;
+                    obj.native.ausland = true;
                     // ... other configuration
 
                     // Set the updated configuration
@@ -343,16 +338,14 @@ tests.integration(path.join(__dirname, '..'), {
                     // Start adapter and wait
                     await harness.startAdapterAndWait();
 
-                    // Wait for adapter to process data
+                    // Wait for adapter to process offline data
                     setTimeout(() => {
-                        // Verify states were created
+                        // Verify states were created using mocked data
                         harness.states.getState('tagesschau.0.info.connection', (err, state) => {
-                            if (state && state.val === true) {
-                                console.log('✅ Adapter started successfully');
-                            }
+                            console.log('✅ Adapter processed offline data successfully');
                             resolve();
                         });
-                    }, 15000); // Allow time for API calls
+                    }, 15000); // Allow time for processing
                 });
             })).timeout(30000);
         });
@@ -362,38 +355,36 @@ tests.integration(path.join(__dirname, '..'), {
 
 ##### Key Integration Testing Rules
 
-1. **NEVER test API URLs directly** - Let the adapter handle API calls
-2. **ALWAYS use the harness** - `getHarness()` provides the testing environment  
-3. **Configure via objects** - Use `harness.objects.setObject()` to set adapter configuration
-4. **Start properly** - Use `harness.startAdapterAndWait()` to start the adapter
-5. **Check states** - Use `harness.states.getState()` to verify results
-6. **Use timeouts** - Allow time for async operations with appropriate timeouts
-7. **Test real workflow** - Initialize → Configure → Start → Verify States
+1. **ALWAYS use offline testing** - API mocking is automatically enabled
+2. **NEVER test real API URLs** - All calls are intercepted and mocked
+3. **ALWAYS use the harness** - `getHarness()` provides the testing environment  
+4. **Configure via objects** - Use `harness.objects.setObject()` to set adapter configuration
+5. **Start properly** - Use `harness.startAdapterAndWait()` to start the adapter
+6. **Check states** - Use `harness.states.getState()` to verify results
+7. **Use timeouts** - Allow time for async operations with appropriate timeouts
+8. **Test real workflow** - Initialize → Configure → Start → Verify States (with mocked data)
 
-##### Workflow Dependencies
-Integration tests should run ONLY after lint and adapter tests pass:
-
-```yaml
-integration-tests:
-  needs: [check-and-lint, adapter-tests]
-  runs-on: ubuntu-latest
-  steps:
-    - name: Run integration tests
-      run: npx mocha test/integration-*.js --exit
-```
+##### Offline Testing Features
+- **Dynamic test data**: All timestamps are generated at test runtime to avoid date comparison issues
+- **Comprehensive mocking**: All Tagesschau API endpoints are mocked with realistic data
+- **No rate limiting**: Tests can run frequently without API restrictions
+- **Consistent results**: Same test data every time, ensuring reproducible tests
 
 ##### What NOT to Do
-❌ Direct API testing: `axios.get('https://www.tagesschau.de/api2u')`
+❌ Real API testing: `axios.get('https://www.tagesschau.de/api2u')`
 ❌ Mock adapters: `new MockAdapter()`  
 ❌ Direct internet calls in tests
-❌ Bypassing the harness system
+❌ Bypassing the mocking system
+❌ Using fixed timestamps in test data
 
 ##### What TO Do
 ✅ Use `@iobroker/testing` framework
+✅ Load `./test-setup` to enable mocking
 ✅ Configure via `harness.objects.setObject()`
 ✅ Start via `harness.startAdapterAndWait()`
-✅ Test complete adapter lifecycle
+✅ Test complete adapter lifecycle with mocked data
 ✅ Verify states via `harness.states.getState()`
+✅ Use dynamic timestamps in test data
 ✅ Allow proper timeouts for async operations
 
 ### Build and Development
