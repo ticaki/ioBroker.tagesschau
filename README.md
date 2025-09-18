@@ -32,7 +32,7 @@ Please note:
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.0 (2025-09-18)
 - (ticaki) Breaking News are now also retrieved from the Tagesschau homepage API and polled every 5 minutes
 
 ### 0.5.0 (2025-01-27)

@@ -319,9 +319,11 @@ class Tagesschau extends utils.Adapter {
         this.log.debug(`News URL for ${topic}: ${url}`);
         const response = await import_axios.default.get(url, { headers: { accept: "application/json" } });
         const start = (/* @__PURE__ */ new Date()).getTime();
+        this.log.debug(`Response status for ${topic}: ${response.status}`);
         if (response.status === 200 && response.data) {
           this.isOnline = true;
           const data = response.data;
+          this.log.debug(`Received ${data.news ? data.news.length : 0} news items for ${topic}`);
           if (data.regional) {
             data.regional.forEach((news) => {
               news.regional = true;

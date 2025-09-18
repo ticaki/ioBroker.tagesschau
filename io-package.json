@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "tagesschau",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "news": {
+      "0.6.0": {
+        "en": "Breaking News are now also retrieved from the Tagesschau homepage API and polled every 5 minutes",
+        "de": "Neuigkeiten werden nun auch von der Tagesschau-Homepage-API abgerufen und alle 5 Minuten abgefragt.",
+        "ru": "Последние новости теперь также извлекаются из API домашней страницы Tagesschau и опрашиваются каждые 5 минут.",
+        "pt": "As notícias de última hora agora também são obtidas da API da página inicial da Tagesschau e verificadas a cada 5 minutos.",
+        "nl": "Er worden nu ook Breaking News opgehaald uit de Tagesschau-homepage API en elke 5 minuten opgevraagd.",
+        "fr": "Les actualités de dernière minute sont désormais également récupérées à partir de l'API de la page d'accueil de Tagesschau et vérifiées toutes les 5 minutes.",
+        "it": "Le ultime notizie vengono ora recuperate anche dall'API della homepage di Tagesschau e verificate ogni 5 minuti",
+        "es": "Las noticias de última hora ahora también se recuperan de la API de la página de inicio de Tagesschau y se consultan cada 5 minutos.",
+        "pl": "Aktualności są teraz także pobierane z interfejsu API strony głównej Tagesschau i sprawdzane co 5 minut.",
+        "uk": "Новини тепер також отримуються з домашньої сторінки Tagesschau API та запитуються кожні 5 хвилин",
+        "zh-cn": "现在也从Tagesschau主页API中检索Breaking News，并每5分钟轮询一次"
+      },
       "0.5.0": {
         "en": "States added for browsing.\nAnother attempt to constantly sort the videos in the same way.\nControl states reorganised.\nPlaceholder images for no news now work",
         "de": "States hinzugefügt zum durchsuchen.\nEin weiterer Versuch, die Videos ständig in der gleichen Weise zu sortieren.\nKontrollstates neu organisiert.\nPlatzhalter Bilder für keine Nachrichten funktionieren jetzt",
@@ -80,19 +93,6 @@
         "pl": "dodano długość do filmów\nObciążenie układu zmniejszone przy starcie",
         "uk": "додано довжину до відео\nСистемне навантаження зменшено при запуску",
         "zh-cn": "在视频中添加长度\n启动时系统负载减少"
-      },
-      "0.3.1": {
-        "en": "Back to stable admin",
-        "de": "Zurück zu Stall Admin",
-        "ru": "Назад к стабильному администратору",
-        "pt": "Voltar para administrador estável",
-        "nl": "Terug naar stabiele toediening",
-        "fr": "Retour à l'administration stable",
-        "it": "Torna a amministratore stabile",
-        "es": "Volver a administración estable",
-        "pl": "Powrót do stabilnego administratora",
-        "uk": "Повернутися до стабільного адміністратора",
-        "zh-cn": "回到稳定的管理员"
       }
     },
     "titleLang": {
