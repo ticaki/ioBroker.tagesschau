@@ -215,8 +215,7 @@ function getMockRegionalData() {
 }
 
 // Check if we're in a test environment and auto-enable mocking
-if (process.env.NODE_ENV === 'test' || process.env.npm_lifecycle_event === 'test' || 
-    (process.env._ && process.env._.includes('mocha'))) {
+if (process.env.NODE_ENV === 'test') {
     console.log('🧪 Test environment detected - enabling API mocking');
     enableMocking();
 }
