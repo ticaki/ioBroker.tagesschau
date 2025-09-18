@@ -71,7 +71,7 @@ tests.integration(path.join(__dirname, '..'), {
                 harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
                     if (err) {
                         console.error('❌ Error getting adapter object:', err);
-                        resolve();
+                        reject();
                         return;
                     }
 
@@ -181,6 +181,11 @@ tests.integration(path.join(__dirname, '..'), {
                                                         console.log(`     📰 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
                                                     });
                                                 }
+                                                else {
+                                                    console.log('⚠️ No inland news states found - this may indicate an issue with offline data');
+                                                    reject(new Error('No inland news states found'));
+                                                    return;
+                                                }
                                             }
 
                                             // Check for ausland news states (if enabled)
@@ -200,6 +205,12 @@ tests.integration(path.join(__dirname, '..'), {
                                                         console.log(`     🌍 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
                                                     });
                                                 }
+                                                else {
+                                                    console.log('⚠️ No ausland news states found - this may indicate an issue with offline data');
+                                                    reject(new Error('No ausland news states found'));
+                                                    return;
+                                                }
+
                                             }
 
                                             // Check for wirtschaft news states (if enabled)
