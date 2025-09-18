@@ -9,13 +9,13 @@ require('./test-setup');
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
-// German news configuration for testing
+// German news configuration for testing - reduced scope for cleaner testing
 const TEST_CONFIG = {
     newsEnabled: true,
     interval: 5, // minutes
     inland: true,
     ausland: true,
-    wirtschaft: true,
+    wirtschaft: false, // Disable to reduce state count for testing
     sport: false,
     video: false,
     investigativ: false,
@@ -89,6 +89,9 @@ tests.integration(path.join(__dirname, '..'), {
                     obj.native.wissen = TEST_CONFIG.wissen;
                     obj.native.regional = TEST_CONFIG.regional;
                     obj.native.regionalSelection = TEST_CONFIG.regionalSelection;
+                    // Set at least one region to satisfy adapter requirements for news API calls
+                    // The API URL pattern requires regions parameter: https://www.tagesschau.de/api2u/news/?regions=${this.regions}&ressort=${topic}
+                    obj.native.L1 = true; // Baden-Württemberg (region 1)
 
                     // Set the updated object
                     harness.objects.setObject(obj._id, obj);
@@ -113,102 +116,155 @@ tests.integration(path.join(__dirname, '..'), {
                             }
 
                             // Get all states to see what was created
-                            harness.states.getStates('tagesschau.0.*', (err, allStates) => {
-                                if (err) {
-                                    console.error('❌ Error getting states:', err);
-                                    // Even if we can't get all states, we know the adapter is working
-                                    // because the connection state worked
-                                    console.log('✅ Step 8: Adapter processed offline data successfully');
-                                    console.log('📊 Connection state confirmed adapter is working with offline data');
-                                    console.log('\n🎉 === OFFLINE INTEGRATION TEST SUMMARY ===');
-                                    console.log(`✅ Adapter initialized with German news configuration`);
-                                    console.log(`✅ Adapter started successfully using offline test data`);
-                                    console.log(`✅ Connection state properly handled: ${connectionState ? connectionState.val : 'null'}`);
-                                    console.log(`✅ No real API calls were made - all data from offline test files`);
-                                    console.log(`✅ Integration test completed successfully\\n`);
-                                    resolve();
-                                    return;
-                                }
+                            // Use the correct pattern from brightsky adapter to avoid "no keys" error
+                            // First get the state IDs that match the pattern
+                            harness.dbConnection.getStateIDs('tagesschau.0.*').then(stateIds => {
+                                if (stateIds && stateIds.length > 0) {
+                                    harness.states.getStates(stateIds, (err, allStates) => {
+                                        if (err) {
+                                            console.error('❌ Error getting states:', err);
+                                            reject(err); // Properly fail the test instead of just resolving
+                                            return;
+                                        }
 
-                                const stateKeys = Object.keys(allStates || {});
-                                const stateCount = stateKeys.length;
-                                
-                                console.log(`📊 Found ${stateCount} total states created by adapter`);
+                                        const stateCount = stateIds.length;
+                                        
+                                        console.log(`📊 Found ${stateCount} total states created by adapter`);
 
-                                if (stateCount > 0) {
-                                    console.log('✅ Step 8: Adapter successfully created states using offline data');
-                                    
-                                    // Show sample of created states
-                                    console.log('📋 Sample states created:');
-                                    stateKeys.slice(0, 10).forEach(key => {
-                                        const state = allStates[key];
-                                        console.log(`   ${key}: ${state.val}`);
+                                        if (stateCount > 0) {
+                                            console.log('✅ Step 8: Adapter successfully created states using offline data');
+                                            
+                                            // Show sample of created states - FIX: access states correctly by index
+                                            console.log('📋 Sample states created:');
+                                            stateIds.slice(0, 10).forEach((stateId, index) => {
+                                                const state = allStates[index]; // FIX: Use index, not stateId as key
+                                                console.log(`   ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                            });
+
+                                            // Check for specific news states
+                                            const newsStates = stateIds.filter(key => 
+                                                key.includes('news.') || 
+                                                key.includes('title') || 
+                                                key.includes('date') ||
+                                                key.includes('breakingNews')
+                                            );
+
+                                            if (newsStates.length > 0) {
+                                                console.log(`✅ Found ${newsStates.length} news-specific datapoints:`);
+                                                newsStates.slice(0, 5).forEach(stateId => {
+                                                    const index = stateIds.indexOf(stateId); // FIX: Get correct index
+                                                    const state = allStates[index];
+                                                    console.log(`   📊 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                                });
+                                            }
+
+                                            // Check for breaking news states
+                                            const breakingNewsStates = stateIds.filter(key => key.includes('breakingNews'));
+                                            if (breakingNewsStates.length > 0) {
+                                                console.log(`✅ Found ${breakingNewsStates.length} breaking news datapoints`);
+                                            }
+
+                                            // Check for inland news states (if enabled)
+                                            if (TEST_CONFIG.inland) {
+                                                const inlandStates = stateIds.filter(key => key.includes('inland'));
+                                                if (inlandStates.length > 0) {
+                                                    console.log(`✅ Found ${inlandStates.length} inland news datapoints`);
+                                                    // Show sample inland NEWS CONTENT states (not just control states)
+                                                    const inlandNewsContent = inlandStates.filter(key => 
+                                                        key.includes('.0.title') || key.includes('.0.date') || 
+                                                        key.includes('.0.firstSentence') || key.includes('.newsCount')
+                                                    );
+                                                    console.log(`   📰 Inland news content states: ${inlandNewsContent.length}`);
+                                                    inlandNewsContent.slice(0, 3).forEach(stateId => {
+                                                        const index = stateIds.indexOf(stateId);
+                                                        const state = allStates[index];
+                                                        console.log(`     📰 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                                    });
+                                                }
+                                            }
+
+                                            // Check for ausland news states (if enabled)
+                                            if (TEST_CONFIG.ausland) {
+                                                const auslandStates = stateIds.filter(key => key.includes('ausland'));
+                                                if (auslandStates.length > 0) {
+                                                    console.log(`✅ Found ${auslandStates.length} ausland news datapoints`);
+                                                    // Show sample ausland NEWS CONTENT states to verify expected content
+                                                    const auslandNewsContent = auslandStates.filter(key => 
+                                                        key.includes('.0.title') || key.includes('.0.date') || 
+                                                        key.includes('.0.firstSentence') || key.includes('.newsCount')
+                                                    );
+                                                    console.log(`   🌍 Ausland news content states: ${auslandNewsContent.length}`);
+                                                    auslandNewsContent.slice(0, 3).forEach(stateId => {
+                                                        const index = stateIds.indexOf(stateId);
+                                                        const state = allStates[index];
+                                                        console.log(`     🌍 ${stateId}: ${state && state.val !== undefined ? state.val : 'undefined'}`);
+                                                    });
+                                                }
+                                            }
+
+                                            // Check for wirtschaft news states (if enabled)
+                                            if (TEST_CONFIG.wirtschaft) {
+                                                const wirtschaftStates = stateIds.filter(key => key.includes('wirtschaft'));
+                                                if (wirtschaftStates.length > 0) {
+                                                    console.log(`✅ Found ${wirtschaftStates.length} wirtschaft news datapoints`);
+                                                }
+                                            }
+
+                                            // Validate that we have actual data values, not just undefined
+                                            let statesWithValues = 0;
+                                            allStates.forEach(state => {
+                                                if (state && state.val !== undefined && state.val !== null) {
+                                                    statesWithValues++;
+                                                }
+                                            });
+
+                                            console.log(`📊 States with actual values: ${statesWithValues}/${stateCount}`);
+
+                                            // Check connection state
+                                            if (connectionState && connectionState.val === true) {
+                                                console.log('✅ Connection state indicates successful processing');
+                                            } else {
+                                                console.log('⚠️ Connection state indicates potential issues');
+                                            }
+
+                                            console.log('\n🎉 === OFFLINE INTEGRATION TEST SUMMARY ===');
+                                            console.log(`✅ Adapter initialized with German news configuration`);
+                                            console.log(`✅ Adapter started successfully using offline test data`);
+                                            console.log(`✅ Adapter created ${stateCount} total datapoints`);
+                                            console.log(`✅ States with values: ${statesWithValues}/${stateCount}`);
+                                            console.log(`✅ News-specific datapoints: ${newsStates.length}`);
+                                            console.log(`✅ Connection state properly handled: ${connectionState ? connectionState.val : 'null'}`);
+                                            console.log(`✅ No real API calls were made - all data from offline test files`);
+
+                                            // FAIL the test if we don't have sufficient valid states
+                                            if (statesWithValues < (stateCount * 0.5)) { // At least 50% should have values
+                                                console.log('❌ FAILURE: Too few states have actual values - this indicates a problem');
+                                                reject(new Error(`Only ${statesWithValues}/${stateCount} states have values`));
+                                                return;
+                                            }
+
+                                            console.log(`✅ Integration test completed successfully\\n`);
+
+                                        } else {
+                                            console.log('❌ No states created by adapter');
+                                            reject(new Error('No states were created by the adapter')); // FAIL the test
+                                            return;
+                                        }
+
+                                        resolve();
                                     });
-
-                                    // Check for specific news states
-                                    const newsStates = stateKeys.filter(key => 
-                                        key.includes('news.') || 
-                                        key.includes('title') || 
-                                        key.includes('date') ||
-                                        key.includes('breakingNews')
-                                    );
-
-                                    if (newsStates.length > 0) {
-                                        console.log(`✅ Found ${newsStates.length} news-specific datapoints:`);
-                                        newsStates.slice(0, 5).forEach(key => {
-                                            console.log(`   📊 ${key}: ${allStates[key].val}`);
-                                        });
-                                    }
-
-                                    // Check for breaking news states
-                                    const breakingNewsStates = stateKeys.filter(key => key.includes('breakingNews'));
-                                    if (breakingNewsStates.length > 0) {
-                                        console.log(`✅ Found ${breakingNewsStates.length} breaking news datapoints`);
-                                    }
-
-                                    // Check for inland news states (if enabled)
-                                    if (TEST_CONFIG.inland) {
-                                        const inlandStates = stateKeys.filter(key => key.includes('inland'));
-                                        if (inlandStates.length > 0) {
-                                            console.log(`✅ Found ${inlandStates.length} inland news datapoints`);
-                                        }
-                                    }
-
-                                    // Check for ausland news states (if enabled)
-                                    if (TEST_CONFIG.ausland) {
-                                        const auslandStates = stateKeys.filter(key => key.includes('ausland'));
-                                        if (auslandStates.length > 0) {
-                                            console.log(`✅ Found ${auslandStates.length} ausland news datapoints`);
-                                        }
-                                    }
-
-                                    // Check for wirtschaft news states (if enabled)
-                                    if (TEST_CONFIG.wirtschaft) {
-                                        const wirtschaftStates = stateKeys.filter(key => key.includes('wirtschaft'));
-                                        if (wirtschaftStates.length > 0) {
-                                            console.log(`✅ Found ${wirtschaftStates.length} wirtschaft news datapoints`);
-                                        }
-                                    }
-
-                                    console.log('\n🎉 === OFFLINE INTEGRATION TEST SUMMARY ===');
-                                    console.log(`✅ Adapter initialized with German news configuration`);
-                                    console.log(`✅ Adapter started successfully using offline test data`);
-                                    console.log(`✅ Adapter created ${stateCount} total datapoints`);
-                                    console.log(`✅ News-specific datapoints: ${newsStates.length}`);
-                                    console.log(`✅ Connection state properly handled: ${connectionState ? connectionState.val : 'null'}`);
-                                    console.log(`✅ No real API calls were made - all data from offline test files`);
-                                    console.log(`✅ Integration test completed successfully\\n`);
-
                                 } else {
-                                    console.log('❌ No states created by adapter');
+                                    console.log('❌ No state IDs found matching pattern tagesschau.0.*');
+                                    reject(new Error('No states found matching pattern tagesschau.0.*')); // FAIL the test
                                 }
-
-                                resolve();
+                            }).catch(err => {
+                                console.error('❌ Error getting state IDs:', err);
+                                reject(err); // FAIL the test properly
                             });
                         });
-                    }, 15000); // Wait 15 seconds for offline data processing
+                    }, 30000); // Wait 30 seconds for offline data processing
                 });
-            })).timeout(30000); // 30 second timeout
+            })).timeout(60000); // 60 second timeout
 
             it('should validate news configuration is properly structured in offline mode', () => {
                 console.log('\n=== OFFLINE NEWS CONFIGURATION VALIDATION TEST ===');

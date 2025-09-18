@@ -45,8 +45,21 @@ function enableMocking() {
                 statusText: 'OK'
             });
         } else if (url.includes('tagesschau.de/api2u/news')) {
+            // Return category-specific mock data based on the ressort parameter
+            let mockData;
+            if (url.includes('ressort=inland')) {
+                mockData = getMockInlandData();
+            } else if (url.includes('ressort=ausland')) {
+                mockData = getMockAuslandData();
+            } else if (url.includes('ressort=wirtschaft')) {
+                mockData = getMockWirtschaftData();
+            } else {
+                // Default for other categories
+                mockData = getMockNewsData();
+            }
+            
             return Promise.resolve({
-                data: getMockNewsData(),
+                data: mockData,
                 status: 200,
                 statusText: 'OK'
             });
@@ -124,6 +137,102 @@ function getMockHomepageData() {
         newsCount: 1,
         regional: [],
         type: 'homepage'
+    };
+}
+
+/**
+ * Get mock inland (domestic) news data
+ */
+function getMockInlandData() {
+    const now = new Date();
+    return {
+        news: [
+            {
+                sophoraId: 'story-inland-001',
+                externalId: 'inland-meldung-001',
+                title: 'Test German Domestic News',
+                date: now.toISOString(),
+                teaserImage: {
+                    imageVariants: {
+                        '1x1-144': 'https://test.example.com/inland-144.jpg',
+                        '16x9-512': 'https://test.example.com/inland-512.jpg'
+                    }
+                },
+                topline: 'Deutschland',
+                firstSentence: 'This is a test German domestic news article.',
+                details: 'Full test German domestic news content.',
+                shareURL: 'https://test.tagesschau.de/inland-test-001',
+                tags: [{ tag: 'Deutschland' }, { tag: 'Politik' }],
+                breakingNews: false,
+                type: 'story',
+                ressort: 'inland'
+            }
+        ],
+        newsCount: 1
+    };
+}
+
+/**
+ * Get mock ausland (international) news data
+ */
+function getMockAuslandData() {
+    const now = new Date();
+    return {
+        news: [
+            {
+                sophoraId: 'story-ausland-001',
+                externalId: 'ausland-meldung-001',
+                title: 'Test International News',
+                date: now.toISOString(),
+                teaserImage: {
+                    imageVariants: {
+                        '1x1-144': 'https://test.example.com/ausland-144.jpg',
+                        '16x9-512': 'https://test.example.com/ausland-512.jpg'
+                    }
+                },
+                topline: 'International',
+                firstSentence: 'This is a test international news article.',
+                details: 'Full test international news content.',
+                shareURL: 'https://test.tagesschau.de/ausland-test-001',
+                tags: [{ tag: 'International' }, { tag: 'Politik' }],
+                breakingNews: false,
+                type: 'story',
+                ressort: 'ausland'
+            }
+        ],
+        newsCount: 1
+    };
+}
+
+/**
+ * Get mock wirtschaft (economy) news data  
+ */
+function getMockWirtschaftData() {
+    const now = new Date();
+    return {
+        news: [
+            {
+                sophoraId: 'story-wirtschaft-001', 
+                externalId: 'wirtschaft-meldung-001',
+                title: 'Test Economy News',
+                date: now.toISOString(),
+                teaserImage: {
+                    imageVariants: {
+                        '1x1-144': 'https://test.example.com/wirtschaft-144.jpg',
+                        '16x9-512': 'https://test.example.com/wirtschaft-512.jpg'
+                    }
+                },
+                topline: 'Wirtschaft',
+                firstSentence: 'This is a test economy news article.',
+                details: 'Full test economy news content.',
+                shareURL: 'https://test.tagesschau.de/wirtschaft-test-001',
+                tags: [{ tag: 'Wirtschaft' }, { tag: 'Unternehmen' }],
+                breakingNews: false,
+                type: 'story',
+                ressort: 'wirtschaft'
+            }
+        ],
+        newsCount: 1
     };
 }
 
@@ -225,6 +334,9 @@ module.exports = {
     disableMocking,
     getMockHomepageData,
     getMockNewsData,
+    getMockInlandData,
+    getMockAuslandData,
+    getMockWirtschaftData,
     getMockRegionalData,
     isMockingEnabled: () => isMockingEnabled
 };
