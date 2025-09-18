@@ -1,0 +1,43 @@
+{
+  "news": [
+    {
+      "sophoraId": "story-wirtschaft-001",
+      "externalId": "wirtschaft-unternehmen-001",
+      "title": "Deutsche Autoindustrie investiert in E-Mobilität",
+      "date": "2024-01-15T09:20:00.000Z",
+      "teaserImage": {
+        "title": "Elektroauto Produktion",
+        "alttext": "Produktionslinie für Elektrofahrzeuge",
+        "copyright": "dpa",
+        "imageVariants": {
+          "1x1-256": "https://images.tagesschau.de/image/test-emobility-1x1-256.jpg",
+          "16x9-512": "https://images.tagesschau.de/image/test-emobility-16x9-512.jpg",
+          "16x9-960": "https://images.tagesschau.de/image/test-emobility-16x9-960.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Automobilindustrie",
+      "firstSentence": "Deutsche Automobilhersteller kündigen Milliarden-Investitionen in Elektromobilität an.",
+      "details": "Die Investitionen sollen den Ausbau der Batterieproduktion und die Entwicklung neuer E-Auto-Modelle vorantreiben.",
+      "shareURL": "https://www.tagesschau.de/wirtschaft/auto-emobilitaet-investition-test",
+      "tags": [
+        {
+          "tag": "Automobilindustrie"
+        },
+        {
+          "tag": "Elektromobilität"
+        },
+        {
+          "tag": "Investitionen"
+        },
+        {
+          "tag": "Technologie"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "ressort": "wirtschaft"
+    }
+  ],
+  "newsCount": 1
+}

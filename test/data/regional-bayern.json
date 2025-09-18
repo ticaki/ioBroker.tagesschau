@@ -1,0 +1,38 @@
+{
+  "regional": [
+    {
+      "sophoraId": "story-regional-2-001",
+      "externalId": "regional-2-test-001",
+      "title": "Neue Entwicklungen in Bayern",
+      "date": "2024-01-15T08:30:00.000Z",
+      "teaserImage": {
+        "title": "Bayern Landtag",
+        "alttext": "Gebäude des Bayern Landtags",
+        "copyright": "ARD",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-2-landtag-1x1-144.jpg",
+          "16x9-384": "https://images.tagesschau.de/image/test-2-landtag-16x9-384.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Bayern",
+      "firstSentence": "In Bayern gibt es wichtige politische Entwicklungen zu berichten.",
+      "details": "Der Landtag von Bayern hat heute über wichtige regionale Themen debattiert.",
+      "shareURL": "https://www.tagesschau.de/regional/bayern/politik-test",
+      "tags": [
+        {
+          "tag": "Bayern"
+        },
+        {
+          "tag": "Regional"
+        },
+        {
+          "tag": "Politik"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "regionalId": 2
+    }
+  ]
+}

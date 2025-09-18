@@ -1,0 +1,109 @@
+{
+  "news": [
+    {
+      "sophoraId": "story-homepage-001",
+      "externalId": "homepage-breaking-001",
+      "title": "Bundestag beschließt wichtiges Gesetz",
+      "date": "2024-01-15T14:30:00.000Z",
+      "teaserImage": {
+        "title": "Bundestag Sitzung",
+        "alttext": "Plenarsaal des Deutschen Bundestages",
+        "copyright": "dpa",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-bundestag-1x1-144.jpg",
+          "1x1-256": "https://images.tagesschau.de/image/test-bundestag-1x1-256.jpg",
+          "1x1-432": "https://images.tagesschau.de/image/test-bundestag-1x1-432.jpg",
+          "16x9-384": "https://images.tagesschau.de/image/test-bundestag-16x9-384.jpg",
+          "16x9-512": "https://images.tagesschau.de/image/test-bundestag-16x9-512.jpg",
+          "16x9-960": "https://images.tagesschau.de/image/test-bundestag-16x9-960.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Bundestag",
+      "firstSentence": "Der Bundestag hat heute ein wichtiges Gesetz zur Digitalisierung verabschiedet.",
+      "details": "Mit großer Mehrheit stimmten die Abgeordneten für das Gesetz zur Förderung der Digitalisierung in Deutschland. Das Gesetz sieht Investitionen in Höhe von mehreren Milliarden Euro vor.",
+      "shareURL": "https://www.tagesschau.de/inland/bundestag-digitalisierung-gesetz-test",
+      "tags": [
+        {
+          "tag": "Bundestag"
+        },
+        {
+          "tag": "Politik"
+        },
+        {
+          "tag": "Digitalisierung"
+        },
+        {
+          "tag": "Deutschland"
+        }
+      ],
+      "breakingNews": true,
+      "type": "story",
+      "ressort": "inland"
+    },
+    {
+      "sophoraId": "story-homepage-002",
+      "externalId": "homepage-wirtschaft-002",
+      "title": "DAX erreicht neues Allzeithoch",
+      "date": "2024-01-15T13:15:00.000Z",
+      "teaserImage": {
+        "title": "Frankfurter Börse",
+        "alttext": "Händler an der Frankfurter Börse",
+        "copyright": "Reuters",
+        "imageVariants": {
+          "1x1-144": "https://images.tagesschau.de/image/test-boerse-1x1-144.jpg",
+          "1x1-256": "https://images.tagesschau.de/image/test-boerse-1x1-256.jpg",
+          "16x9-384": "https://images.tagesschau.de/image/test-boerse-16x9-384.jpg",
+          "16x9-512": "https://images.tagesschau.de/image/test-boerse-16x9-512.jpg"
+        },
+        "type": "image"
+      },
+      "topline": "Börse",
+      "firstSentence": "Der deutsche Leitindex DAX hat heute erstmals die Marke von 18.000 Punkten überschritten.",
+      "details": "Angetrieben von positiven Quartalszahlen erreichte der DAX ein neues Allzeithoch. Besonders Technologieaktien legten stark zu.",
+      "shareURL": "https://www.tagesschau.de/wirtschaft/dax-allzeithoch-test",
+      "tags": [
+        {
+          "tag": "DAX"
+        },
+        {
+          "tag": "Börse"
+        },
+        {
+          "tag": "Wirtschaft"
+        },
+        {
+          "tag": "Aktien"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "ressort": "wirtschaft"
+    }
+  ],
+  "newsCount": 2,
+  "regional": [
+    {
+      "sophoraId": "story-regional-bayern-001",
+      "externalId": "bayern-regional-001",
+      "title": "Neues Verkehrskonzept für München",
+      "date": "2024-01-15T12:00:00.000Z",
+      "topline": "Bayern",
+      "firstSentence": "München plant ein neues Verkehrskonzept zur Reduzierung der Innenstadtbelastung.",
+      "details": "Das neue Konzept sieht eine Ausweitung der Fußgängerzonen und bessere ÖPNV-Anbindung vor.",
+      "shareURL": "https://www.tagesschau.de/regional/bayern/muenchen-verkehr-test",
+      "tags": [
+        {
+          "tag": "München"
+        },
+        {
+          "tag": "Verkehr"
+        }
+      ],
+      "breakingNews": false,
+      "type": "story",
+      "regionalId": 2
+    }
+  ],
+  "type": "homepage"
+}
