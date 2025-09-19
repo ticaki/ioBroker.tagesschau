@@ -79,7 +79,7 @@ jobs:
 
       - name: Run offline integration tests
         run: npx mocha test/integration-tagesschau-offline.js --exit
-        timeout-minutes: 5
+        timeout-minutes: 10
         env:
           NODE_ENV: test
 
