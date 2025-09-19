@@ -467,7 +467,12 @@ tests.integration(path.join(__dirname, '..'), {
                             L1: true // Need at least one region for API calls
                         });
                         
-                        harness.objects.setObject(obj._id, obj);
+                        await new Promise((resolve, reject) => {
+                            harness.objects.setObject(obj._id, obj, (err) => {
+                                if (err) return reject(err);
+                                resolve();
+                            });
+                        });
                         await harness.startAdapterAndWait();
                         
                         console.log('⏳ Step 2: Waiting for adapter to process...');
