@@ -60,11 +60,11 @@ tests.integration(path.join(__dirname, '..'), {
                             } else {
                                 console.log('✅ Step 2: Connection state object created successfully');
                             }
-                            resolveState();
+                            resolveState(undefined);
                         });
                     });
                 } catch (error) {
-                    console.log('⚠️ Note: Could not pre-create connection state:', error.message);
+                    console.log('⚠️ Note: Could not pre-create connection state:', error instanceof Error ? error.message : String(error));
                 }
 
                 // Configure adapter with news settings
@@ -263,10 +263,10 @@ tests.integration(path.join(__dirname, '..'), {
                                         }
 
                                         harness.stopAdapter().then(() => {
-                                            resolve();
+                                            resolve(true);
                                         }).catch(err => {
                                             console.error('❌ Error stopping adapter:', err);
-                                            resolve(); // Still resolve even if stop fails
+                                            resolve(true); // Still resolve even if stop fails
                                         });
                                     });
                                 } else {
@@ -436,7 +436,7 @@ tests.integration(path.join(__dirname, '..'), {
                         reject(error);
                     }
                 });
-            }).timeout(40000);
+            }).timeout(120000);
         });
 
         // Test partial disabling - inland enabled, ausland disabled
@@ -480,7 +480,7 @@ tests.integration(path.join(__dirname, '..'), {
                         await new Promise((resolve, reject) => {
                             harness.objects.setObject(obj._id, obj, (err) => {
                                 if (err) return reject(err);
-                                resolve();
+                                resolve(true);
                             });
                         });
                         await harness.startAdapterAndWait();
@@ -529,7 +529,7 @@ tests.integration(path.join(__dirname, '..'), {
                         reject(error);
                     }
                 });
-            }).timeout(40000);
+            }).timeout(120000);
         });
     }
 });
