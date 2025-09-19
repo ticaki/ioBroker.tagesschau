@@ -36,7 +36,7 @@ tests.integration(path.join(__dirname, '..'), {
                 harness = getHarness();
             });
 
-            it('should create connection state and start adapter with offline data', () => new Promise(async (resolve) => {
+            it('should create connection state and start adapter with offline data', () => new Promise(async (resolve, reject) => {
                 console.log('\n=== OFFLINE TAGESSCHAU INTEGRATION TEST START ===');
                 console.log('✅ Step 1: Using offline test data (no real API calls)');
                 console.log('📊 Test data available for offline testing');
@@ -71,7 +71,7 @@ tests.integration(path.join(__dirname, '..'), {
                 harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
                     if (err) {
                         console.error('❌ Error getting adapter object:', err);
-                        reject();
+                        reject(err);
                         return;
                     }
 
@@ -262,7 +262,12 @@ tests.integration(path.join(__dirname, '..'), {
                                             return;
                                         }
 
-                                        resolve();
+                                        harness.stopAdapter().then(() => {
+                                            resolve();
+                                        }).catch(err => {
+                                            console.error('❌ Error stopping adapter:', err);
+                                            resolve(); // Still resolve even if stop fails
+                                        });
                                     });
                                 } else {
                                     console.log('❌ No state IDs found matching pattern tagesschau.0.*');
