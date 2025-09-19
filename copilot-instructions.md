@@ -421,7 +421,12 @@ tests.integration(path.join(__dirname, '..'), {
                             L1: false
                         });
                         
-                        harness.objects.setObject(obj._id, obj);
+                        await new Promise((resolve, reject) => {
+                            harness.objects.setObject(obj._id, obj, (err) => {
+                                if (err) reject(err);
+                                else resolve();
+                            });
+                        });
                         await harness.startAdapterAndWait();
                         
                         setTimeout(async () => {
