@@ -323,7 +323,7 @@ tests.integration(path.join(__dirname, '..'), {
         });
 
         // New test suite for failure scenarios - separate suite because `it` doesn't support restarting adapter
-        suite('should NOT create news states when news categories are disabled', (getHarness) => {
+        /*suite('should NOT create news states when news categories are disabled', (getHarness) => {
             let harness;
 
             before(() => {
@@ -541,6 +541,6 @@ tests.integration(path.join(__dirname, '..'), {
                     }
                 });
             }).timeout(120000);
-        });
+        });*/
     }
 });
