@@ -404,7 +404,12 @@ tests.integration(path.join(__dirname, '..'), {
                         console.log('\n=== NEGATIVE TEST: News categories disabled ===');
                         
                         harness = getHarness();
-                        const obj = await harness.objects.getObject('system.adapter.tagesschau.0');
+                        const obj = await new Promise((resolve, reject) => {
+                            harness.objects.getObject('system.adapter.tagesschau.0', (err, obj) => {
+                                if (err) return reject(err);
+                                resolve(obj);
+                            });
+                        });
                         
                         // Configure with ALL news categories disabled
                         Object.assign(obj.native, {
