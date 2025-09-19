@@ -448,7 +448,12 @@ tests.integration(path.join(__dirname, '..'), {
                         console.log('\n=== PARTIAL NEGATIVE TEST: Only inland enabled ===');
                         
                         harness = getHarness();
-                        const obj = await harness.objects.getObject('system.adapter.tagesschau.0');
+                        const obj = await new Promise((resolve, reject) => {
+                            harness.objects.getObject('system.adapter.tagesschau.0', (err, obj) => {
+                                if (err) return reject(err);
+                                resolve(obj);
+                            });
+                        });
                         
                         console.log('✅ Step 1: Configuring adapter with inland enabled, ausland disabled...');
                         
