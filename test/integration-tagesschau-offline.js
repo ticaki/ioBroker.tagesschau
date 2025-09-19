@@ -37,6 +37,7 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('should create connection state and start adapter with offline data', () => new Promise(async (resolve, reject) => {
+                harness = getHarness();
                 console.log('\n=== OFFLINE TAGESSCHAU INTEGRATION TEST START ===');
                 console.log('✅ Step 1: Using offline test data (no real API calls)');
                 console.log('📊 Test data available for offline testing');
@@ -330,6 +331,7 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('should NOT create inland/ausland states when both are disabled', () => {
+                harness = getHarness();
                 return new Promise(async (resolve, reject) => {
                     try {
                         console.log('\n=== NEGATIVE TEST: News categories disabled ===');
@@ -456,6 +458,7 @@ tests.integration(path.join(__dirname, '..'), {
             });
 
             it('should create only inland states when ausland is disabled', () => {
+                harness = getHarness();
                 return new Promise(async (resolve, reject) => {
                     try {
                         console.log('\n=== PARTIAL NEGATIVE TEST: Only inland enabled ===');
