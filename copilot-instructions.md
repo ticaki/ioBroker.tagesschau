@@ -284,11 +284,14 @@ Choose appropriate resolutions based on use case and available bandwidth.
 
 #### Test Commands
 ```bash
-npm run test:ts      # TypeScript unit tests
-npm run test:package # Package validation
-npm run test         # Basic tests (unit + package)
-npm run test:all     # All tests including offline integration
+npm run test:ts            # TypeScript unit tests
+npm run test:package       # Package validation
+npm run test               # Basic tests (unit + package)
+npm run test:all           # All tests including offline integration
+npm run test:integration-custom  # Run only the custom integration test
 ```
+
+**CRITICAL**: Always use `npm run test:integration-custom` for integration testing. This runs the enhanced offline tests that include both success and failure scenarios.
 
 #### ioBroker Integration Testing
 
@@ -296,19 +299,27 @@ npm run test:all     # All tests including offline integration
 
 **Official Documentation**: https://github.com/ioBroker/testing
 
-##### Framework Structure
-Integration tests MUST follow this exact pattern with offline data:
+##### Framework Structure  
+Integration tests MUST use the working pattern with BOTH success and failure scenarios:
 
 ```javascript
-// Load test setup FIRST to configure mocking
+// Load test setup FIRST to configure mocking for offline testing
 require('./test-setup');
 
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
-// Use tests.integration() with defineAdditionalTests
+const TEST_CONFIG = {
+    newsEnabled: true,
+    interval: 5,
+    inland: true,
+    ausland: true,
+    // ... other configuration
+};
+
 tests.integration(path.join(__dirname, '..'), {
     defineAdditionalTests({ suite }) {
+        // SUCCESS TEST: Test normal operation with enabled features
         suite('Test adapter with news configuration - offline mode', (getHarness) => {
             let harness;
             
@@ -316,38 +327,150 @@ tests.integration(path.join(__dirname, '..'), {
                 harness = getHarness();
             });
 
-            it('should configure and start adapter with offline data', () => new Promise(async (resolve) => {
-                // Get adapter object and configure
+            it('should create connection state and start adapter with offline data', () => new Promise(async (resolve, reject) => {
+                console.log('\n=== OFFLINE TAGESSCHAU INTEGRATION TEST START ===');
+                
+                // Configure adapter  
                 harness.objects.getObject('system.adapter.tagesschau.0', async (err, obj) => {
                     if (err) {
-                        console.error('Error getting adapter object:', err);
-                        resolve();
+                        console.error('❌ Error getting adapter object:', err);
+                        reject(err);
                         return;
                     }
 
-                    // Configure adapter properties
-                    obj.native.newsEnabled = true;
-                    obj.native.interval = 5;
-                    obj.native.inland = true;
-                    obj.native.ausland = true;
-                    // ... other configuration
-
-                    // Set the updated configuration
+                    // Set test configuration
+                    Object.assign(obj.native, TEST_CONFIG);
+                    obj.native.L1 = true; // Need at least one region for API calls
+                    
                     harness.objects.setObject(obj._id, obj);
-
-                    // Start adapter and wait
                     await harness.startAdapterAndWait();
-
-                    // Wait for adapter to process offline data
-                    setTimeout(() => {
-                        // Verify states were created using mocked data
-                        harness.states.getState('tagesschau.0.info.connection', (err, state) => {
-                            console.log('✅ Adapter processed offline data successfully');
+                    
+                    // Wait for processing
+                    setTimeout(async () => {
+                        try {
+                            const stateIds = await harness.dbConnection.getStateIDs('tagesschau.0.*');
+                            
+                            if (stateIds.length === 0) {
+                                reject(new Error('No states were created by the adapter'));
+                                return;
+                            }
+                            
+                            // CRITICAL: Test that expected states exist
+                            const newsStates = stateIds.filter(key => 
+                                key.includes('news.') || 
+                                key.includes('title') || 
+                                key.includes('date')
+                            );
+                            
+                            if (newsStates.length === 0) {
+                                reject(new Error('No news states found'));
+                                return;
+                            }
+                            
+                            const inlandStates = stateIds.filter(key => key.includes('inland'));
+                            if (TEST_CONFIG.inland && inlandStates.length === 0) {
+                                reject(new Error('Expected inland states but none were found'));
+                                return;
+                            }
+                            
+                            const auslandStates = stateIds.filter(key => key.includes('ausland'));
+                            if (TEST_CONFIG.ausland && auslandStates.length === 0) {
+                                reject(new Error('Expected ausland states but none were found'));
+                                return;
+                            }
+                            
+                            console.log(`✅ Integration test completed successfully - ${stateIds.length} states created`);
                             resolve();
-                        });
-                    }, 15000); // Allow time for processing
+                            
+                        } catch (error) {
+                            reject(error);
+                        }
+                    }, 30000);
                 });
-            })).timeout(30000);
+            })).timeout(60000);
+        });
+
+        // FAILURE TEST: Test when features are disabled
+        suite('should NOT create news states when news categories are disabled', (getHarness) => {
+            let harness;
+            
+            before(() => {
+                harness = getHarness();
+            });
+
+            it('should NOT create inland/ausland states when both are disabled', () => {
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        console.log('\n=== NEGATIVE TEST: News categories disabled ===');
+                        
+                        harness = getHarness();
+                        const obj = await new Promise((resolve, reject) => {
+                            harness.objects.getObject('system.adapter.tagesschau.0', (err, obj) => {
+                                if (err) return reject(err);
+                                resolve(obj);
+                            });
+                        });
+                        
+                        // Configure with ALL news categories disabled
+                        Object.assign(obj.native, {
+                            newsEnabled: true,
+                            interval: 5,
+                            inland: false,    // DISABLED
+                            ausland: false,   // DISABLED
+                            wirtschaft: false,
+                            sport: false,
+                            video: false,
+                            investigativ: false,
+                            wissen: false,
+                            regional: false,
+                            L1: false
+                        });
+                        
+                        await new Promise((resolve, reject) => {
+                            harness.objects.setObject(obj._id, obj, (err) => {
+                                if (err) reject(err);
+                                else resolve();
+                            });
+                        });
+                        await harness.startAdapterAndWait();
+                        
+                        setTimeout(async () => {
+                            const stateIds = await harness.dbConnection.getStateIDs('tagesschau.0.*');
+                            
+                            // Verify news states DON'T exist (disabled)
+                            const inlandStates = stateIds.filter(key => 
+                                key.includes('inland') && 
+                                !key.includes('controls') && 
+                                !key.includes('newsCount')
+                            );
+                            
+                            if (inlandStates.length > 0) {
+                                reject(new Error(`Expected no inland news states but found ${inlandStates.length}`));
+                                return;
+                            }
+                            
+                            const auslandStates = stateIds.filter(key => 
+                                key.includes('ausland') && 
+                                !key.includes('controls') && 
+                                !key.includes('newsCount')
+                            );
+                            
+                            if (auslandStates.length > 0) {
+                                reject(new Error(`Expected no ausland news states but found ${auslandStates.length}`));
+                                return;
+                            }
+                            
+                            console.log('✅ Negative test completed successfully');
+                            await harness.stopAdapter();
+                            resolve(true);
+                            
+                        }, 15000);
+                        
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }).timeout(40000);
         });
     }
 });
@@ -355,14 +478,28 @@ tests.integration(path.join(__dirname, '..'), {
 
 ##### Key Integration Testing Rules
 
-1. **ALWAYS use offline testing** - API mocking is automatically enabled
-2. **NEVER test real API URLs** - All calls are intercepted and mocked
-3. **ALWAYS use the harness** - `getHarness()` provides the testing environment  
-4. **Configure via objects** - Use `harness.objects.setObject()` to set adapter configuration
-5. **Start properly** - Use `harness.startAdapterAndWait()` to start the adapter
-6. **Check states** - Use `harness.states.getState()` to verify results
-7. **Use timeouts** - Allow time for async operations with appropriate timeouts
-8. **Test real workflow** - Initialize → Configure → Start → Verify States (with mocked data)
+**CRITICAL PRINCIPLES:**
+1. **ALWAYS use offline testing** - Load `require('./test-setup')` at the top to enable mocking
+2. **Split test suites** - Use separate suites for different scenarios (can't restart adapter within same `it`)
+3. **Test SUCCESS and FAILURE** - For every "it works" test, add corresponding "it fails when disabled" test
+4. **MUST FAIL when expected states missing** - Use `reject(new Error(...))` not just logging
+5. **Use proper async patterns** - `await harness.startAdapterAndWait()`, proper Promise handling
+6. **Allow sufficient time** - `await setTimeout()` for data processing, `.timeout(40000)` for tests
+
+**Required Test Structure:**
+- ✅ Success test: News categories enabled → Verify news state types exist
+- ✅ Failure test: Categories disabled → Verify no news states created  
+- ✅ Partial test: Only inland enabled → Verify only inland states exist
+- ✅ Use `reject(new Error(...))` when validation fails
+- ✅ Use offline mocked data (no real API calls)
+
+**Testing Workflow:**
+1. **Initialize** - `getHarness()` and get adapter object
+2. **Configure** - Use `harness.objects.setObject()` to set adapter configuration  
+3. **Start** - Use `harness.startAdapterAndWait()` to start the adapter
+4. **Wait** - Allow time for processing: `setTimeout(() => {}, 15000-30000)`
+5. **Verify** - Get states and validate expected behavior with `reject()` for failures
+6. **Cleanup** - `await harness.stopAdapter()` when done
 
 ##### Offline Testing Features
 - **Dynamic test data**: All timestamps are generated at test runtime to avoid date comparison issues
@@ -376,6 +513,10 @@ tests.integration(path.join(__dirname, '..'), {
 ❌ Direct internet calls in tests
 ❌ Bypassing the mocking system
 ❌ Using fixed timestamps in test data
+❌ Single test suite for all scenarios (adapter restart issues)
+❌ Only logging failures without rejecting
+❌ Testing only success cases without corresponding failure cases
+❌ Insufficient timeouts for async operations
 
 ##### What TO Do
 ✅ Use `@iobroker/testing` framework
@@ -383,9 +524,26 @@ tests.integration(path.join(__dirname, '..'), {
 ✅ Configure via `harness.objects.setObject()`
 ✅ Start via `harness.startAdapterAndWait()`
 ✅ Test complete adapter lifecycle with mocked data
-✅ Verify states via `harness.states.getState()`
+✅ Verify states via `harness.dbConnection.getStateIDs()` and `harness.states.getStates()`
 ✅ Use dynamic timestamps in test data
 ✅ Allow proper timeouts for async operations
+✅ Use separate test suites for different scenarios
+✅ Test both success (states created) and failure (states not created) scenarios
+✅ Use `reject(new Error(...))` when expected states are missing
+✅ Use proper timeouts: `.timeout(40000)` for tests, `setTimeout(..., 15000-30000)` for processing
+✅ Follow the exact pattern from working integration tests
+
+##### Workflow Dependencies
+Integration tests should run ONLY after lint and adapter tests pass:
+
+```yaml
+integration-tests:
+  needs: [check-and-lint, adapter-tests]
+  runs-on: ubuntu-latest
+  steps:
+    - name: Run integration tests
+      run: npx mocha test/integration-*.js --exit
+```
 
 ### Build and Development
 
